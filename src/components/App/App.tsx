@@ -14,6 +14,7 @@ export const App = () => {
       ...config,
       ...{
         userId: user.id,
+        userGroup: user.group,
         socketID: socket.id,
         socketRoom: socket.room,
       },

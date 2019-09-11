@@ -8,19 +8,24 @@ export const UserProvider = props => {
   const [value, setValue] = useState({
     id: '',
     token: '',
+    group: '',
     ready: false,
     setToken: token => {
       localStorage.setItem('token', token)
       setValue(state => ({ ...state, token }))
     },
-    setJWT: jwt => {
-      setValue(state => ({ ...state, id: jwt.id }))
+    setJWT: ({ id }) => {
+      setValue(state => ({ ...state, id }))
+    },
+    setGroup: group => {
+      setValue(state => ({ ...state, group }))
     },
   })
 
   useEffect(() => {
     const initConfig = () => {
-      const token: MaybeNull<string> = localStorage.getItem('token')
+      const token: MaybeNull<string> = localStorage.getItem('token') || ''
+      const group = localStorage.getItem('group') || ''
       const ready = true
 
       tokenValid: if (token) {
@@ -31,7 +36,13 @@ export const UserProvider = props => {
         }
 
         setToken(token)
-        return setValue(state => ({ ...state, ready, token, id: jwt.id }))
+        return setValue(state => ({
+          ...state,
+          ready,
+          group,
+          token,
+          id: jwt.id,
+        }))
       }
 
       return setValue(state => ({ ...state, ready }))
