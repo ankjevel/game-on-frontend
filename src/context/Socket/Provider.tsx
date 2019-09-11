@@ -4,23 +4,21 @@ import io from 'socket.io-client'
 import Context from './context'
 import ConfigContext from '../Config'
 
+let socket
+
 export const SocketProvider = props => {
-  let socket
   const config = useContext(ConfigContext)
-  const [value, setValue] = useState()
+  const [value, setValue] = useState({ id: '', room: '' })
 
   useEffect(() => {
-    console.log(config)
     socket = io(config.api)
-    const initConfig = async () => {
-      console.log('init socket', socket)
 
+    socket.on('connect', () => {
       setValue(state => ({
         ...state,
+        id: socket.id,
       }))
-    }
-
-    initConfig()
+    })
   }, [])
 
   return <Context.Provider value={value}>{props.children}</Context.Provider>

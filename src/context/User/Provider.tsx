@@ -3,17 +3,14 @@ import React, { useState, useEffect } from 'react'
 import Context from './context'
 
 export const UserProvider = props => {
-  const [value, setValue] = useState()
+  const [value, setValue] = useState({ id: '' })
 
   useEffect(() => {
     const initConfig = async () => {
-      console.log('init user')
-
       setValue(state => ({
         ...state,
       }))
     }
-
     initConfig()
   }, [])
 

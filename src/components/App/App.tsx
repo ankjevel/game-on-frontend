@@ -1,32 +1,46 @@
-import React, { Component, Fragment } from 'react'
+import React, { useContext } from 'react'
 
-import { Provider as Socket } from '../../context/Socket'
-import { Provider as User } from '../../context/User'
+import socketContext from '../../context/Socket'
+import userContext from '../../context/User'
+import configContext from '../../context/Config'
 
-import ConfigContext from '../../context/Config'
+import SignIn from '../SignIn'
 
-import './App.css'
+export const App = () => {
+  const config = useContext(configContext)
+  const user = useContext(userContext)
+  const socket = useContext(socketContext)
+  const onSuccess = id => {
+    console.log('onSuccess', id)
+  }
 
-class App extends Component {
-  static contextType = ConfigContext
-
-  render() {
-    return (
-      <Fragment>
-        <Socket />
-        <User />
-        <div className="app">
-          <div className="flex mb-4">
-            <code className="app-title">{`${JSON.stringify(
-              this.context,
+  return (
+    <div className="app">
+      <div className="flex mb-4">
+        {user.id === '' ? (
+          <SignIn onSuccess={onSuccess} />
+        ) : (
+          <code className="app-title">
+            {`${JSON.stringify(
+              {
+                ...config,
+                ...{
+                  ...user,
+                  userID: user.id,
+                },
+                ...{
+                  ...socket,
+                  socketID: socket.id,
+                },
+              },
               null,
               2
-            )}`}</code>
-          </div>
-        </div>
-      </Fragment>
-    )
-  }
+            )}`}
+          </code>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default App

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react'
+import req from '../../utils/req'
 
 import Context from './context'
+import Config from 'config'
 
 export const ConfigProvider = props => {
   const [value, setValue] = useState()
 
   useEffect(() => {
     const initConfig = async () => {
-      const res = await fetch('/js/config.json')
-      const config = await res.json()
+      const config = await req({
+        url: '/js/config.json',
+        host: '',
+      })
 
-      setValue(state => ({
+      setValue((state: MaybeNull<Config>) => ({
         ...state,
         ...config,
       }))
