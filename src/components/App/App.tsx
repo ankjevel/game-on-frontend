@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import ConfigContext from '../../context/config'
+import ConfigContext from '../../context/Config'
 
 import './App.css'
 
