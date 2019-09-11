@@ -1,9 +1,8 @@
-import Config from 'Config'
+import Config from 'CConfig'
 import React, { createContext } from 'react'
 import TestRenderer from 'react-test-renderer'
 
 const config: Config = {
-  debug: true,
   api: 'localhost:5555',
 }
 
@@ -27,7 +26,6 @@ test('it renders the component', async () => {
           className="app-title"
         >
           {
-      "debug": true,
       "api": "localhost:5555"
     }
         </code>
