@@ -8,11 +8,11 @@ import { Provider as Socket } from './context/Socket'
 
 render(
   <Config>
-    <Socket>
-      <User>
+    <User>
+      <Socket>
         <App />
-      </User>
-    </Socket>
+      </Socket>
+    </User>
   </Config>,
   document.getElementById('root')
 )

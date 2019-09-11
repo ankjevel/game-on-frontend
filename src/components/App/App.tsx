@@ -9,6 +9,17 @@ export const App = () => {
   const user = useContext(userContext)
   const socket = useContext(socketContext)
 
+  const print = () => {
+    return {
+      ...config,
+      ...{
+        userId: user.id,
+        socketID: socket.id,
+        socketRoom: socket.room,
+      },
+    }
+  }
+
   return (
     <div className="app">
       <div className="flex mb-4">
@@ -16,21 +27,7 @@ export const App = () => {
           <SignIn />
         ) : (
           <code className="app-title">
-            {`${JSON.stringify(
-              {
-                ...config,
-                ...{
-                  ...user,
-                  userID: user.id,
-                },
-                ...{
-                  ...socket,
-                  socketID: socket.id,
-                },
-              },
-              null,
-              2
-            )}`}
+            {`${JSON.stringify(print(), null, 2)}`}
           </code>
         )}
       </div>

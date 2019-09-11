@@ -1,3 +1,5 @@
+import JWT from 'JWT'
+
 export type StateInput = {
   email: string
   password: string

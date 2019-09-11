@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { ISignIn, ICreate, State } from 'SignIn'
-import req from '../../utils/req'
+import UserContext from '../../context/User'
+import { validate } from '../../utils/jwt'
+import req, { setToken } from '../../utils/req'
 
 class SignIn extends Component<{}, State> {
+  static contextType = UserContext
+
   constructor(props) {
     super(props)
 
@@ -22,42 +26,43 @@ class SignIn extends Component<{}, State> {
     this.toggleCreate = this.toggleCreate.bind(this)
   }
 
-  signIn: ISignIn = async input => {
-    const res = await req({
-      url: '/user/token',
-      method: 'POST',
-      body: JSON.stringify(input),
-    })
-
-    if (res == null) {
+  simpleHandleJWS = (token?: string) => {
+    if (token == null || typeof token !== 'string') {
       return false
     }
 
-    console.log(res)
+    const jwt = validate(token)
+    if (!jwt) {
+      return false
+    }
+
+    setToken(token)
+
+    this.context.setToken(token)
+    this.context.setJWT(jwt)
 
     return true
   }
 
-  create: ICreate = async ({
-    name,
-    email,
-    password: p1,
-    passwordRepeat: p2,
-  }) => {
-    const res = await req({
-      url: '/user',
-      method: 'POST',
-      body: JSON.stringify({ name, email, p1, p2 }),
-    })
+  signIn: ISignIn = async input =>
+    this.simpleHandleJWS(
+      await req({
+        url: '/user/token',
+        method: 'POST',
+        body: JSON.stringify(input),
+        jsonResponse: false,
+      })
+    )
 
-    if (res == null) {
-      return false
-    }
-
-    console.log(res)
-
-    return true
-  }
+  create: ICreate = async ({ name, email, password: p1, passwordRepeat: p2 }) =>
+    this.simpleHandleJWS(
+      await req({
+        url: '/user',
+        method: 'POST',
+        body: JSON.stringify({ name, email, p1, p2 }),
+        jsonResponse: false,
+      })
+    )
 
   handleChange(event) {
     event.persist()
@@ -109,20 +114,28 @@ class SignIn extends Component<{}, State> {
         })
       }
 
+      if (await this.create(input)) {
+        return
+      }
+
       return this.setState({
         ...this.state,
-        error: (await this.create(input)) ? '' : 'Could not create user',
+        error: 'Could not create user',
       })
+    }
+
+    if (
+      await this.signIn({
+        email: input.email,
+        password: input.password,
+      })
+    ) {
+      return
     }
 
     this.setState({
       ...this.state,
-      error: (await this.signIn({
-        email: input.email,
-        password: input.password,
-      }))
-        ? ''
-        : 'Unable to sign in, try again',
+      error: 'Unable to sign in, try again',
     })
   }
 

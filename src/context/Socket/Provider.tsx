@@ -17,6 +17,14 @@ export const SocketProvider = props => {
         id: socket.id,
       }))
     })
+
+    return () => {
+      try {
+        socket.close()
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }, [])
 
   return <Context.Provider value={value}>{props.children}</Context.Provider>
