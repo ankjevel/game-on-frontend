@@ -1,4 +1,4 @@
-import { Socket } from 'socket'
+import { Socket } from 'Socket'
 import { createContext } from 'react'
 
 const SocketContext = createContext({

@@ -1,3 +1,5 @@
+import Config from 'Config'
+
 export type Method =
   | 'GET'
   | 'HEAD'
@@ -9,13 +11,16 @@ export type Method =
   | 'TRACE'
   | 'PATCH'
 
+let host: Config['api'] = ''
+export const setHost = (api: Config['api']) => {
+  host = api
+}
+
 export const req = async <T>({
   url,
   method = 'GET',
   body,
-  host,
 }: {
-  host: string
   url: string
   method?: Method
   body?: T
@@ -26,9 +31,14 @@ export const req = async <T>({
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: body && JSON.stringify(body),
+    body: typeof body !== 'string' ? JSON.stringify(body) : body,
   })
-  return await response.json()
+
+  if (response.status >= 200 && response.status < 300) {
+    return await response.json()
+  }
+
+  return null
 }
 
 export default req

@@ -1,4 +1,4 @@
-import { User } from 'user'
+import { User } from 'User'
 import { createContext } from 'react'
 
 const UserContext = createContext({

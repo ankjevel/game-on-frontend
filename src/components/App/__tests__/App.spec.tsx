@@ -1,4 +1,4 @@
-import Config from 'config'
+import Config from 'Config'
 import React, { createContext } from 'react'
 import TestRenderer from 'react-test-renderer'
 

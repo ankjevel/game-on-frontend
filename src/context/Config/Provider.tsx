@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import req from '../../utils/req'
-
+import req, { setHost } from '../../utils/req'
 import Context from './context'
-import Config from 'config'
+import Config from 'Config'
 
 export const ConfigProvider = props => {
   const [value, setValue] = useState()
@@ -11,8 +10,9 @@ export const ConfigProvider = props => {
     const initConfig = async () => {
       const config = await req({
         url: '/js/config.json',
-        host: '',
       })
+
+      setHost(config.api)
 
       setValue((state: MaybeNull<Config>) => ({
         ...state,
