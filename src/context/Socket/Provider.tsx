@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import io from 'socket.io-client'
 
-import SocketContext from './context'
+import Context from './context'
+import ConfigContext from '../Config'
 
 export const SocketProvider = props => {
+  let socket
+  const config = useContext(ConfigContext)
   const [value, setValue] = useState()
 
   useEffect(() => {
+    console.log(config)
+    socket = io(config.api)
     const initConfig = async () => {
-      console.log('init socket')
+      console.log('init socket', socket)
 
       setValue(state => ({
         ...state,
@@ -17,11 +23,7 @@ export const SocketProvider = props => {
     initConfig()
   }, [])
 
-  return (
-    <SocketContext.Provider value={value}>
-      {props.children}
-    </SocketContext.Provider>
-  )
+  return <Context.Provider value={value}>{props.children}</Context.Provider>
 }
 
 export default SocketProvider

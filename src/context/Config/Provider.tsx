@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import ConfigContext from './context'
+import Context from './context'
 
 export const ConfigProvider = props => {
   const [value, setValue] = useState()
@@ -20,9 +20,9 @@ export const ConfigProvider = props => {
   }, [])
 
   return (
-    <ConfigContext.Provider value={value}>
+    <Context.Provider value={value}>
       {value == null ? null : props.children}
-    </ConfigContext.Provider>
+    </Context.Provider>
   )
 }
 

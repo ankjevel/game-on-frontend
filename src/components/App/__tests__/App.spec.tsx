@@ -8,15 +8,15 @@ const config: Config = {
 }
 
 jest.mock('../../../context/Config', () => createContext(config))
+jest.mock('../../../context/Socket', () => createContext({}))
+jest.mock('../../../context/User', () => createContext({}))
 
 import App from '../App'
 
 test('it renders the component', async () => {
   const component = TestRenderer.create(<App />)
 
-  const tree = component.toJSON()
-
-  expect(tree).toMatchInlineSnapshot(`
+  expect(component.toJSON()).toMatchInlineSnapshot(`
     <div
       className="app"
     >

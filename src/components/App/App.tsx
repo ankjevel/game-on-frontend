@@ -1,4 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+
+import { Provider as Socket } from '../../context/Socket'
+import { Provider as User } from '../../context/User'
 
 import ConfigContext from '../../context/Config'
 
@@ -9,15 +12,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="app">
-        <div className="flex mb-4">
-          <code className="app-title">{`${JSON.stringify(
-            this.context,
-            null,
-            2
-          )}`}</code>
+      <Fragment>
+        <Socket />
+        <User />
+        <div className="app">
+          <div className="flex mb-4">
+            <code className="app-title">{`${JSON.stringify(
+              this.context,
+              null,
+              2
+            )}`}</code>
+          </div>
         </div>
-      </div>
+      </Fragment>
     )
   }
 }

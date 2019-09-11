@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import UserContext from './context'
+import Context from './context'
 
 export const UserProvider = props => {
   const [value, setValue] = useState()
@@ -17,9 +17,7 @@ export const UserProvider = props => {
     initConfig()
   }, [])
 
-  return (
-    <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
-  )
+  return <Context.Provider value={value}>{props.children}</Context.Provider>
 }
 
 export default UserProvider
