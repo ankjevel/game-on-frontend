@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import ConfigContext from '../context/Config'
+import ConfigContext from './context'
 
 export const ConfigProvider = props => {
   const [value, setValue] = useState()

@@ -2,12 +2,12 @@ import Config from 'config'
 import React, { createContext } from 'react'
 import TestRenderer from 'react-test-renderer'
 
-const ConfigContext = createContext({
+const config: Config = {
   debug: true,
   api: 'localhost:5555',
-} as Config)
+}
 
-jest.mock('../../../context/Config', () => ConfigContext)
+jest.mock('../../../context/Config', () => createContext(config))
 
 import App from '../App'
 

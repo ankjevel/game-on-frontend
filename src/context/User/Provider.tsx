@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 
-import SocketContext from '../context/Socket'
+import UserContext from './context'
 
-export const SocketProvider = props => {
+export const UserProvider = props => {
   const [value, setValue] = useState()
 
   useEffect(() => {
     const initConfig = async () => {
-      console.log('init socket')
+      console.log('init user')
 
       setValue(state => ({
         ...state,
@@ -18,10 +18,8 @@ export const SocketProvider = props => {
   }, [])
 
   return (
-    <SocketContext.Provider value={value}>
-      {props.children}
-    </SocketContext.Provider>
+    <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
   )
 }
 
-export default SocketProvider
+export default UserProvider
