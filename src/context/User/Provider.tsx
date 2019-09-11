@@ -8,12 +8,12 @@ export const UserProvider = props => {
   const [value, setValue] = useState({
     id: '',
     token: '',
+    ready: false,
     setToken: token => {
       localStorage.setItem('token', token)
       setValue(state => ({ ...state, token }))
     },
     setJWT: jwt => {
-      console.log('new JWT', jwt)
       setValue(state => ({ ...state, id: jwt.id }))
     },
   })
@@ -21,27 +21,30 @@ export const UserProvider = props => {
   useEffect(() => {
     const initConfig = () => {
       const token: MaybeNull<string> = localStorage.getItem('token')
-      console.log(token)
+      const ready = true
 
       tokenValid: if (token) {
         const jwt = validate(token)
-        console.log(jwt)
 
-        if (jwt) {
+        if (!jwt) {
           break tokenValid
         }
 
         setToken(token)
-        return setValue(state => ({ ...state, token, id: jwt.id }))
+        return setValue(state => ({ ...state, ready, token, id: jwt.id }))
       }
 
-      return setValue(state => ({ ...state }))
+      return setValue(state => ({ ...state, ready }))
     }
 
     initConfig()
   }, [])
 
-  return <Context.Provider value={value}>{props.children}</Context.Provider>
+  return (
+    <Context.Provider value={value}>
+      {value == null || !value.ready ? null : props.children}
+    </Context.Provider>
+  )
 }
 
 export default UserProvider

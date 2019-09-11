@@ -1,9 +1,4 @@
-import { Socket } from 'Socket'
+import { CSocket } from 'CSocket'
 import { createContext } from 'react'
 
-const SocketContext = createContext({
-  room: '',
-  id: '',
-} as Socket)
-
-export default SocketContext
+export default createContext({} as CSocket)

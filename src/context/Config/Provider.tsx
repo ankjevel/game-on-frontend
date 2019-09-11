@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import req, { setHost } from '../../utils/req'
 import Context from './context'
-import Config from 'Config'
+import CConfig from 'CConfig'
 
 export const ConfigProvider = props => {
   const [value, setValue] = useState()
@@ -14,7 +14,7 @@ export const ConfigProvider = props => {
 
       setHost(config.api)
 
-      setValue((state: MaybeNull<Config>) => ({
+      setValue((state: MaybeNull<CConfig>) => ({
         ...state,
         ...config,
       }))
