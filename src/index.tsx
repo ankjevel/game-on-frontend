@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import './index.css'
 import App from './components/App'
 
-import ConfigContext from './context/ConfigContext'
+import ConfigContext from './context/config'
 
 const ConfigProvider = props => {
   const [value, setValue] = useState()
@@ -18,12 +18,13 @@ const ConfigProvider = props => {
         ...config,
       }))
     }
+
     initConfig()
   }, [])
 
   return (
     <ConfigContext.Provider value={value}>
-      {props.children}
+      {value == null ? null : props.children}
     </ConfigContext.Provider>
   )
 }

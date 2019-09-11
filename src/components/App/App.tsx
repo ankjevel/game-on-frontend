@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import ConfigContext from '../../context/ConfigContext'
+import ConfigContext from '../../context/config'
 
 import './App.css'
 
@@ -8,10 +8,6 @@ class App extends Component {
   static contextType = ConfigContext
 
   render() {
-    if (this.context == null) {
-      return null
-    }
-
     return (
       <div className="app">
         <div className="flex mb-4">
