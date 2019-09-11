@@ -1,26 +1,14 @@
 import React, { Component } from 'react'
-import { Config } from 'config'
+
+import ConfigContext from '../../context/ConfigContext'
 
 import './App.css'
 
 class App extends Component {
-  state: { config: MaybeNull<Config> } = {
-    config: null,
-  }
-
-  componentDidMount() {
-    fetch('/js/config.json')
-      .then(res => res.json())
-      .then((config: Config) => {
-        this.setState({
-          ...this.state,
-          config,
-        })
-      })
-  }
+  static contextType = ConfigContext
 
   render() {
-    if (this.state.config == null) {
+    if (this.context == null) {
       return null
     }
 
@@ -28,7 +16,7 @@ class App extends Component {
       <div className="app">
         <div className="flex mb-4">
           <code className="app-title">{`${JSON.stringify(
-            this.state.config,
+            this.context,
             null,
             2
           )}`}</code>
