@@ -1,4 +1,4 @@
-import Config from 'Config'
+import Config from 'CConfig'
 
 export type Method =
   | 'GET'
@@ -12,38 +12,45 @@ export type Method =
   | 'PATCH'
 
 let host: Config['api'] = ''
-let token: MaybeUndefined<string>
-
 export const setHost = (api: Config['api']) => {
   host = api
 }
 
+let token: MaybeUndefined<string>
 export const setToken = (newToken: string) => {
   token = newToken
+}
+
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
 }
 
 export const req = async <T>({
   url,
   method = 'GET',
   body,
-  jsonResponse = true,
 }: {
   url: string
   method?: Method
   body?: T
-  jsonResponse?: boolean
 }): Promise<any> => {
   const response = await fetch(`${host}${url}`, {
     method,
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      ...headers,
+      Authorization: token && `Bearer ${token}`,
     },
     body: typeof body !== 'string' ? JSON.stringify(body) : body,
   })
 
   if (response.status >= 200 && response.status < 300) {
-    return await (jsonResponse ? response.json() : response.text())
+    const contentType = response.headers.get('content-type')
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json()
+    }
+
+    return await response.text()
   }
 
   return null

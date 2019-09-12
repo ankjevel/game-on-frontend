@@ -50,7 +50,6 @@ class SignIn extends Component<{}, State> {
         url: '/user/token',
         method: 'POST',
         body: JSON.stringify(input),
-        jsonResponse: false,
       })
     )
 
@@ -60,7 +59,6 @@ class SignIn extends Component<{}, State> {
         url: '/user',
         method: 'POST',
         body: JSON.stringify({ name, email, p1, p2 }),
-        jsonResponse: false,
       })
     )
 
