@@ -13,7 +13,7 @@ export const App = () => {
     return {
       ...config,
       ...{
-        userId: user.id,
+        userID: user.id,
         userGroup: user.group,
         socketID: socket.id,
         socketRoom: socket.room,

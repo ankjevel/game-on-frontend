@@ -23,11 +23,11 @@ export const SocketProvider = props => {
     return () => {
       socket.close()
     }
-  }, [])
+  }, [config.api])
 
   useEffect(() => {
-    const handleUserID = async () => {
-      if (user.id === '') {
+    const exec = async () => {
+      if (user.group === '') {
         if (value.room !== '') {
           await socket.emit('leave', value.room)
         }
@@ -38,8 +38,8 @@ export const SocketProvider = props => {
       console.log('call when USE EFFECT', JSON.stringify(user), value.room)
     }
 
-    handleUserID()
-  }, [user.id])
+    exec()
+  }, [user, value.room])
 
   return (
     <Context.Provider value={value}>
