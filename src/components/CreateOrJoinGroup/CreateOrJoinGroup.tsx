@@ -6,10 +6,10 @@ import req from '../../utils/req'
 type Props = {}
 type State = {
   error: string
-  input: NewGroup
+  create: NewGroup
 }
 
-class CreateGroup extends Component<Props, State> {
+class CreateOrJoinGroup extends Component<Props, State> {
   static contextType = UserContext
   context!: ContextType<typeof UserContext>
 
@@ -18,7 +18,7 @@ class CreateGroup extends Component<Props, State> {
 
     this.state = {
       error: '',
-      input: {
+      create: {
         name: '',
         startSum: 200,
         smallBlind: 2,
@@ -27,7 +27,7 @@ class CreateGroup extends Component<Props, State> {
     }
 
     this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.createGroup = this.createGroup.bind(this)
   }
 
   handleChange(event) {
@@ -36,9 +36,9 @@ class CreateGroup extends Component<Props, State> {
       target: { name, value: valuePre },
     } = event
     const { state } = this
-    const { input } = state
+    const { create } = state
 
-    const isNumber = typeof input[name] === 'number'
+    const isNumber = typeof create[name] === 'number'
 
     if (isNumber && isNaN(parseInt(valuePre, 10))) {
       return
@@ -55,7 +55,10 @@ class CreateGroup extends Component<Props, State> {
 
     switch (name) {
       case 'bigBlind': {
-        if (value >= state.input.startSum || value <= state.input.smallBlind) {
+        if (
+          value >= state.create.startSum ||
+          value <= state.create.smallBlind
+        ) {
           return
         }
 
@@ -63,7 +66,7 @@ class CreateGroup extends Component<Props, State> {
       }
 
       case 'startSum': {
-        if (value <= state.input.bigBlind) {
+        if (value <= state.create.bigBlind) {
           return
         }
 
@@ -71,7 +74,7 @@ class CreateGroup extends Component<Props, State> {
       }
 
       case 'smallBlind': {
-        if (value >= state.input.bigBlind) {
+        if (value >= state.create.bigBlind) {
           return
         }
 
@@ -81,20 +84,20 @@ class CreateGroup extends Component<Props, State> {
 
     this.setState({
       ...state,
-      input: {
-        ...input,
+      create: {
+        ...create,
         [name]: value,
       },
     })
   }
 
-  async handleSubmit(event) {
+  async createGroup(event) {
     event.preventDefault()
 
     const res = await req({
       url: '/group',
       method: 'POST',
-      body: JSON.stringify(this.state.input),
+      body: JSON.stringify(this.state.create),
     })
 
     if (!res) {
@@ -107,12 +110,14 @@ class CreateGroup extends Component<Props, State> {
 
   render() {
     return (
-      <div className="flex-1">
+      <div
+        className={`${
+          this.state.error ? 'bg-red-100' : 'bg-white'
+        } flex-1 sign-in '`}
+      >
         <form
-          onSubmit={this.handleSubmit}
-          className={`${
-            this.state.error ? 'bg-red-100' : 'bg-white'
-          } create-group shadow-md rounded px-8 pt-6 pb-8 mb-4 border rounded w-full'`}
+          onSubmit={this.createGroup}
+          className="px-8 pt-6 pb-8 mb-4 w-full"
         >
           <div>
             <label
@@ -126,7 +131,7 @@ class CreateGroup extends Component<Props, State> {
               type="name"
               name="name"
               required={true}
-              value={this.state.input.name}
+              value={this.state.create.name}
               onChange={this.handleChange}
             />
           </div>
@@ -142,7 +147,7 @@ class CreateGroup extends Component<Props, State> {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="number"
               name="startSum"
-              value={this.state.input.startSum}
+              value={this.state.create.startSum}
               onChange={this.handleChange}
             />
           </div>
@@ -160,7 +165,7 @@ class CreateGroup extends Component<Props, State> {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="number"
                   name="smallBlind"
-                  value={this.state.input.smallBlind}
+                  value={this.state.create.smallBlind}
                   onChange={this.handleChange}
                 />
               </div>
@@ -176,7 +181,7 @@ class CreateGroup extends Component<Props, State> {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="number"
                   name="bigBlind"
-                  value={this.state.input.bigBlind}
+                  value={this.state.create.bigBlind}
                   onChange={this.handleChange}
                 />
               </div>
@@ -205,4 +210,4 @@ class CreateGroup extends Component<Props, State> {
   }
 }
 
-export default CreateGroup
+export default CreateOrJoinGroup

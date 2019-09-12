@@ -9,6 +9,7 @@ export const UserProvider = props => {
   const [value, setValue] = useState<CContext>({
     id: '',
     token: '',
+    name: '',
     group: undefined,
     ready: false,
     setValue: async (key: SetValue, value: any) => {
@@ -25,12 +26,8 @@ export const UserProvider = props => {
           break
         }
 
-        case SetValue.ID: {
-          changed.id = value
-          break
-        }
-
         case SetValue.JWT: {
+          changed.name = value.name
           changed.id = value.id
           break
         }
@@ -76,6 +73,7 @@ export const UserProvider = props => {
           ready,
           token,
           group,
+          name: jwt.name,
           id: jwt.id,
         }))
       }

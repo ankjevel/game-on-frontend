@@ -1,11 +1,12 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const Config = require('./lib/Config')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const outputDir = path.join(__dirname, 'dist/')
-const isProd = process.env.NODE_ENV === 'production'
+const configPlugin = new Config({})
+const config = configPlugin.serverConfig
 
 module.exports = {
-  mode: isProd ? 'production' : 'development',
+  mode: config.mode,
   devtool: 'source-map',
   output: {
     path: outputDir,
@@ -19,15 +20,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'public/index.html',
     }),
-    new Config({}),
+    configPlugin,
   ],
   entry: './src/index.tsx',
   devServer: {
-    compress: true,
     contentBase: outputDir,
-    port: process.env.PORT || 3000,
-    historyApiFallback: true,
-    stats: 'minimal',
+    ...config.devServer,
   },
   module: {
     rules: [

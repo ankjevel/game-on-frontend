@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node bin/generateConfig && serve -s dist",
-    "dev": "webpack-dev-server --no-inline --mode development",
-    "build": "NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --no-inline",
+    "build": "mode=production webpack",
     "lint": "eslint '{types,src,bin,lib}/{**/,}*.{js,ts,tsx}'",
     "prettier": "prettier --check '{types,src,bin,lib}/{**/,}*.{js,ts,tsx}'",
     "test": "jest --forceExit --detectOpenHandles"

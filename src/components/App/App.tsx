@@ -1,36 +1,42 @@
 import React, { useContext } from 'react'
 import socketContext from '../../context/Socket'
 import userContext from '../../context/User'
-import configContext from '../../context/Config'
 import SignIn from '../SignIn'
-import CreateGroup from '../CreateGroup'
+import CreateOrJoinGroup from '../CreateOrJoinGroup'
 
 export const App = () => {
-  const config = useContext(configContext)
   const user = useContext(userContext)
   const socket = useContext(socketContext)
 
-  const print = () => ({
-    ...config,
-    ...{
-      userID: user.id,
-      userGroup: user.group.id,
-      socketID: socket.id,
-      socketRoom: socket.room,
-    },
-  })
+  const leave = event => {
+    event.preventDefault()
+    console.log('leave')
+  }
 
   return (
-    <div className="app">
-      <div className="flex mb-4">
+    <div className="app flex items-center justify-center">
+      <div className="self-center auto w-1/2 rounded overflow-hidden shadow-lg bg-white">
         {user.id === '' ? (
           <SignIn />
         ) : user.group == null ? (
-          <CreateGroup />
+          <CreateOrJoinGroup />
         ) : (
-          <code className="app-title">
-            {`${JSON.stringify(print(), null, 2)}`}
-          </code>
+          <div className="px-4 py-6">
+            <div>
+              <p>id: {user.id}</p>
+              <p>name: {user.name}</p>
+              <p>group: {user.group.name}</p>
+              <p>socket: {socket.id}</p>
+            </div>
+            <div className="pt-4">
+              <button
+                className="leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                onClick={leave}
+              >
+                Leave group
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

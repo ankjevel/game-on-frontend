@@ -22,13 +22,14 @@ export const SocketProvider = props => {
     }
 
     socket = io(config.api)
-    socket.on('connect', () => {
+    socket.on('connect', () =>
       setValue(state => ({ ...state, id: socket.id, connected: true }))
-    })
-
-    socket.on('reconnect', () => {
+    )
+    socket.on('reconnect', () =>
       setValue(state => ({ ...state, room: '', connected: false }))
-    })
+    )
+    socket.on('update:group', group => setValue(state => ({ ...state, group })))
+    socket.on('user:joined', message => console.log({ message }))
 
     return () => {
       socket.close()
@@ -54,7 +55,8 @@ export const SocketProvider = props => {
         return
       }
 
-      await socket.emit('group:join', user.group.id)
+      await socket.emit('group:join', { id: user.group.id, token: user.token })
+
       setValue(state => ({
         ...state,
         room: user.group.id,

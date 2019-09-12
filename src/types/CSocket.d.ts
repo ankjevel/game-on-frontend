@@ -1,6 +1,6 @@
 export type CSocket = {
-  room: string
   id: string
+  room: string
   connected: boolean
 }
 
