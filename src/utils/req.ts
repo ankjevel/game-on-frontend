@@ -26,6 +26,16 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
+export const query = (input: any) =>
+  `?${Object.entries(input)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value as
+          | string
+          | number)}`
+    )
+    .join('&')}`
+
 export const req = async <T>({
   url,
   method = 'GET',

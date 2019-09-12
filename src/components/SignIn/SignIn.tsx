@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, ContextType } from 'react'
 import { ISignIn, ICreate, State } from 'SignIn'
 import UserContext from '../../context/User'
 import { validate } from '../../utils/jwt'
@@ -6,6 +6,7 @@ import req, { setToken } from '../../utils/req'
 
 class SignIn extends Component<{}, State> {
   static contextType = UserContext
+  context!: ContextType<typeof UserContext>
 
   constructor(props) {
     super(props)
@@ -209,6 +210,7 @@ class SignIn extends Component<{}, State> {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               type="password"
               name="password"
+              minLength={8}
               required={true}
               value={this.state.input.password}
               onChange={this.handleChange}
@@ -227,6 +229,7 @@ class SignIn extends Component<{}, State> {
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 type="password"
+                minLength={8}
                 name="passwordRepeat"
                 required={true}
                 value={this.state.input.passwordRepeat}

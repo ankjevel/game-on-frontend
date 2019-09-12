@@ -1,3 +1,6 @@
+import { CSocket } from 'CSocket'
+import { CUser } from 'CUser'
+import { CConfig } from 'CConfig'
 import React, { useState, useEffect, useContext } from 'react'
 import io from 'socket.io-client'
 import Context from './context'
@@ -6,9 +9,9 @@ import UserContext from '../User'
 
 export let socket
 export const SocketProvider = props => {
-  const config = useContext(ConfigContext)
-  const user = useContext(UserContext)
-  const [value, setValue] = useState({ id: '', room: '' })
+  const config = useContext<CConfig>(ConfigContext)
+  const user = useContext<CUser>(UserContext)
+  const [value, setValue] = useState<CSocket>({ id: '', room: '' })
 
   useEffect(() => {
     if (socket != null) {

@@ -1,3 +1,4 @@
+import { CUser } from 'CUser'
 import React, { useState, useEffect } from 'react'
 import Context from './context'
 
@@ -5,7 +6,7 @@ import { validate } from '../../utils/jwt'
 import req, { setToken } from '../../utils/req'
 
 export const UserProvider = props => {
-  const [value, setValue] = useState({
+  const [value, setValue] = useState<CUser>({
     id: '',
     token: '',
     group: '',
