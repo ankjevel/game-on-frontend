@@ -1,4 +1,3 @@
-import Context from '../../../context/Config/Types'
 import React, { createContext } from 'react'
 import TestRenderer from 'react-test-renderer'
 

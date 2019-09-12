@@ -10,7 +10,11 @@ export let socket
 export const SocketProvider = props => {
   const config = useContext<CConfig>(ConfigContext)
   const user = useContext<User>(UserContext)
-  const [value, setValue] = useState<CContext>({ id: '', room: '' })
+  const [value, setValue] = useState<CContext>({
+    id: '',
+    room: '',
+    connected: false,
+  })
 
   useEffect(() => {
     if (socket != null) {
@@ -19,7 +23,11 @@ export const SocketProvider = props => {
 
     socket = io(config.api)
     socket.on('connect', () => {
-      setValue(state => ({ ...state, id: socket.id }))
+      setValue(state => ({ ...state, id: socket.id, connected: true }))
+    })
+
+    socket.on('reconnect', () => {
+      setValue(state => ({ ...state, room: '', connected: false }))
     })
 
     return () => {
@@ -29,26 +37,32 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const exec = async () => {
+      if (value.connected === false) {
+        return
+      }
+
       if (user.group == null) {
         if (value.room !== '') {
-          await socket.emit('group:leave', value.room)
+          console.log('useEffect: leave group')
+          await socket.emit('group:leave')
         }
 
         return
       }
 
-      if (user.group.id !== value.room) {
-        await socket.emit('group:leave', value.room)
-        await socket.emit('group:join', user.group.id)
-        setValue(state => ({
-          ...state,
-          room: user.group.id,
-        }))
+      if (user.group.id === value.room) {
+        return
       }
+
+      await socket.emit('group:join', user.group.id)
+      setValue(state => ({
+        ...state,
+        room: user.group.id,
+      }))
     }
 
     exec()
-  }, [user, value.room])
+  }, [user.group, value.room, value.connected])
 
   return (
     <Context.Provider value={value}>
