@@ -1,6 +1,6 @@
 import React, { Component, ContextType } from 'react'
 import { ISignIn, ICreate, State } from 'SignIn'
-import UserContext from '../../context/User'
+import UserContext, { SetValue } from '../../context/User'
 import { validate } from '../../utils/jwt'
 import req, { setToken } from '../../utils/req'
 
@@ -39,8 +39,8 @@ class SignIn extends Component<{}, State> {
 
     setToken(token)
 
-    this.context.setToken(token)
-    this.context.setJWT(jwt)
+    this.context.setValue(SetValue.Token, token)
+    this.context.setValue(SetValue.JWT, jwt)
 
     return true
   }

@@ -26,30 +26,22 @@ const headers = {
   'Content-Type': 'application/json',
 }
 
-export const query = (input: any) =>
-  `?${Object.entries(input)
-    .map(
-      ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(value as
-          | string
-          | number)}`
-    )
-    .join('&')}`
-
 export const req = async <T>({
   url,
   method = 'GET',
   body,
+  token: inputToken = token,
 }: {
   url: string
   method?: Method
   body?: T
+  token?: string
 }): Promise<any> => {
   const response = await fetch(`${host}${url}`, {
     method,
     headers: {
       ...headers,
-      Authorization: token && `Bearer ${token}`,
+      Authorization: inputToken && `Bearer ${inputToken}`,
     },
     body: typeof body !== 'string' ? JSON.stringify(body) : body,
   })

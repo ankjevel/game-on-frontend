@@ -1,14 +1,26 @@
-import Config from 'CConfig'
+import Context from '../../../context/Config/Types'
 import React, { createContext } from 'react'
 import TestRenderer from 'react-test-renderer'
 
-const config: Config = {
-  api: 'localhost:5555',
-}
-
-jest.mock('../../../context/Config', () => createContext(config))
-jest.mock('../../../context/Socket', () => createContext({}))
-jest.mock('../../../context/User', () => createContext({}))
+jest.mock('../../../context/Config', () =>
+  createContext({
+    api: 'configAPI',
+  })
+)
+jest.mock('../../../context/Socket', () =>
+  createContext({
+    id: 'socketID',
+    room: 'socketRoom',
+  })
+)
+jest.mock('../../../context/User', () =>
+  createContext({
+    id: 'userID',
+    group: {
+      id: 'groupID',
+    },
+  })
+)
 
 import App from '../App'
 
@@ -26,7 +38,11 @@ test('it renders the component', async () => {
           className="app-title"
         >
           {
-      "api": "localhost:5555"
+      "api": "configAPI",
+      "userID": "userID",
+      "userGroup": "groupID",
+      "socketID": "socketID",
+      "socketRoom": "socketRoom"
     }
         </code>
       </div>

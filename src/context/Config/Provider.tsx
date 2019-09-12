@@ -1,10 +1,11 @@
-import { CConfig } from 'CConfig'
+import CContext from './Types'
+
 import React, { useState, useEffect } from 'react'
 import req, { setHost } from '../../utils/req'
 import Context from './context'
 
 export const ConfigProvider = props => {
-  const [value, setValue] = useState<CConfig>()
+  const [value, setValue] = useState<CContext>()
 
   useEffect(() => {
     const initConfig = async () => {

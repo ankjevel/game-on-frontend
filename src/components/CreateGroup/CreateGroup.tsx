@@ -1,7 +1,7 @@
 import React, { Component, ContextType } from 'react'
-import UserContext from '../../context/User'
+import UserContext, { SetValue } from '../../context/User'
 import { NewGroup } from 'Api'
-import req, { query } from '../../utils/req'
+import req from '../../utils/req'
 
 type Props = {}
 type State = {
@@ -102,7 +102,7 @@ class CreateGroup extends Component<Props, State> {
       return this.setState({ ...this.state, error })
     }
 
-    this.context.setGroup(res.id)
+    this.context.setValue(SetValue.Group, res)
   }
 
   render() {

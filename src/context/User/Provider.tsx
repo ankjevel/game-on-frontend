@@ -1,55 +1,81 @@
-import { CUser } from 'CUser'
+import CContext, { SetValue } from './Types'
+
 import React, { useState, useEffect } from 'react'
 import Context from './context'
-
 import { validate } from '../../utils/jwt'
 import req, { setToken } from '../../utils/req'
 
 export const UserProvider = props => {
-  const [value, setValue] = useState<CUser>({
+  const [value, setValue] = useState<CContext>({
     id: '',
     token: '',
-    group: '',
+    group: undefined,
     ready: false,
-    setToken: async token => {
-      localStorage.setItem('token', token)
+    setValue: async (key: SetValue, value: any) => {
+      const changed: any = {}
+      switch (key) {
+        case SetValue.Token: {
+          changed.group = (await req({ url: '/user/group' })) || undefined
+          changed.token = value
+          break
+        }
 
-      const res = await req({ url: '/user/group' })
-      console.log(res)
+        case SetValue.Group: {
+          changed.group = value
+          break
+        }
 
-      setValue(state => ({ ...state, token }))
-    },
-    setJWT: ({ id }) => {
-      setValue(state => ({ ...state, id }))
-    },
-    setGroup: group => {
-      setValue(state => ({ ...state, group }))
+        case SetValue.ID: {
+          changed.id = value
+          break
+        }
+
+        case SetValue.JWT: {
+          changed.id = value.id
+          break
+        }
+
+        default:
+          return
+      }
+
+      setValue(state => ({ ...state, ...changed }))
     },
   })
 
   useEffect(() => {
     const initConfig = async () => {
-      const token: MaybeNull<string> = localStorage.getItem('token') || ''
-      const group = localStorage.getItem('group') || ''
       const ready = true
+      const token: MaybeNull<string> = localStorage.getItem('token') || ''
+      const groupFromLocalStorage = localStorage.getItem('group') || undefined
+      let group: MaybeUndefined<CContext['group']>
 
       tokenValid: if (token) {
         const jwt = validate(token)
-
-        if (!jwt) {
+        if (!jwt || (await req({ url: '/user/valid-token', token })) == null) {
+          localStorage.removeItem('token')
+          localStorage.removeItem('group')
           break tokenValid
         }
 
         setToken(token)
 
-        const res = await req({ url: '/user/group' })
-        console.log({ res })
+        if (groupFromLocalStorage) {
+          try {
+            group = JSON.parse(groupFromLocalStorage)
+          } catch (error) {
+            console.error(error)
+            localStorage.removeItem('group')
+          }
+        } else {
+          group = (await req({ url: '/user/group' })) || undefined
+        }
 
         return setValue(state => ({
           ...state,
           ready,
-          group,
           token,
+          group,
           id: jwt.id,
         }))
       }
@@ -59,6 +85,28 @@ export const UserProvider = props => {
 
     initConfig()
   }, [])
+
+  useEffect(() => {
+    const setValue = () => {
+      if (!value.group) {
+        localStorage.removeItem('group')
+      } else {
+        localStorage.setItem('group', JSON.stringify(value.group))
+      }
+    }
+    setValue()
+  }, [value.group])
+
+  useEffect(() => {
+    const setValue = () => {
+      if (!value.token) {
+        localStorage.removeItem('token')
+      } else {
+        localStorage.setItem('token', value.token)
+      }
+    }
+    setValue()
+  }, [value.token])
 
   return (
     <Context.Provider value={value}>

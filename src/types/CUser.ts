@@ -1,13 +1,11 @@
-import JWT from 'JWT'
+import { Group } from 'Api'
 
-export type CUser = {
+export type CUser<T> = {
   id: string
   token: string
-  group: string
+  group?: Group
   ready: boolean
-  setToken: (token: string) => void
-  setJWT: (jwt: JWT) => void
-  setGroup: (group: string) => void
+  setValue: (key: T, value: any) => void
 }
 
 export default CUser

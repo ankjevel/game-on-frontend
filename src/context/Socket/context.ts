@@ -1,4 +1,4 @@
-import { CSocket } from 'CSocket'
+import Context from './Types'
 import { createContext } from 'react'
 
-export default createContext({} as CSocket)
+export default createContext({} as Context)

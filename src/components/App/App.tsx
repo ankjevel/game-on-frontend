@@ -14,7 +14,7 @@ export const App = () => {
     ...config,
     ...{
       userID: user.id,
-      userGroup: user.group,
+      userGroup: user.group.id,
       socketID: socket.id,
       socketRoom: socket.room,
     },
@@ -25,7 +25,7 @@ export const App = () => {
       <div className="flex mb-4">
         {user.id === '' ? (
           <SignIn />
-        ) : user.group === '' ? (
+        ) : user.group == null ? (
           <CreateGroup />
         ) : (
           <code className="app-title">

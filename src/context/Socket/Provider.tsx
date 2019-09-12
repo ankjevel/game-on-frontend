@@ -1,17 +1,16 @@
-import { CSocket } from 'CSocket'
-import { CUser } from 'CUser'
+import CContext from './Types'
 import { CConfig } from 'CConfig'
 import React, { useState, useEffect, useContext } from 'react'
 import io from 'socket.io-client'
 import Context from './context'
 import ConfigContext from '../Config'
-import UserContext from '../User'
+import UserContext, { Context as User } from '../User'
 
 export let socket
 export const SocketProvider = props => {
   const config = useContext<CConfig>(ConfigContext)
-  const user = useContext<CUser>(UserContext)
-  const [value, setValue] = useState<CSocket>({ id: '', room: '' })
+  const user = useContext<User>(UserContext)
+  const [value, setValue] = useState<CContext>({ id: '', room: '' })
 
   useEffect(() => {
     if (socket != null) {
@@ -30,15 +29,22 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const exec = async () => {
-      if (user.group === '') {
+      if (user.group == null) {
         if (value.room !== '') {
-          await socket.emit('leave', value.room)
+          await socket.emit('group:leave', value.room)
         }
 
         return
       }
 
-      console.log('call when USE EFFECT', JSON.stringify(user), value.room)
+      if (user.group.id !== value.room) {
+        await socket.emit('group:leave', value.room)
+        await socket.emit('group:join', user.group.id)
+        setValue(state => ({
+          ...state,
+          room: user.group.id,
+        }))
+      }
     }
 
     exec()

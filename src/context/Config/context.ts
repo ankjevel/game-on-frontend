@@ -1,4 +1,5 @@
-import { CConfig } from 'CConfig'
+import Context from './Types'
+
 import { createContext } from 'react'
 
-export default createContext(null as MaybeNull<CConfig>)
+export default createContext(null as Context)
