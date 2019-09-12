@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Context from './context'
 
 import { validate } from '../../utils/jwt'
-import { setToken } from '../../utils/req'
+import req, { setToken } from '../../utils/req'
 
 export const UserProvider = props => {
   const [value, setValue] = useState({
@@ -10,8 +10,12 @@ export const UserProvider = props => {
     token: '',
     group: '',
     ready: false,
-    setToken: token => {
+    setToken: async token => {
       localStorage.setItem('token', token)
+
+      const res = await req({ url: '/user/group' })
+      console.log(res)
+
       setValue(state => ({ ...state, token }))
     },
     setJWT: ({ id }) => {
@@ -23,7 +27,7 @@ export const UserProvider = props => {
   })
 
   useEffect(() => {
-    const initConfig = () => {
+    const initConfig = async () => {
       const token: MaybeNull<string> = localStorage.getItem('token') || ''
       const group = localStorage.getItem('group') || ''
       const ready = true
@@ -36,6 +40,10 @@ export const UserProvider = props => {
         }
 
         setToken(token)
+
+        const res = await req({ url: '/user/group' })
+        console.log({ res })
+
         return setValue(state => ({
           ...state,
           ready,
