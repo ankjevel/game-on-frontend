@@ -28,22 +28,45 @@ test('it renders the component', async () => {
 
   expect(component.toJSON()).toMatchInlineSnapshot(`
     <div
-      className="app"
+      className="app flex items-center justify-center"
     >
       <div
-        className="flex mb-4"
+        className="self-center auto w-1/2 rounded overflow-hidden shadow-lg bg-white"
       >
-        <code
-          className="app-title"
+        <div
+          className="px-4 py-6"
         >
-          {
-      "api": "configAPI",
-      "userID": "userID",
-      "userGroup": "groupID",
-      "socketID": "socketID",
-      "socketRoom": "socketRoom"
-    }
-        </code>
+          <div>
+            <p>
+              id: 
+              userID
+            </p>
+            <p>
+              name: 
+            </p>
+            <p>
+              group: 
+            </p>
+            <p>
+              group id: 
+              groupID
+            </p>
+            <p>
+              socket: 
+              socketID
+            </p>
+          </div>
+          <div
+            className="pt-4"
+          >
+            <button
+              className="leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              onClick={[Function]}
+            >
+              Leave group
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   `)
