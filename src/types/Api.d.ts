@@ -1,3 +1,5 @@
+import { CConfig } from './CConfig'
+
 export interface Action {
   id: string
 }
@@ -29,4 +31,38 @@ export type NewGroup = {
   startSum: MaybeUndefined<Group['startSum']>
   smallBlind: MaybeUndefined<Group['blind']['small']>
   bigBlind: MaybeUndefined<Group['blind']['big']>
+}
+
+export type Response<T> = Promise<MaybeNull<T>>
+
+export type JWS = string
+
+export interface ConfigRoutes {
+  get: () => Response<CConfig>
+}
+
+export interface UserRoutes {
+  create: (input: {
+    name: User['name']
+    email: User['email']
+    p1: string
+    p2: string
+  }) => Response<JWS>
+
+  newToken: (input: {
+    name: User['name']
+    email: User['email']
+  }) => Response<JWS>
+
+  validToken: (token: JWS) => Response<{ status: 'ok' }>
+
+  group: () => Response<Group>
+}
+
+export interface GroupRoutes {
+  create: (body: NewGroup) => Response<Group>
+
+  join: (id: Group['id']) => Response<Group>
+
+  leave: (id: Group['id']) => Response<{ status: string }>
 }

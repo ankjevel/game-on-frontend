@@ -1,31 +1,31 @@
-import { NewGroup } from '../types/Api'
+import { NewGroup, UserRoutes, ConfigRoutes, GroupRoutes } from '../types/Api'
 import { parseJWS, isExpired, validate } from './jwt'
 import req, { Method, setHost, setToken } from './req'
 
 export { Method, setHost, setToken, req, parseJWS, isExpired, validate }
 
-export const config = {
+export const config: ConfigRoutes = {
   get() {
     return req({ url: '/js/config.json' })
   },
 }
 
-export const user = {
-  create(input: { name: string; email: string; p1: string; p2: string }) {
+export const user: UserRoutes = {
+  create(input) {
     return req({
       url: '/user',
       method: 'POST',
       body: JSON.stringify(input),
     })
   },
-  newToken(input: { email: string; password: string }) {
+  newToken(input) {
     return req({
       url: '/user/token',
       method: 'POST',
       body: JSON.stringify(input),
     })
   },
-  validToken(token: string) {
+  validToken(token) {
     return req({ url: '/user/valid-token', token })
   },
   group() {
@@ -33,8 +33,8 @@ export const user = {
   },
 }
 
-export const group = {
-  create(body: NewGroup) {
+export const group: GroupRoutes = {
+  create(body) {
     return req({
       url: '/group',
       method: 'POST',
@@ -42,14 +42,14 @@ export const group = {
     })
   },
 
-  join(id: string) {
+  join(id) {
     return req({
       url: `/group/${id}/join`,
       method: 'PUT',
     })
   },
 
-  leave(id: string) {
+  leave(id) {
     return req({
       url: `/group/${id}/leave`,
       method: 'DELETE',
