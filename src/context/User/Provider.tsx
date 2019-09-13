@@ -3,7 +3,7 @@ import CContext, { SetValue } from './Types'
 import React, { useState, useEffect } from 'react'
 import Context from './context'
 import { validate } from '../../utils/jwt'
-import req, { setToken } from '../../utils/req'
+import * as api from '../../utils/api'
 
 export const UserProvider = props => {
   const [value, setValue] = useState<CContext>({
@@ -16,7 +16,7 @@ export const UserProvider = props => {
       const changed: any = {}
       switch (key) {
         case SetValue.Token: {
-          changed.group = (await req({ url: '/user/group' })) || undefined
+          changed.group = (await api.user.group()) || undefined
           changed.token = value
           break
         }
@@ -49,13 +49,13 @@ export const UserProvider = props => {
 
       tokenValid: if (token) {
         const jwt = validate(token)
-        if (!jwt || (await req({ url: '/user/valid-token', token })) == null) {
+        if (!jwt || (await api.user.validToken(token)) == null) {
           localStorage.removeItem('token')
           localStorage.removeItem('group')
           break tokenValid
         }
 
-        setToken(token)
+        api.setToken(token)
 
         if (groupFromLocalStorage) {
           try {
@@ -65,7 +65,7 @@ export const UserProvider = props => {
             localStorage.removeItem('group')
           }
         } else {
-          group = (await req({ url: '/user/group' })) || undefined
+          group = (await api.user.group()) || undefined
         }
 
         return setValue(state => ({

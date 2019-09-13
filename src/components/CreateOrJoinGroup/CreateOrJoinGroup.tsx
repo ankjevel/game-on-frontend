@@ -1,7 +1,7 @@
 import React, { Component, ContextType } from 'react'
 import UserContext, { SetValue } from '../../context/User'
 import { NewGroup } from 'Api'
-import req from '../../utils/req'
+import * as api from '../../utils/api'
 
 type Props = {}
 type State = {
@@ -105,10 +105,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
       return
     }
 
-    const res = await req({
-      url: `/group/${id}/join`,
-      method: 'PUT',
-    })
+    const res = await api.group.join(id)
 
     if (res == null) {
       return
@@ -120,11 +117,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
   async createGroup(event) {
     event.preventDefault()
 
-    const res = await req({
-      url: '/group',
-      method: 'POST',
-      body: JSON.stringify(this.state.create),
-    })
+    const res = await api.group.create(this.state.create)
 
     if (!res) {
       const error = 'Could not create group'

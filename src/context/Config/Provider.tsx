@@ -1,7 +1,7 @@
 import CContext from './Types'
 
 import React, { useState, useEffect } from 'react'
-import req, { setHost } from '../../utils/req'
+import * as api from '../../utils/api'
 import Context from './context'
 
 export const ConfigProvider = props => {
@@ -9,9 +9,9 @@ export const ConfigProvider = props => {
 
   useEffect(() => {
     const initConfig = async () => {
-      const config = await req({ url: '/js/config.json' })
+      const config = await api.config.get()
 
-      setHost(config.api)
+      api.setHost(config.api)
 
       setValue(state => ({ ...state, ...config }))
     }

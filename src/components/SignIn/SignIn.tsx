@@ -1,8 +1,7 @@
 import React, { Component, ContextType } from 'react'
 import { ISignIn, ICreate, State } from 'SignIn'
 import UserContext, { SetValue } from '../../context/User'
-import { validate } from '../../utils/jwt'
-import req, { setToken } from '../../utils/req'
+import * as api from '../../utils/api'
 
 class SignIn extends Component<{}, State> {
   static contextType = UserContext
@@ -32,12 +31,12 @@ class SignIn extends Component<{}, State> {
       return false
     }
 
-    const jwt = validate(token)
+    const jwt = api.validate(token)
     if (!jwt) {
       return false
     }
 
-    setToken(token)
+    api.setToken(token)
 
     this.context.setValue(SetValue.Token, token)
     this.context.setValue(SetValue.JWT, jwt)
@@ -46,22 +45,10 @@ class SignIn extends Component<{}, State> {
   }
 
   signIn: ISignIn = async input =>
-    this.simpleHandleJWS(
-      await req({
-        url: '/user/token',
-        method: 'POST',
-        body: JSON.stringify(input),
-      })
-    )
+    this.simpleHandleJWS(await api.user.newToken(input))
 
   create: ICreate = async ({ name, email, password: p1, passwordRepeat: p2 }) =>
-    this.simpleHandleJWS(
-      await req({
-        url: '/user',
-        method: 'POST',
-        body: JSON.stringify({ name, email, p1, p2 }),
-      })
-    )
+    this.simpleHandleJWS(await api.user.create({ name, email, p1, p2 }))
 
   handleChange(event) {
     event.persist()
