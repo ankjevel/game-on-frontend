@@ -28,10 +28,12 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
     this.handleChange = this.handleChange.bind(this)
     this.createGroup = this.createGroup.bind(this)
+    this.joinGroup = this.joinGroup.bind(this)
   }
 
   handleChange(event) {
-    event.persist()
+    event.preventDefault()
+
     const {
       target: { name, value: valuePre },
     } = event
@@ -89,6 +91,30 @@ class CreateOrJoinGroup extends Component<Props, State> {
         [name]: value,
       },
     })
+  }
+
+  async joinGroup(event) {
+    event.preventDefault()
+
+    const id = window.prompt('input group id')
+    if (
+      id.includes(':') &&
+      id.split(':').length === 2 &&
+      id.match(/[^a-z0-9-:]/) != null
+    ) {
+      return
+    }
+
+    const res = await req({
+      url: `/group/${id}/join`,
+      method: 'PUT',
+    })
+
+    if (res == null) {
+      return
+    }
+
+    this.context.setValue(SetValue.Group, res)
   }
 
   async createGroup(event) {
@@ -189,10 +215,21 @@ class CreateOrJoinGroup extends Component<Props, State> {
           </div>
           <div>
             <input
-              className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline"
+              className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
               value="Create"
             />
+          </div>
+
+          <div className="py-2">
+            <p>Or, if you have a groupID</p>
+            <button
+              className="w-1/2 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={this.joinGroup}
+            >
+              Join group
+            </button>
           </div>
 
           {this.state.error && (

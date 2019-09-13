@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:800&display=swap');
-
 html {
   background-color: #81c7c0;
   background: linear-gradient(35deg, #5cdb94, #8de4af);
+}
+
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
 }

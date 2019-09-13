@@ -1,16 +1,27 @@
 import React, { useContext } from 'react'
 import socketContext from '../../context/Socket'
-import userContext from '../../context/User'
+import userContext, { SetValue } from '../../context/User'
 import SignIn from '../SignIn'
 import CreateOrJoinGroup from '../CreateOrJoinGroup'
+import req from '../../utils/req'
 
 export const App = () => {
   const user = useContext(userContext)
   const socket = useContext(socketContext)
 
-  const leave = event => {
+  const leave = async event => {
     event.preventDefault()
-    console.log('leave')
+
+    const res = await req({
+      url: `/group/${user.group.id}/leave`,
+      method: 'DELETE',
+    })
+
+    if (!res) {
+      return
+    }
+
+    user.setValue(SetValue.Group, undefined)
   }
 
   return (
@@ -26,6 +37,7 @@ export const App = () => {
               <p>id: {user.id}</p>
               <p>name: {user.name}</p>
               <p>group: {user.group.name}</p>
+              <p>group id: {user.group.id}</p>
               <p>socket: {socket.id}</p>
             </div>
             <div className="pt-4">

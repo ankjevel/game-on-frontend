@@ -64,7 +64,20 @@ export const SocketProvider = props => {
     }
 
     exec()
-  }, [user.group, value.room, value.connected])
+  }, [user.group, user.token, value.room, value.connected])
+
+  useEffect(() => {
+    const handleToken = async () => {
+      const { token } = user
+      if (token) {
+        await socket.emit('user:join', token)
+      } else {
+        await socket.emit('user:leave', token)
+      }
+    }
+
+    handleToken()
+  }, [user, user.token])
 
   return (
     <Context.Provider value={value}>
