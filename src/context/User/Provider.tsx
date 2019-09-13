@@ -2,7 +2,6 @@ import CContext, { SetValue } from './Types'
 
 import React, { useState, useEffect } from 'react'
 import Context from './context'
-import { validate } from '../../utils/jwt'
 import * as api from '../../utils/api'
 
 export const UserProvider = props => {
@@ -12,7 +11,7 @@ export const UserProvider = props => {
     name: '',
     group: undefined,
     ready: false,
-    setValue: async (key: SetValue, value: any) => {
+    setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {
         case SetValue.Token: {
@@ -48,7 +47,7 @@ export const UserProvider = props => {
       let group: MaybeUndefined<CContext['group']>
 
       tokenValid: if (token) {
-        const jwt = validate(token)
+        const jwt = api.validate(token)
         if (!jwt || (await api.user.validToken(token)) == null) {
           localStorage.removeItem('token')
           localStorage.removeItem('group')

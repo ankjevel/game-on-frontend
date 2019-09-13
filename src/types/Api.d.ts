@@ -49,10 +49,7 @@ export interface UserRoutes {
     p2: string
   }) => Response<JWS>
 
-  newToken: (input: {
-    name: User['name']
-    email: User['email']
-  }) => Response<JWS>
+  newToken: (input: { email: User['email']; password: string }) => Response<JWS>
 
   validToken: (token: JWS) => Response<{ status: 'ok' }>
 

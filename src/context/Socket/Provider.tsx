@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import Context from './context'
 import ConfigContext from '../Config'
 import UserContext, { Context as User, SetValue } from '../User'
+import { Group } from 'Api'
 
 export let socket
 export const SocketProvider = props => {
@@ -28,7 +29,9 @@ export const SocketProvider = props => {
     socket.on('reconnect', () =>
       setValue(state => ({ ...state, room: '', connected: false }))
     )
-    socket.on('update:group', group => user.setValue(SetValue.Group, group))
+    socket.on('update:group', (group: Group) =>
+      user.setValue(SetValue.Group, group)
+    )
     socket.on('user:joined', message => console.log({ message }))
 
     return () => {

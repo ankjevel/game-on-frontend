@@ -6,7 +6,7 @@ export type CUser<T> = {
   ready: boolean
   token: string
   group?: Group
-  setValue: (key: T, value: any) => void
+  setValue: T
 }
 
 export default CUser
