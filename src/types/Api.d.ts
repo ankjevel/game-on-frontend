@@ -33,6 +33,15 @@ export type NewGroup = {
   bigBlind: MaybeUndefined<Group['blind']['big']>
 }
 
+export type NewGroupUpdate = {
+  name: Group['name']
+  startSum: Group['startSum']
+  smallBlind: Group['blind']['small']
+  bigBlind: Group['blind']['big']
+}
+
+export type NewGroupOrder = { [key: number]: User['id'] }
+
 export type Response<T> = Promise<MaybeNull<T>>
 
 export type JWS = string
@@ -62,4 +71,10 @@ export interface GroupRoutes {
   join: (id: Group['id']) => Response<Group>
 
   leave: (id: Group['id']) => Response<{ status: string }>
+
+  update: (id: Group['id'], body: Partial<NewGroupOrder>) => Response<Group>
+
+  order: (id: Group['id'], body: NewGroupOrder) => Response<Group>
+
+  start: (id: Group['id']) => Response<Group>
 }

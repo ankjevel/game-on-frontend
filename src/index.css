@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 html {
-  background-color: #81c7c0;
-  background: linear-gradient(35deg, #5cdb94, #8de4af);
+  background-color: #4ec483;
+  background: linear-gradient(35deg, #4ec483, #39B16E);
 }
 
 h1, h2, h3, h4, h5, h6 {

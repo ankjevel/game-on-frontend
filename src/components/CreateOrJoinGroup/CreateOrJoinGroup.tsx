@@ -1,4 +1,5 @@
 import React, { Component, ContextType } from 'react'
+import { Redirect } from 'react-router-dom'
 import UserContext, { SetValue } from '../../context/User'
 import { NewGroup } from 'Api'
 import * as api from '../../utils/api'
@@ -97,15 +98,17 @@ class CreateOrJoinGroup extends Component<Props, State> {
     event.preventDefault()
 
     const id = window.prompt('input group id')
+
     if (
+      id.trim() &&
       id.includes(':') &&
       id.split(':').length === 2 &&
-      id.match(/[^a-z0-9-:]/) != null
+      id.trim().match(/[^a-z0-9-:]/) != null
     ) {
       return
     }
 
-    const res = await api.group.join(id)
+    const res = await api.group.join(id.trim())
 
     if (res == null) {
       return

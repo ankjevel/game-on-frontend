@@ -18,6 +18,7 @@ export const user: UserRoutes = {
       body: JSON.stringify(input),
     })
   },
+
   newToken(input) {
     return req({
       url: '/user/token',
@@ -25,9 +26,11 @@ export const user: UserRoutes = {
       body: JSON.stringify(input),
     })
   },
+
   validToken(token) {
     return req({ url: '/user/valid-token', token })
   },
+
   group() {
     return req({ url: '/user/group' })
   },
@@ -44,15 +47,38 @@ export const group: GroupRoutes = {
 
   join(id) {
     return req({
-      url: `/group/${id}/join`,
+      url: `/group/${id}`,
       method: 'PUT',
     })
   },
 
   leave(id) {
     return req({
-      url: `/group/${id}/leave`,
+      url: `/group/${id}`,
       method: 'DELETE',
+    })
+  },
+
+  update(id, body) {
+    return req({
+      url: `/group/${id}`,
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    })
+  },
+
+  order(id, body) {
+    return req({
+      url: `/group/${id}/order`,
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+  },
+
+  start(id) {
+    return req({
+      url: `/group/${id}/order`,
+      method: 'POST',
     })
   },
 }
