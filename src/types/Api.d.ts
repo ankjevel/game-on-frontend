@@ -34,6 +34,7 @@ export type NewGroup = {
 }
 
 export type NewGroupUpdate = {
+  owner: Group['owner']
   name: Group['name']
   startSum: Group['startSum']
   smallBlind: Group['blind']['small']
@@ -72,7 +73,7 @@ export interface GroupRoutes {
 
   leave: (id: Group['id']) => Response<{ status: string }>
 
-  update: (id: Group['id'], body: Partial<Group>) => Response<Group>
+  update: (id: Group['id'], body: Partial<NewGroupUpdate>) => Response<Group>
 
   order: (id: Group['id'], body: NewGroupOrder) => Response<Group>
 

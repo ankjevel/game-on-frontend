@@ -9,37 +9,39 @@ import api from '../../utils/api'
 export const Group = () => {
   const user = useContext(userContext)
 
-  const [users, setOrder] = useState(user.group.users)
   const [owner, setOwner] = useState(user.group.owner)
+  const [users, setOrder] = useState(user.group.users)
+  const [name, changeName] = useState(user.group.name)
+  const [changed, setChanged] = useState(false)
   const [isOwner, setIsOwner] = useState(owner === user.id)
   const [input, changeInput] = useState({
     small: user.group.blind.small,
     big: user.group.blind.big,
     startSum: user.group.startSum,
   })
-  const [changed, setChanged] = useState(false)
 
   useEffect(() => {
-    if (input.small === user.group.blind.small) return
-    setChanged(true)
-  }, [input.small, user.group.blind.small])
-
-  useEffect(() => {
-    if (input.big === user.group.blind.big) return
-    setChanged(true)
-  }, [input.big, user.group.blind.big])
-
-  useEffect(() => {
-    if (input.startSum === user.group.startSum) return
-    setChanged(true)
-  }, [input.startSum, user.group.startSum])
+    setChanged(
+      input.small !== user.group.blind.small ||
+        input.big !== user.group.blind.big ||
+        input.startSum !== user.group.startSum ||
+        name !== user.group.name
+    )
+  }, [
+    input.big,
+    input.small,
+    input.startSum,
+    name,
+    user.group.blind.big,
+    user.group.blind.small,
+    user.group.name,
+    user.group.startSum,
+  ])
 
   useEffect(() => {
     if (owner === user.group.owner) return
-
     const apply = async () => {
       await api.group.update(user.group.id, { owner })
-      console.log('new owner', owner)
     }
     apply()
   }, [owner, user.group.owner, user.group.id])
@@ -51,7 +53,6 @@ export const Group = () => {
     ) {
       return
     }
-
     const apply = async () => {
       await api.group.order(
         user.group.id,
@@ -71,6 +72,24 @@ export const Group = () => {
         $splice: [[index, 1], [newIndex, 0, user]],
       })
     )
+  }
+
+  const updateName = event => {
+    event.preventDefault()
+
+    const {
+      target: { value: preFormatted },
+    } = event
+
+    const value = preFormatted
+      .trimLeft()
+      .replace(/ {1,}$/, '-')
+      .replace(/[^a-z0-9-åäö]/gi, '')
+      .replace(/-{2,}/g, '-')
+      .toLocaleLowerCase()
+      .substr(0, 64)
+
+    changeName(value)
   }
 
   const updateStartSums = event => {
@@ -127,9 +146,15 @@ export const Group = () => {
     })
   }
 
-  const updateGroup = event => {
+  const updateGroup = async event => {
     event.preventDefault()
-    console.log('save changes')
+
+    await api.group.update(user.group.id, {
+      name: name !== user.group.name && name,
+      startSum: input.startSum !== user.group.startSum && input.startSum,
+      smallBlind: input.small !== user.group.blind.small && input.small,
+      bigBlind: input.big !== user.group.blind.big && input.big,
+    })
   }
 
   const startGame = event => {
@@ -155,15 +180,21 @@ export const Group = () => {
       x => x
     )
 
+    const even = index % 2 === 0
+
     return (
       <tr
         key={`tr-${id}`}
-        className="p-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap"
+        className={`p-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
+          'bg-gray-100'}`}
       >
-        <td className="font-bold">{index}</td>
-        <td className="p-2">
+        <td className="pl-2 font-bold">{index}</td>
+        <td className="p-2 pl-0 inline">
           <IconStar
-            className={`inline -mt-1 ${isOwner && 'cursor-pointer'}`}
+            className={`inline py-2 pb-3 mr-1 -mt-1 -mb-1 inline m-auto h-full hover:text-red-500 fill-current ${isOwner &&
+              'cursor-pointer'} ${
+              id === owner ? 'text-red-500' : 'text-gray-400'
+            }`}
             height={10}
             onClick={() => {
               if (
@@ -174,7 +205,6 @@ export const Group = () => {
                 setIsOwner(id === user.id)
               }
             }}
-            fill={id === owner ? 'tomato' : 'gray'}
           />
           {id === user.id ? <strong>you</strong> : id.replace('user:', '')}
         </td>
@@ -184,8 +214,8 @@ export const Group = () => {
             <td>
               {!end && (
                 <IconArrowDown
-                  className="cursor-pointer"
-                  height={15}
+                  className="cursor-pointer py-2 inline m-auto w-full h-full hover:text-blue-500 fill-current text-gray-500"
+                  height={10}
                   onClick={() => changeOrder(index, index + 1)}
                 />
               )}
@@ -193,8 +223,8 @@ export const Group = () => {
             <td>
               {!start && (
                 <IconArrowUp
-                  className="cursor-pointer"
-                  height={15}
+                  className="cursor-pointer py-2 inline m-auto w-full h-full hover:text-blue-500 fill-current text-gray-500"
+                  height={10}
                   onClick={() => changeOrder(index, index - 1)}
                 />
               )}
@@ -210,31 +240,42 @@ export const Group = () => {
       <div>
         <div className="w-full text-left p-2 text-gray-700">
           <div className="flex -mx-2">
-            <h1 className="font-semibold w-full px-2">
-              {user.group.name}
-              {isOwner && (
-                <IconStar className="inline -mt-2" height={10} fill="tomato" />
-              )}
-            </h1>
+            {isOwner ? (
+              <span className="font-semibold flex w-full px-2">
+                <IconStar
+                  className="inline-block mt-1 fill-current text-red-500"
+                  height={10}
+                />
+                <input
+                  className="font-semibold inline-block w-full"
+                  value={name}
+                  onChange={updateName}
+                />
+              </span>
+            ) : (
+              <h1 className="font-semibold w-full px-2">{name}</h1>
+            )}
           </div>
         </div>
 
         <div className="w-full relative">
-          <table className="w-full text-left table-collapse">
+          <table className="w-full text-left table-collapse mb-5">
             <thead>
-              <tr className="text-xs font-semibold text-gray-700 bg-gray-100">
+              <tr className="text-xs font-semibold text-gray-700 bg-gray-200">
                 <th className="p-2">Small blind</th>
                 <th className="p-2">Big blind</th>
                 <th className="p-2">Start sum</th>
                 {isOwner && (
                   <th>
-                    <button
-                      type="button"
-                      onClick={updateGroup}
-                      className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
-                    >
-                      update
-                    </button>
+                    {changed && (
+                      <button
+                        type="button"
+                        onClick={updateGroup}
+                        className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
+                      >
+                        update
+                      </button>
+                    )}
                   </th>
                 )}
               </tr>
@@ -282,33 +323,20 @@ export const Group = () => {
         </div>
 
         <table className="w-full text-left table-collapse">
-          <thead className="text-xs font-semibold text-gray-700 bg-gray-100">
-            <tr>
-              <th></th>
-              <th className="p-2">order</th>
-              <th></th>
-              {isOwner && (
-                <Fragment>
-                  <th></th>
-                  <th></th>
-                </Fragment>
-              )}
-            </tr>
-          </thead>
           <tbody className="align-baseline">
             {users.map(({ id }, i, array) => renderUser(id, i, array.length))}
           </tbody>
         </table>
       </div>
 
-      <div className="pt-4">
+      <div className="pt-4 mt-4">
         <Link
           className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 border border-blue-500 hover:border-transparent rounded"
           to="/group/leave"
         >
           Leave group
         </Link>
-        {owner && (
+        {isOwner && (
           <button
             type="button"
             onClick={startGame}
