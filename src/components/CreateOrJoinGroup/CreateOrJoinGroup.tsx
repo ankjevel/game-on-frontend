@@ -1,5 +1,4 @@
-import React, { Component, ContextType } from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { Component, ContextType, useEffect } from 'react'
 import UserContext, { SetValue } from '../../context/User'
 import { NewGroup } from 'Api'
 import * as api from '../../utils/api'
@@ -43,47 +42,16 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
     const isNumber = typeof create[name] === 'number'
 
-    if (isNumber && isNaN(parseInt(valuePre, 10))) {
-      return
-    }
-
     const value = isNumber
-      ? parseInt(valuePre, 10)
+      ? isNaN(parseInt(valuePre, 10))
+        ? 0
+        : parseInt(valuePre, 10)
       : valuePre
           .trimLeft()
           .replace(/ {1,}$/, '-')
           .replace(/[^a-z0-9-åäö]/gi, '')
           .replace(/-{2,}/g, '-')
           .toLocaleLowerCase()
-
-    switch (name) {
-      case 'bigBlind': {
-        if (
-          value >= state.create.startSum ||
-          value <= state.create.smallBlind
-        ) {
-          return
-        }
-
-        break
-      }
-
-      case 'startSum': {
-        if (value <= state.create.bigBlind) {
-          return
-        }
-
-        break
-      }
-
-      case 'smallBlind': {
-        if (value >= state.create.bigBlind) {
-          return
-        }
-
-        break
-      }
-    }
 
     this.setState({
       ...state,
@@ -119,6 +87,30 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
   async createGroup(event) {
     event.preventDefault()
+
+    const {
+      state: {
+        create: { bigBlind, smallBlind, startSum },
+      },
+    } = this
+
+    if (bigBlind >= startSum || bigBlind <= smallBlind) {
+      return window.alert(
+        'big blind needs to be lower than start sum and higher than small blind'
+      )
+    }
+
+    if (startSum <= bigBlind) {
+      return window.alert('start sum needs to be higher than the big blind')
+    }
+
+    if (smallBlind >= bigBlind) {
+      return window.alert('smal blind needs to be lower than big blind')
+    }
+
+    if (smallBlind < 1) {
+      return window.alert('small blind needs to b greater than 1')
+    }
 
     const res = await api.group.create(this.state.create)
 

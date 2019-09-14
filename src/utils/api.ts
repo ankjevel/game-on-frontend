@@ -47,21 +47,21 @@ export const group: GroupRoutes = {
 
   join(id) {
     return req({
-      url: `/group/${id}`,
+      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
       method: 'PUT',
     })
   },
 
   leave(id) {
     return req({
-      url: `/group/${id}`,
+      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
       method: 'DELETE',
     })
   },
 
   update(id, body) {
     return req({
-      url: `/group/${id}`,
+      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
       method: 'PATCH',
       body: JSON.stringify(body),
     })
@@ -69,7 +69,7 @@ export const group: GroupRoutes = {
 
   order(id, body) {
     return req({
-      url: `/group/${id}/order`,
+      url: `/group/${id.includes('group:') ? id : `group:${id}`}/order`,
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -77,7 +77,7 @@ export const group: GroupRoutes = {
 
   start(id) {
     return req({
-      url: `/group/${id}/order`,
+      url: `/group/${id.includes('group:') ? id : `group:${id}`}/order`,
       method: 'POST',
     })
   },

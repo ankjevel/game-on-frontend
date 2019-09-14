@@ -72,7 +72,7 @@ export interface GroupRoutes {
 
   leave: (id: Group['id']) => Response<{ status: string }>
 
-  update: (id: Group['id'], body: Partial<NewGroupOrder>) => Response<Group>
+  update: (id: Group['id'], body: Partial<Group>) => Response<Group>
 
   order: (id: Group['id'], body: NewGroupOrder) => Response<Group>
 

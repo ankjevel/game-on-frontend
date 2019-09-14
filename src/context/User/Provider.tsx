@@ -43,29 +43,17 @@ export const UserProvider = props => {
     const initConfig = async () => {
       const ready = true
       const token: MaybeNull<string> = localStorage.getItem('token') || ''
-      const groupFromLocalStorage = localStorage.getItem('group') || undefined
-      let group: MaybeUndefined<CContext['group']>
 
       tokenValid: if (token) {
         const jwt = api.validate(token)
         if (!jwt || (await api.user.validToken(token)) == null) {
           localStorage.removeItem('token')
-          localStorage.removeItem('group')
           break tokenValid
         }
 
         api.setToken(token)
 
-        if (groupFromLocalStorage) {
-          try {
-            group = JSON.parse(groupFromLocalStorage)
-          } catch (error) {
-            console.error(error)
-            localStorage.removeItem('group')
-          }
-        } else {
-          group = (await api.user.group()) || undefined
-        }
+        const group = (await api.user.group()) || undefined
 
         return setValue(state => ({
           ...state,
@@ -82,17 +70,6 @@ export const UserProvider = props => {
 
     initConfig()
   }, [])
-
-  useEffect(() => {
-    const setValue = () => {
-      if (!value.group) {
-        localStorage.removeItem('group')
-      } else {
-        localStorage.setItem('group', JSON.stringify(value.group))
-      }
-    }
-    setValue()
-  }, [value.group])
 
   useEffect(() => {
     const setValue = () => {

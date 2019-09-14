@@ -47,7 +47,6 @@ export const SocketProvider = props => {
 
       if (user.group == null) {
         if (value.room !== '') {
-          console.log('useEffect: leave group')
           await socket.emit('group:leave')
         }
 
