@@ -173,7 +173,7 @@ export const Group = () => {
   const renderUser = (id: string, index: number, size: number) => {
     const start = index == 0
     const end = index === size - 1
-    const small = index === 1
+    const small = index === 1 % size
     const big = index === 2 % size
 
     const states = [start && 'button', small && 'small', big && 'big'].filter(
@@ -188,8 +188,8 @@ export const Group = () => {
         className={`p-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
           'bg-gray-100'}`}
       >
-        <td className="pl-2 font-bold">{index}</td>
-        <td className="p-2 pl-0 inline">
+        <td className="pl-2 py-2 font-bold">{index}</td>
+        <td className="p-2 py-2 pl-0 inline">
           <IconStar
             className={`inline py-2 pb-3 mr-1 -mt-1 -mb-1 inline m-auto h-full hover:text-red-500 fill-current ${isOwner &&
               'cursor-pointer'} ${
