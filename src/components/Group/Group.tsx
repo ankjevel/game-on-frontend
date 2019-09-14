@@ -42,7 +42,7 @@ export const Group = () => {
       console.log('new owner', owner)
     }
     apply()
-  }, [owner, user.group.owner])
+  }, [owner, user.group.owner, user.group.id])
 
   useEffect(() => {
     if (
@@ -62,7 +62,7 @@ export const Group = () => {
       )
     }
     apply()
-  }, [users, user.group.users])
+  }, [users, user.group.users, user.group.id])
 
   const changeOrder = (index: number, newIndex: number) => {
     const user = users[index]
