@@ -1,4 +1,4 @@
-import { Group } from './Api'
+import { Group } from 'Api'
 
 export type CGroup = {
   group: Group

@@ -1,4 +1,4 @@
-import { CConfig } from './CConfig'
+import { CConfig } from 'CConfig'
 
 export interface Action {
   id: string
