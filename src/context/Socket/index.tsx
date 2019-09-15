@@ -1,4 +1,4 @@
-import Context from './Types'
+import Context from 'CSocket'
 import context from './context'
 import Provider from './Provider'
 

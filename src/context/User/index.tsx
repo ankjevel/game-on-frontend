@@ -1,4 +1,4 @@
-import Context, { SetValue } from './Types'
+import Context, { SetValue } from '../../types/CUser'
 import context from './context'
 import Provider from './Provider'
 

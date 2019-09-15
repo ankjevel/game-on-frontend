@@ -1,4 +1,4 @@
-import Context from './Types'
+import Context from 'CConfig'
 
 import { createContext } from 'react'
 

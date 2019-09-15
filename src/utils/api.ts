@@ -1,10 +1,4 @@
-import {
-  NewGroup,
-  UserRoutes,
-  ConfigRoutes,
-  GroupRoutes,
-  ListRoutes,
-} from '../types/Api'
+import { UserRoutes, ConfigRoutes, GroupRoutes, ListRoutes } from '../types/Api'
 import { parseJWS, isExpired, validate } from './jwt'
 import req, { Method, setHost, setToken } from './req'
 

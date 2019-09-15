@@ -1,5 +1,5 @@
 import { User } from 'Api'
-import CContext, { SetValue } from './Types'
+import CContext, { SetValue } from '../../types/CUser'
 
 import React, { useState, useEffect } from 'react'
 import Context from './context'

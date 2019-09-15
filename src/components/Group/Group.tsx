@@ -279,9 +279,15 @@ export const Group = () => {
 
         <div className="w-full flex flex-col text-xs font-semibold text-gray-700 bg-gray-200 relative">
           <div className="w-full flex flex-row">
-            <div className="p-2 w-full">Small blind</div>
-            <div className="p-2 w-full">Big blind</div>
-            <div className="p-2 w-full">Start sum</div>
+            <div className="p-2 w-full">
+              <h2>Small blind</h2>
+            </div>
+            <div className="p-2 w-full">
+              <h2>Big blind</h2>
+            </div>
+            <div className="p-2 w-full">
+              <h2>Start sum</h2>
+            </div>
             {isOwner && changed && (
               <button
                 type="button"

@@ -1,6 +1,6 @@
-import React, { Component, ContextType, useEffect } from 'react'
-import UserContext, { SetValue } from '../../context/User'
 import { NewGroup } from 'Api'
+import React, { Component, ContextType } from 'react'
+import UserContext, { SetValue } from '../../context/User'
 import * as api from '../../utils/api'
 
 type Props = {}

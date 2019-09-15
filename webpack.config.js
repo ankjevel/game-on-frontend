@@ -7,6 +7,9 @@ const config = configPlugin.serverConfig
 
 module.exports = {
   mode: config.mode,
+  optimization: {
+    usedExports: true,
+  },
   devtool: 'source-map',
   output: {
     path: outputDir,
@@ -46,11 +49,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-        ],
+        loaders: ['babel-loader', 'ts-loader'],
       },
       {
         enforce: 'pre',

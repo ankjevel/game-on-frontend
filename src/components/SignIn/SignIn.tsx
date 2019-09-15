@@ -1,5 +1,5 @@
-import React, { Component, ContextType } from 'react'
 import { ISignIn, ICreate, State } from 'SignIn'
+import React, { Component, ContextType } from 'react'
 import UserContext, { SetValue } from '../../context/User'
 import * as api from '../../utils/api'
 

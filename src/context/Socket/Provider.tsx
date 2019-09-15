@@ -1,5 +1,5 @@
-import CContext from './Types'
-import { CConfig } from 'CConfig'
+import CContext from 'CSocket'
+import CConfig from 'CConfig'
 import React, { useState, useEffect, useContext } from 'react'
 import io from 'socket.io-client'
 import Context from './context'
