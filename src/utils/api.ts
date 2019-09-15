@@ -1,4 +1,10 @@
-import { NewGroup, UserRoutes, ConfigRoutes, GroupRoutes } from '../types/Api'
+import {
+  NewGroup,
+  UserRoutes,
+  ConfigRoutes,
+  GroupRoutes,
+  ListRoutes,
+} from '../types/Api'
 import { parseJWS, isExpired, validate } from './jwt'
 import req, { Method, setHost, setToken } from './req'
 
@@ -77,8 +83,17 @@ export const group: GroupRoutes = {
 
   start(id) {
     return req({
-      url: `/group/${id.includes('group:') ? id : `group:${id}`}/order`,
+      url: `/group/${id.includes('group:') ? id : `group:${id}`}/start`,
       method: 'POST',
+    })
+  },
+}
+
+export const list: ListRoutes = {
+  get(id, type) {
+    return req({
+      url: `/get/${id.includes(`${type}:`) ? id : `${type}:${id}`}/${type}`,
+      method: 'GET',
     })
   },
 }

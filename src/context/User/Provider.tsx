@@ -1,3 +1,4 @@
+import { User } from 'Api'
 import CContext, { SetValue } from './Types'
 
 import React, { useState, useEffect } from 'react'
@@ -11,6 +12,7 @@ export const UserProvider = props => {
     name: '',
     group: undefined,
     ready: false,
+    users: {},
     setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {
@@ -81,6 +83,35 @@ export const UserProvider = props => {
     }
     setValue()
   }, [value.token])
+
+  useEffect(() => {
+    if (value.group == null) {
+      return
+    }
+
+    const apply = async () => {
+      for (const user of value.group.users) {
+        const current = value.users[user.id]
+        if (current != null) {
+          continue
+        }
+
+        let fetched: MaybeNull<User['name']> = localStorage.getItem(user.id)
+        if (!fetched) {
+          const res = await api.list.get(user.id, 'user')
+          if (!res) {
+            continue
+          }
+          fetched = res.name
+          localStorage.setItem(user.id, fetched)
+        }
+
+        value.users[user.id] = fetched
+        setValue(state => ({ ...state, users: value.users }))
+      }
+    }
+    apply()
+  }, [value.group, value.users])
 
   return (
     <Context.Provider value={value}>

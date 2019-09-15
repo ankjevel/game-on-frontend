@@ -1,4 +1,4 @@
-import { Group } from 'Api'
+import { Group, User } from 'Api'
 
 export type CUser<T> = {
   id: string
@@ -6,6 +6,9 @@ export type CUser<T> = {
   ready: boolean
   token: string
   group?: Group
+  users: {
+    [id: string]: User['name']
+  }
   setValue: T
 }
 

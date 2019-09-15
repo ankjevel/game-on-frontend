@@ -5,48 +5,13 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
+import { RouteParams, IMaybeRedirect, ERoute, IRoute } from '../../types/Route'
 import userContext, { SetValue } from '../../context/User'
+import Action from '../Action'
 import CreateOrJoinGroup from '../CreateOrJoinGroup'
 import Group from '../Group'
 import SignIn from '../SignIn'
 import api from '../../utils/api'
-
-enum ERoute {
-  None = '/',
-  SignIn = '/sign-in',
-  CreateOrJoin = '/create',
-  Group = '/group',
-}
-
-type RouteParamsLocation = {
-  pathname: string
-  search: string
-  hash: string
-  key: string
-}
-
-type RouteParams = {
-  history: {
-    length: number
-    action: string
-    location: RouteParamsLocation
-  }
-  location: RouteParamsLocation
-  match: {
-    path: string
-    url: string
-    isExact: boolean
-    params: { [key: string]: string }
-  }
-}
-
-interface IRoute {
-  (params?: RouteParams): JSX.Element
-}
-
-interface IMaybeRedirect {
-  (props: RouteParams, validRoute: ERoute | ERoute[]): JSX.Element | false
-}
 
 export const App = () => {
   const user = useContext(userContext)
@@ -57,9 +22,15 @@ export const App = () => {
     if (user.id === '') {
       return ERoute.SignIn
     }
+
     if (user.group == null) {
       return ERoute.CreateOrJoin
     }
+
+    if (user.group.action != null) {
+      return ERoute.Action
+    }
+
     return ERoute.Group
   }
 
@@ -86,6 +57,13 @@ export const App = () => {
         return (
           <Redirect
             to={`/group/${user.group.id.replace(/group:/, '')}`}
+            from="/"
+          />
+        )
+      case ERoute.Action:
+        return (
+          <Redirect
+            to={`/action/${user.group.action.replace(/action:/, '')}`}
             from="/"
           />
         )
@@ -169,6 +147,52 @@ export const App = () => {
     )
   }
 
+  const RouteActionWithOutID: IRoute = params => {
+    if (active) return null
+    return maybeRedirect(params, ERoute.Action) || user.group == null ? (
+      <Redirect to="/" from="/action" />
+    ) : (
+      <Redirect
+        to={`${ERoute.Action}/${user.group.action.replace('action:', '')}`}
+        from="/action"
+      />
+    )
+  }
+
+  const RouteAction: IRoute = params => {
+    if (active) return null
+    const {
+      match: {
+        params: { id },
+      },
+    } = params
+    const redirect = maybeRedirect(params, ERoute.Action)
+    if (redirect) {
+      return redirect
+    }
+
+    if (user.group != null) {
+      if (
+        user.group.action !== (id.startsWith('action:') ? id : `action:${id}`)
+      ) {
+        return <Redirect to={`/action/${user.group.action}`} />
+      }
+
+      return <Action />
+    }
+
+    const join = async () => {
+      updateActive(true)
+      const group = await api.group.join(id)
+      user.setValue(SetValue.Group, group)
+      return [updateRender(true), updateActive(false)]
+    }
+
+    join()
+
+    return null
+  }
+
   const NotFound = () => (
     <div>
       <h1>Sorry, can’t find that.</h1>
@@ -186,6 +210,8 @@ export const App = () => {
             <Route path="/group" exact component={RouteGroupWithOutID} />
             <Route path="/group/leave" exact component={RouteLeaveGroup} />
             <Route path="/group/:id" component={RouteGroup} />
+            <Route path="/action" exact component={RouteActionWithOutID} />
+            <Route path="/action/:id" component={RouteAction} />
             <Route component={NotFound} />
           </Switch>
         </div>

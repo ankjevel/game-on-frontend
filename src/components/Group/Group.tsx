@@ -14,6 +14,7 @@ export const Group = () => {
   const [name, changeName] = useState(user.group.name)
   const [changed, setChanged] = useState(false)
   const [isOwner, setIsOwner] = useState(owner === user.id)
+  const [usersObject] = useState(user.users)
   const [input, changeInput] = useState({
     small: user.group.blind.small,
     big: user.group.blind.big,
@@ -106,7 +107,7 @@ export const Group = () => {
     switch (name) {
       case 'big': {
         if (value >= input.startSum || value <= input.small) {
-          value = input.small + 1
+          value = input.small * 2
         }
 
         if (value === input.startSum) {
@@ -118,7 +119,7 @@ export const Group = () => {
 
       case 'startSum': {
         if (value <= input.big) {
-          value = input.big * user.group.users.length
+          value = input.big * (user.group.users.length * 2)
         }
 
         break
@@ -149,25 +150,28 @@ export const Group = () => {
   const updateGroup = async event => {
     event.preventDefault()
 
-    await api.group.update(user.group.id, {
-      name: name !== user.group.name && name,
-      startSum: input.startSum !== user.group.startSum && input.startSum,
-      smallBlind: input.small !== user.group.blind.small && input.small,
-      bigBlind: input.big !== user.group.blind.big && input.big,
-    })
+    const update: [string, string | number | boolean][] = [
+      ['name', name !== user.group.name && name.length > 3 && name],
+      ['startSum', input.startSum !== user.group.startSum && input.startSum],
+      ['smallBlind', input.small !== user.group.blind.small && input.small],
+      ['bigBlind', input.big !== user.group.blind.big && input.big],
+    ]
+
+    await api.group.update(
+      user.group.id,
+      update
+        .filter(([, value]) => value !== false)
+        .reduce((object, [key, value]) => {
+          object[key] = value
+          return object
+        }, {})
+    )
   }
 
-  const startGame = event => {
+  const startGame = async event => {
     event.preventDefault()
 
-    const {
-      target: { name, value },
-    } = event.target.name
-
-    changeInput({
-      ...input,
-      [name]: parseInt(value, 10),
-    })
+    await api.group.start(user.group.id)
   }
 
   const renderUser = (id: string, index: number, size: number) => {
@@ -181,17 +185,20 @@ export const Group = () => {
     )
 
     const even = index % 2 === 0
-
     return (
-      <tr
-        key={`tr-${id}`}
-        className={`p-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
+      <div
+        key={`div-${id}`}
+        className={`w-full flex flex-row pl-2 pr-2 pt-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
           'bg-gray-100'}`}
       >
-        <td className="pl-2 py-2 font-bold">{index}</td>
-        <td className="p-2 py-2 pl-0 inline">
+        <div className="pl-2 font-bold flex-grow-0 flex-shrink-0">
+          <span className="inline-block align-bottom w-full h-full">
+            {index}
+          </span>
+        </div>
+        <div className="pl-2 flex-grow-0 flex-shrink-0">
           <IconStar
-            className={`inline py-2 pb-3 mr-1 -mt-1 -mb-1 inline m-auto h-full hover:text-red-500 fill-current ${isOwner &&
+            className={`m-auto h-full pb-3 pt-1 hover:text-red-500 fill-current ${isOwner &&
               'cursor-pointer'} ${
               id === owner ? 'text-red-500' : 'text-gray-400'
             }`}
@@ -206,39 +213,51 @@ export const Group = () => {
               }
             }}
           />
-          {id === user.id ? <strong>you</strong> : id.replace('user:', '')}
-        </td>
-        <td>{states.join(', ')}</td>
+        </div>
+        <div className="flex-grow-1 w-full">
+          <span className="inline-block align-bottom w-full h-full">
+            {id === user.id ? (
+              <strong>you</strong>
+            ) : (
+              usersObject[id] || id.replace('user:', '')
+            )}
+          </span>
+        </div>
+        <div className="flex-grow-1">
+          <span className="inline-block align-bottom w-full h-full">
+            {states.join(', ')}
+          </span>
+        </div>
         {isOwner && (
           <Fragment>
-            <td>
+            <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
               {!end && (
                 <IconArrowDown
-                  className="cursor-pointer py-2 inline m-auto w-full h-full hover:text-blue-500 fill-current text-gray-500"
-                  height={10}
+                  className="cursor-pointer inline ml-2 w-6 h-5 hover:text-blue-500 fill-current text-gray-500"
+                  height={5}
                   onClick={() => changeOrder(index, index + 1)}
                 />
               )}
-            </td>
-            <td>
+            </div>
+            <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
               {!start && (
                 <IconArrowUp
-                  className="cursor-pointer py-2 inline m-auto w-full h-full hover:text-blue-500 fill-current text-gray-500"
-                  height={10}
+                  className="cursor-pointer inline ml-2 w-6 h-5 hover:text-blue-500 fill-current text-gray-500"
+                  height={5}
                   onClick={() => changeOrder(index, index - 1)}
                 />
               )}
-            </td>
+            </div>
           </Fragment>
         )}
-      </tr>
+      </div>
     )
   }
 
   return (
     <div className="px-4 py-6">
       <div>
-        <div className="w-full text-left p-2 text-gray-700">
+        <div className="w-full text-left p-2 text-gray-700 flex flex-col">
           <div className="flex -mx-2">
             {isOwner ? (
               <span className="font-semibold flex w-full px-2">
@@ -258,75 +277,63 @@ export const Group = () => {
           </div>
         </div>
 
-        <div className="w-full relative">
-          <table className="w-full text-left table-collapse mb-5">
-            <thead>
-              <tr className="text-xs font-semibold text-gray-700 bg-gray-200">
-                <th className="p-2">Small blind</th>
-                <th className="p-2">Big blind</th>
-                <th className="p-2">Start sum</th>
-                {isOwner && (
-                  <th>
-                    {changed && (
-                      <button
-                        type="button"
-                        onClick={updateGroup}
-                        className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
-                      >
-                        update
-                      </button>
-                    )}
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="align-baseline">
-              <tr className="border-t border-gray-300 font-mono text-xs text-gray-700">
-                {isOwner ? (
-                  <Fragment>
-                    <td className="p-2">
-                      <input
-                        type="number"
-                        onChange={updateStartSums}
-                        name="small"
-                        value={input.small}
-                      />
-                    </td>
-                    <td className="p-2">
-                      <input
-                        type="number"
-                        onChange={updateStartSums}
-                        name="big"
-                        value={input.big}
-                      />
-                    </td>
-                    <td className="p-2">
-                      <input
-                        type="number"
-                        onChange={updateStartSums}
-                        name="startSum"
-                        value={input.startSum}
-                      />
-                    </td>
-                    <td></td>
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    <td className="p-2">{input.small}</td>
-                    <td className="p-2">{input.big}</td>
-                    <td className="p-2">{input.startSum}</td>
-                  </Fragment>
-                )}
-              </tr>
-            </tbody>
-          </table>
+        <div className="w-full flex flex-col text-xs font-semibold text-gray-700 bg-gray-200 relative">
+          <div className="w-full flex flex-row">
+            <div className="p-2 w-full">Small blind</div>
+            <div className="p-2 w-full">Big blind</div>
+            <div className="p-2 w-full">Start sum</div>
+            {isOwner && changed && (
+              <button
+                type="button"
+                onClick={updateGroup}
+                className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
+              >
+                update
+              </button>
+            )}
+          </div>
+
+          <div className="w-full align-baseline flex flex-row border-t border-gray-300 font-mono text-xs text-gray-700 bg-white">
+            {isOwner ? (
+              <Fragment>
+                <div className="p-2 w-full">
+                  <input
+                    type="number"
+                    onChange={updateStartSums}
+                    name="small"
+                    value={input.small}
+                  />
+                </div>
+                <div className="p-2 w-full">
+                  <input
+                    type="number"
+                    onChange={updateStartSums}
+                    name="big"
+                    value={input.big}
+                  />
+                </div>
+                <div className="p-2 w-full">
+                  <input
+                    type="number"
+                    onChange={updateStartSums}
+                    name="startSum"
+                    value={input.startSum}
+                  />
+                </div>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className="p-2 w-full">{input.small}</div>
+                <div className="p-2 w-full">{input.big}</div>
+                <div className="p-2 w-full">{input.startSum}</div>
+              </Fragment>
+            )}
+          </div>
         </div>
 
-        <table className="w-full text-left table-collapse">
-          <tbody className="align-baseline">
-            {users.map(({ id }, i, array) => renderUser(id, i, array.length))}
-          </tbody>
-        </table>
+        <div className="w-full mt-10 text-left align-baseline flex flex-col">
+          {users.map(({ id }, i, array) => renderUser(id, i, array.length))}
+        </div>
       </div>
 
       <div className="pt-4 mt-4">

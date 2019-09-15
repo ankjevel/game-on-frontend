@@ -7,7 +7,6 @@ export interface Action {
 export interface User {
   id: string
   name: string
-  email: string
 }
 
 export type Group = {
@@ -54,12 +53,11 @@ export interface ConfigRoutes {
 export interface UserRoutes {
   create: (input: {
     name: User['name']
-    email: User['email']
     p1: string
     p2: string
   }) => Response<JWS>
 
-  newToken: (input: { email: User['email']; password: string }) => Response<JWS>
+  newToken: (input: { name: User['name']; password: string }) => Response<JWS>
 
   validToken: (token: JWS) => Response<{ status: 'ok' }>
 
@@ -78,4 +76,10 @@ export interface GroupRoutes {
   order: (id: Group['id'], body: NewGroupOrder) => Response<Group>
 
   start: (id: Group['id']) => Response<Group>
+}
+
+export interface ListRoutes {
+  get(id: string, type: 'user'): Response<User>
+  get(id: string, type: 'group'): Response<Group>
+  get(id: string, type: 'action'): Response<Action>
 }

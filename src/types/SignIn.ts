@@ -1,7 +1,4 @@
-import JWT from 'JWT'
-
 export type StateInput = {
-  email: string
   password: string
   passwordRepeat: string
   name: string
@@ -14,16 +11,15 @@ export type State = {
 }
 
 export type ISignIn = ({
-  email,
+  name,
   password,
 }: {
-  email: StateInput['email']
+  name: StateInput['name']
   password: StateInput['password']
 }) => Promise<boolean>
 
 export type ICreate = ({
   name,
-  email,
   password,
   passwordRepeat,
 }: StateInput) => Promise<boolean>

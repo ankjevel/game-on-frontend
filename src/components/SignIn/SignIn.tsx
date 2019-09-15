@@ -13,7 +13,6 @@ class SignIn extends Component<{}, State> {
     this.state = {
       create: false,
       input: {
-        email: '',
         password: '',
         passwordRepeat: '',
         name: '',
@@ -47,8 +46,8 @@ class SignIn extends Component<{}, State> {
   signIn: ISignIn = async input =>
     this.simpleHandleJWS(await api.user.newToken(input))
 
-  create: ICreate = async ({ name, email, password: p1, passwordRepeat: p2 }) =>
-    this.simpleHandleJWS(await api.user.create({ name, email, p1, p2 }))
+  create: ICreate = async ({ name, password: p1, passwordRepeat: p2 }) =>
+    this.simpleHandleJWS(await api.user.create({ name, p1, p2 }))
 
   handleChange(event) {
     event.persist()
@@ -69,7 +68,7 @@ class SignIn extends Component<{}, State> {
       state: { input, create },
     } = this
 
-    if (!input.email.trim() || !input.password.trim()) {
+    if (!input.password.trim()) {
       return
     }
 
@@ -112,7 +111,7 @@ class SignIn extends Component<{}, State> {
 
     if (
       await this.signIn({
-        email: input.email,
+        name: input.name,
         password: input.password,
       })
     ) {
@@ -152,37 +151,18 @@ class SignIn extends Component<{}, State> {
           onSubmit={this.handleSubmit}
         >
           <div>
-            {this.state.create && (
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                >
-                  Name
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="name"
-                  name="name"
-                  required={true}
-                  value={this.state.input.name}
-                  onChange={this.handleChange}
-                />
-              </div>
-            )}
-
             <label
-              htmlFor="email"
+              htmlFor="name"
               className="block text-gray-700 text-sm font-bold mb-2 w-full"
             >
-              Email
+              Username
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="email"
-              name="email"
+              type="name"
+              name="name"
               required={true}
-              value={this.state.input.email}
+              value={this.state.input.name}
               onChange={this.handleChange}
             />
           </div>
@@ -255,14 +235,14 @@ class SignIn extends Component<{}, State> {
           )}
         </form>
 
-        <div className="absolute ml-2">
+        {/* <div className="absolute ml-2">
           <button
             onClick={this.handleForgot}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-bl rounded-br"
           >
             Forgot Password?
           </button>
-        </div>
+        </div> */}
       </div>
     )
   }
