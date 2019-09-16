@@ -1,8 +1,7 @@
 import { CConfig } from 'CConfig'
+import { NewAction, CAction } from 'CAction'
 
-export interface Action {
-  id: string
-}
+export type Action = CAction
 
 export interface User {
   id: string
@@ -82,4 +81,12 @@ export interface ListRoutes {
   get(id: string, type: 'user'): Response<User>
   get(id: string, type: 'group'): Response<Group>
   get(id: string, type: 'action'): Response<Action>
+}
+
+export interface ActionRoutes {
+  newAction(
+    actionID: Action['id'],
+    groupID: Group['id'],
+    body: NewAction
+  ): Response<null>
 }

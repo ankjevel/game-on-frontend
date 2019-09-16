@@ -2,6 +2,7 @@ import CContext from 'CAction'
 import React, { useEffect, useState, useContext } from 'react'
 import UserContext, { Context as User } from '../User'
 import Context from './context'
+import { list } from '../../utils/api'
 
 export const ActionProvider = props => {
   const user = useContext<User>(UserContext)
@@ -17,8 +18,14 @@ export const ActionProvider = props => {
         return setValue(null)
       }
 
-      if (!value) {
-        //
+      if (!value || value.id !== user.group.action) {
+        const action = await list.get(user.group.action, 'action')
+
+        if (!action) {
+          return
+        }
+
+        setValue(action)
       }
     }
 

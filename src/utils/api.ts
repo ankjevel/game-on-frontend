@@ -1,6 +1,17 @@
-import { UserRoutes, ConfigRoutes, GroupRoutes, ListRoutes } from '../types/Api'
+import {
+  UserRoutes,
+  ConfigRoutes,
+  GroupRoutes,
+  ListRoutes,
+  ActionRoutes,
+} from '../types/Api'
 import { parseJWS, isExpired, validate } from './jwt'
 import req, { Method, setHost, setToken } from './req'
+
+type ID = 'group' | 'action' | 'user'
+
+const formatID = (id: string, type: ID) =>
+  id.includes(`${type}:`) ? id : `${type}:${id}`
 
 export { Method, setHost, setToken, req, parseJWS, isExpired, validate }
 
@@ -47,21 +58,21 @@ export const group: GroupRoutes = {
 
   join(id) {
     return req({
-      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
+      url: `/group/${formatID(id, 'group')}`,
       method: 'PUT',
     })
   },
 
   leave(id) {
     return req({
-      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
+      url: `/group/${formatID(id, 'group')}`,
       method: 'DELETE',
     })
   },
 
   update(id, body) {
     return req({
-      url: `/group/${id.startsWith('group:') ? id : `group:${id}`}`,
+      url: `/group/${formatID(id, 'group')}`,
       method: 'PATCH',
       body: JSON.stringify(body),
     })
@@ -69,7 +80,7 @@ export const group: GroupRoutes = {
 
   order(id, body) {
     return req({
-      url: `/group/${id.includes('group:') ? id : `group:${id}`}/order`,
+      url: `/group/${formatID(id, 'group')}/order`,
       method: 'POST',
       body: JSON.stringify(body),
     })
@@ -77,7 +88,7 @@ export const group: GroupRoutes = {
 
   start(id) {
     return req({
-      url: `/group/${id.includes('group:') ? id : `group:${id}`}/start`,
+      url: `/group/${formatID(id, 'group')}/start`,
       method: 'POST',
     })
   },
@@ -86,14 +97,29 @@ export const group: GroupRoutes = {
 export const list: ListRoutes = {
   get(id, type) {
     return req({
-      url: `/get/${id.includes(`${type}:`) ? id : `${type}:${id}`}/${type}`,
+      url: `/get/${formatID(id, type)}/${type}`,
       method: 'GET',
     })
   },
 }
 
+export const action: ActionRoutes = {
+  newAction(actionID, groupID, body) {
+    const aID = formatID(actionID, 'action')
+    const gID = formatID(groupID, 'group')
+
+    return req({
+      url: `/get/${aID}/${gID}`,
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+  },
+}
+
 export default {
+  list,
   config,
   user,
   group,
+  action,
 }
