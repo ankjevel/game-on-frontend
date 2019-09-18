@@ -1,16 +1,12 @@
 import { Group, User, JWS } from 'Api'
 import { JWT } from 'JWT'
 
-export enum SetValue {
-  Token = 'token',
-  Group = 'group',
-  JWT = 'jwt',
-}
+export type SetValue = 'token' | 'group' | 'jwt'
 
 export interface ISetValue {
-  setValue(key: SetValue.Group, value: Group): Promise<void>
-  setValue(key: SetValue.Token, value: JWS): Promise<void>
-  setValue(key: SetValue.JWT, value: JWT): Promise<void>
+  setValue(key: 'group', value: Group): Promise<void>
+  setValue(key: 'token', value: JWS): Promise<void>
+  setValue(key: 'jwt', value: JWT): Promise<void>
 }
 
 export type CUser = {

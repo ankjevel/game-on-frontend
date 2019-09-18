@@ -1,6 +1,6 @@
 import { ISignIn, ICreate, State } from 'SignIn'
 import React, { Component, ContextType } from 'react'
-import UserContext, { SetValue } from '../../context/User'
+import UserContext from '../../context/User'
 import * as api from '../../utils/api'
 
 class SignIn extends Component<{}, State> {
@@ -37,8 +37,8 @@ class SignIn extends Component<{}, State> {
 
     api.setToken(token)
 
-    this.context.setValue(SetValue.Token, token)
-    this.context.setValue(SetValue.JWT, jwt)
+    this.context.setValue('token', token)
+    this.context.setValue('jwt', jwt)
 
     return true
   }

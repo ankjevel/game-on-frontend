@@ -20,13 +20,7 @@ export type RouteParams = {
   }
 }
 
-export enum ERoute {
-  None = '/',
-  SignIn = '/sign-in',
-  CreateOrJoin = '/create',
-  Group = '/group',
-  Action = '/action',
-}
+export type ERoute = '/' | '/sign-in' | '/create' | '/group' | '/action'
 
 export interface IRoute {
   (params?: RouteParams): JSX.Element

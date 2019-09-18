@@ -1,5 +1,5 @@
 import { User } from 'Api'
-import CContext, { SetValue } from '../../types/CUser'
+import CContext from '../../types/CUser'
 
 import React, { useState, useEffect } from 'react'
 import Context from './context'
@@ -16,18 +16,18 @@ export const UserProvider = props => {
     setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {
-        case SetValue.Token: {
+        case 'token': {
           changed.group = (await api.user.group()) || undefined
           changed.token = value
           break
         }
 
-        case SetValue.Group: {
+        case 'group': {
           changed.group = value
           break
         }
 
-        case SetValue.JWT: {
+        case 'jwt': {
           changed.name = value.name
           changed.id = value.id
           break
@@ -85,12 +85,18 @@ export const UserProvider = props => {
   }, [value.token])
 
   useEffect(() => {
-    if (value.group == null) {
+    if (!value.group || !value.users) {
       return
     }
 
     const apply = async () => {
+      if (!value.group || !value.group.users) {
+        return
+      }
       for (const user of value.group.users) {
+        if (!user) {
+          continue
+        }
         const current = value.users[user.id]
         if (current != null) {
           continue

@@ -6,31 +6,39 @@ import { list } from '../../utils/api'
 
 export const ActionProvider = props => {
   const user = useContext<User>(UserContext)
-  const [value, setValue] = useState<MaybeNull<CContext>>(null)
+  const [value, setValue] = useState<CContext>({
+    action: undefined,
+    setValue: async (key, value) => {
+      const changed: any = {}
+      switch (key) {
+        case 'action': {
+          changed.action = value
+          break
+        }
+        default:
+          return
+      }
+
+      setValue(state => ({ ...state, ...changed }))
+    },
+  })
 
   useEffect(() => {
     const apply = async () => {
-      if (user.group == null) {
-        return
-      }
+      if (user.group == null) return
+      if (user.group.action == null) return setValue(null)
 
-      if (user.group.action == null) {
-        return setValue(null)
-      }
-
-      if (!value || value.id !== user.group.action) {
+      if (!value.action || value.action.id !== user.group.action) {
         const action = await list.get(user.group.action, 'action')
 
-        if (!action) {
-          return
-        }
+        if (!action) return
 
-        setValue(action)
+        setValue(state => ({ ...state, action }))
       }
     }
 
     apply()
-  }, [value, user.group])
+  }, [value.action, user.group])
 
   return <Context.Provider value={value}>{props.children}</Context.Provider>
 }

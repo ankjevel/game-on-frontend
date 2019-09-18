@@ -1,6 +1,6 @@
 import { NewGroup } from 'Api'
 import React, { Component, ContextType } from 'react'
-import UserContext, { SetValue } from '../../context/User'
+import UserContext from '../../context/User'
 import * as api from '../../utils/api'
 
 type Props = {}
@@ -82,7 +82,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
       return
     }
 
-    this.context.setValue(SetValue.Group, res)
+    this.context.setValue('group', res)
   }
 
   async createGroup(event) {
@@ -119,7 +119,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
       return this.setState({ ...this.state, error })
     }
 
-    this.context.setValue(SetValue.Group, res)
+    this.context.setValue('group', res)
   }
 
   render() {

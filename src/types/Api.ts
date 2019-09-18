@@ -1,7 +1,5 @@
 import { CConfig } from 'CConfig'
-import { NewAction, CAction } from 'CAction'
-
-export type Action = CAction
+import { NewAction, Action } from 'CAction'
 
 export interface User {
   id: string

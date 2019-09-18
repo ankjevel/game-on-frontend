@@ -1,16 +1,20 @@
+import { Action } from 'CAction'
+import { Group } from 'Api'
 import CContext from 'CSocket'
-import CConfig from 'CConfig'
+
 import React, { useState, useEffect, useContext } from 'react'
 import io from 'socket.io-client'
-import Context from './context'
-import ConfigContext from '../Config'
-import UserContext, { Context as User, SetValue } from '../User'
-import { Group } from 'Api'
 
-export let socket
+import Context from './context'
+import ActionContext, { Context as CAction } from '../Action'
+import ConfigContext, { Context as CConfig } from '../Config'
+import UserContext, { Context as CUser } from '../User'
+
+let socket
 export const SocketProvider = props => {
-  const config = useContext<CConfig>(ConfigContext)
-  const user = useContext<User>(UserContext)
+  const cConfig = useContext<CConfig>(ConfigContext)
+  const cUser = useContext<CUser>(UserContext)
+  const cAction = useContext<CAction>(ActionContext)
   const [value, setValue] = useState<CContext>({
     id: '',
     room: '',
@@ -22,22 +26,46 @@ export const SocketProvider = props => {
       return
     }
 
-    socket = io(config.api)
+    socket = io(cConfig.api)
     socket.on('connect', () =>
       setValue(state => ({ ...state, id: socket.id, connected: true }))
     )
     socket.on('reconnect', () =>
       setValue(state => ({ ...state, room: '', connected: false }))
     )
-    socket.on('update:group', (group: Group) =>
-      user.setValue(SetValue.Group, group)
-    )
-    socket.on('user:joined', message => console.log({ message }))
-
+    socket.on('user:joined', _message => {})
     return () => {
       socket.close()
     }
-  }, [config.api])
+  }, [cConfig.api])
+
+  useEffect(() => {
+    if (socket == null) return
+    if (socket.off) socket.off('update:group')
+    if (cUser == null) return
+
+    socket.on('update:group', (updatedGroup: Group) => {
+      if (cUser && cUser.group != null && cUser.group.id === updatedGroup.id) {
+        cUser.setValue('group', updatedGroup)
+      }
+    })
+  }, [cConfig.api, cUser])
+
+  useEffect(() => {
+    if (socket == null) return
+    if (socket.off) socket.off('update:action')
+    if (cAction == null) return
+
+    socket.on('update:action', (updatedAction: Action) => {
+      if (
+        cAction &&
+        cAction.action != null &&
+        cAction.action.id === updatedAction.id
+      ) {
+        cAction.setValue('action', updatedAction)
+      }
+    })
+  }, [cConfig.api, cAction])
 
   useEffect(() => {
     const exec = async () => {
@@ -45,7 +73,7 @@ export const SocketProvider = props => {
         return
       }
 
-      if (user.group == null) {
+      if (cUser.group == null) {
         if (value.room !== '') {
           await socket.emit('group:leave')
         }
@@ -53,24 +81,27 @@ export const SocketProvider = props => {
         return
       }
 
-      if (user.group.id === value.room) {
+      if (cUser.group.id === value.room) {
         return
       }
 
-      await socket.emit('group:join', { id: user.group.id, token: user.token })
+      await socket.emit('group:join', {
+        id: cUser.group.id,
+        token: cUser.token,
+      })
 
       setValue(state => ({
         ...state,
-        room: user.group.id,
+        room: cUser.group.id,
       }))
     }
 
     exec()
-  }, [user.group, user.token, value.room, value.connected])
+  }, [cConfig.api, cUser.group, cUser.token, value.room, value.connected])
 
   useEffect(() => {
     const handleToken = async () => {
-      const { token } = user
+      const { token } = cUser
       if (token) {
         await socket.emit('user:join', token)
       } else {
@@ -79,7 +110,7 @@ export const SocketProvider = props => {
     }
 
     handleToken()
-  }, [user, user.token])
+  }, [cConfig.api, cUser, cUser.token])
 
   return (
     <Context.Provider value={value}>

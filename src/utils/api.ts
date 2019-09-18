@@ -109,7 +109,7 @@ export const action: ActionRoutes = {
     const gID = formatID(groupID, 'group')
 
     return req({
-      url: `/get/${aID}/${gID}`,
+      url: `/action/${aID}/${gID}`,
       method: 'POST',
       body: JSON.stringify(body),
     })

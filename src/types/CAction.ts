@@ -1,30 +1,28 @@
 import { Group, User } from 'Api'
 
-export enum NewActionEnum {
-  None = 'none',
-  Bet = 'bet',
-  Check = 'check',
-  Call = 'call',
-  Raise = 'raise',
-  AllIn = 'allIn',
-  Fold = 'fold',
-
-  Draw = 'draw',
-  Winner = 'winner',
-  Back = 'back',
-  Bank = 'bank',
-  Join = 'join',
-  Leave = 'leave',
-  SittingOut = 'sittingOut',
-}
+export type ActionType =
+  | 'none'
+  | 'bet'
+  | 'check'
+  | 'call'
+  | 'raise'
+  | 'allIn'
+  | 'fold'
+  | 'draw'
+  | 'winner'
+  | 'back'
+  | 'bank'
+  | 'join'
+  | 'leave'
+  | 'sittingOut'
 
 export type UserSummary = {
   bet: number
-  status: NewActionEnum
+  status: ActionType
 }
 
 export type NewAction = {
-  type: NewActionEnum
+  type: ActionType
   value?: number
   winners?: User['id'][]
 }
@@ -33,7 +31,7 @@ export interface KeyValue<T> {
   [key: string]: T
 }
 
-export interface ICAction<T, Y> {
+export interface IAction<T, Y> {
   id: string
   round: 0 | 1 | 2 | 3 | 4
   groupID: Group['id']
@@ -47,6 +45,15 @@ export interface ICAction<T, Y> {
   sidePot?: { id: User['id']; sum: number }[]
 }
 
-export type CAction = ICAction<NewAction, UserSummary>
+export type Action = IAction<NewAction, UserSummary>
+
+export interface CActionSetValue {
+  (key: 'action', value: Action): Promise<void>
+}
+
+export type CAction = {
+  action?: Action
+  setValue: CActionSetValue
+}
 
 export default CAction

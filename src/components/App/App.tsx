@@ -6,7 +6,7 @@ import {
   Switch,
 } from 'react-router-dom'
 import { RouteParams, IMaybeRedirect, ERoute, IRoute } from '../../types/Route'
-import userContext, { SetValue } from '../../context/User'
+import userContext from '../../context/User'
 import Action from '../Action'
 import CreateOrJoinGroup from '../CreateOrJoinGroup'
 import Group from '../Group'
@@ -18,20 +18,20 @@ export const App = () => {
   const [render, updateRender] = useState(false)
   const [active, updateActive] = useState(false)
 
-  const checkState = () => {
+  const checkState = (): ERoute => {
     if (user.id === '') {
-      return ERoute.SignIn
+      return '/sign-in'
     }
 
     if (user.group == null) {
-      return ERoute.CreateOrJoin
+      return '/create'
     }
 
     if (user.group.action != null) {
-      return ERoute.Action
+      return '/action'
     }
 
-    return ERoute.Group
+    return '/group'
   }
 
   const maybeRedirect: IMaybeRedirect = (
@@ -50,17 +50,17 @@ export const App = () => {
     if (active) return null
     const route = checkState()
     switch (route) {
-      case ERoute.SignIn:
-      case ERoute.CreateOrJoin:
+      case '/sign-in':
+      case '/create':
         return <Redirect to={`${route}`} from="/" />
-      case ERoute.Group:
+      case '/group':
         return (
           <Redirect
             to={`/group/${user.group.id.replace(/group:/, '')}`}
             from="/"
           />
         )
-      case ERoute.Action:
+      case '/action':
         return (
           <Redirect
             to={`/action/${user.group.action.replace(/action:/, '')}`}
@@ -73,17 +73,17 @@ export const App = () => {
 
   const RouteSignIn: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, ERoute.SignIn) || <SignIn />
+    return maybeRedirect(params, '/sign-in') || <SignIn />
   }
 
   const RouteCreate: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, ERoute.CreateOrJoin) || <CreateOrJoinGroup />
+    return maybeRedirect(params, '/create') || <CreateOrJoinGroup />
   }
 
   const RouteLeaveGroup: IRoute = () => {
     if (active) return null
-    if (checkState() !== ERoute.Group) {
+    if (checkState() !== '/group') {
       return <Redirect to="/" />
     }
 
@@ -94,7 +94,7 @@ export const App = () => {
       }
 
       await api.group.leave(user.group.id)
-      user.setValue(SetValue.Group, undefined)
+      user.setValue('group', undefined)
       return [updateActive(false), updateRender(false)]
     }
 
@@ -110,7 +110,7 @@ export const App = () => {
         params: { id },
       },
     } = params
-    const redirect = maybeRedirect(params, [ERoute.Group, ERoute.CreateOrJoin])
+    const redirect = maybeRedirect(params, ['/group', '/create'])
     if (redirect) {
       return redirect
     }
@@ -126,7 +126,7 @@ export const App = () => {
     const join = async () => {
       updateActive(true)
       const group = await api.group.join(id)
-      user.setValue(SetValue.Group, group)
+      user.setValue('group', group)
       return [updateRender(true), updateActive(false)]
     }
 
@@ -137,11 +137,11 @@ export const App = () => {
 
   const RouteGroupWithOutID: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, ERoute.Group) || user.group == null ? (
+    return maybeRedirect(params, '/group') || user.group == null ? (
       <Redirect to="/" from="/route" />
     ) : (
       <Redirect
-        to={`${ERoute.Group}/${user.group.id.replace('group:', '')}`}
+        to={`${'/group'}/${user.group.id.replace('group:', '')}`}
         from="/group"
       />
     )
@@ -149,11 +149,11 @@ export const App = () => {
 
   const RouteActionWithOutID: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, ERoute.Action) || user.group == null ? (
+    return maybeRedirect(params, '/action') || user.group == null ? (
       <Redirect to="/" from="/action" />
     ) : (
       <Redirect
-        to={`${ERoute.Action}/${user.group.action.replace('action:', '')}`}
+        to={`${'/action'}/${user.group.action.replace('action:', '')}`}
         from="/action"
       />
     )
@@ -166,7 +166,7 @@ export const App = () => {
         params: { id },
       },
     } = params
-    const redirect = maybeRedirect(params, ERoute.Action)
+    const redirect = maybeRedirect(params, '/action')
     if (redirect) {
       return redirect
     }
@@ -184,7 +184,7 @@ export const App = () => {
     const join = async () => {
       updateActive(true)
       const group = await api.group.join(id)
-      user.setValue(SetValue.Group, group)
+      user.setValue('group', group)
       return [updateRender(true), updateActive(false)]
     }
 
