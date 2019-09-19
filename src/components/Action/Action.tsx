@@ -1,11 +1,8 @@
 import { NewAction } from 'CAction'
 import React, { useContext, useState, Fragment } from 'react'
-
-import api, { user } from '../../utils/api'
-
+import api from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
-
 import Modal from '../Modal'
 
 export const Action = () => {
@@ -73,6 +70,13 @@ export const Action = () => {
 
   const currentBet = cAction.action.turn[cAction.action.big].bet
   const yourBet = cAction.action.turn[cUser.id].bet
+
+  const type = 1
+  const radius = '12em'
+  const start = -90
+  const numberOfElements =
+    type === 1 ? group.users.length : group.users.length - 1
+  const slice = (360 * type) / numberOfElements
 
   return (
     <Fragment>
@@ -151,9 +155,9 @@ export const Action = () => {
       </Modal>
 
       <div className="px-4 py-6">
+        <h1 className="absolute left-0 top-0">{group.name}</h1>
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <h1>{group.name}</h1>
             <div>current bet: {currentBet}</div>
             <div>your bet: {yourBet}</div>
             <div>round: {cAction.action.round}</div>
@@ -166,6 +170,27 @@ export const Action = () => {
                   : users[cAction.action.button]
               }`}
             </div>
+            <ul className="circle-container z-10">
+              {group.users.map((user, i) => {
+                const rotate = slice * i + start
+                const rotateReverse = rotate * -1
+
+                const name = users[user.id]
+                const action = cAction.action.turn[user.id]
+
+                const styles = {
+                  transform: `rotate(${rotate}deg) translate(${radius}) rotate(${rotateReverse}deg)`,
+                }
+
+                return (
+                  <li key={user.id} style={styles}>
+                    <h1>{name}</h1>
+                    <h2>{action.bet}</h2>
+                    <h2>{action.status}</h2>
+                  </li>
+                )
+              })}
+            </ul>
             {cAction.action.round !== 4 && !callPending && (
               <div className="w-full flex flex-row">
                 {cAction.action.button === cUser.id && (

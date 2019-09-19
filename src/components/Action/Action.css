@@ -1,0 +1,14 @@
+.circle-container {
+  @apply absolute inset-0 font-bold;
+  list-style: none;
+  left: 50%;
+  top: 50%;
+  width: 50vw;
+  height: 50vh;
+}
+
+.circle-container > * {
+  @apply block relative w-full text-center text-white;
+  left: -50%;
+  top: -25%;
+}
