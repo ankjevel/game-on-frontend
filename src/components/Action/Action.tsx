@@ -64,7 +64,7 @@ export const Action = () => {
     },
   }
 
-  if (group == null || cAction.action == null) {
+  if (group == null || cAction == null || cAction.action == null) {
     return null
   }
 
@@ -155,7 +155,7 @@ export const Action = () => {
       </Modal>
 
       <div className="px-4 py-6">
-        <h1 className="absolute left-0 top-0">{group.name}</h1>
+        <h1 className="absolute left-0 top-0 text-white">{group.name}</h1>
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
             <div>current bet: {currentBet}</div>

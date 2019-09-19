@@ -25,6 +25,7 @@ export const ActionProvider = props => {
 
   useEffect(() => {
     const apply = async () => {
+      if (value == null) return
       if (user.group == null) return
       if (user.group.action == null) return setValue(null)
 
@@ -38,7 +39,7 @@ export const ActionProvider = props => {
     }
 
     apply()
-  }, [value.action, user.group])
+  }, [value, user.group])
 
   return <Context.Provider value={value}>{props.children}</Context.Provider>
 }

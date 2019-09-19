@@ -1,12 +1,15 @@
 import { NewGroup } from 'Api'
-import React, { Component, ContextType } from 'react'
+import React, { Component, ContextType, Fragment } from 'react'
 import UserContext from '../../context/User'
 import * as api from '../../utils/api'
+import Modal from '../Modal'
+import { isObject } from 'util'
 
 type Props = {}
 type State = {
   error: string
   create: NewGroup
+  isOpen: boolean
 }
 
 class CreateOrJoinGroup extends Component<Props, State> {
@@ -24,11 +27,13 @@ class CreateOrJoinGroup extends Component<Props, State> {
         smallBlind: 2,
         bigBlind: 4,
       },
+      isOpen: false,
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.createGroup = this.createGroup.bind(this)
     this.joinGroup = this.joinGroup.bind(this)
+    this.toggleModalVisible = this.toggleModalVisible.bind(this)
   }
 
   handleChange(event) {
@@ -85,6 +90,13 @@ class CreateOrJoinGroup extends Component<Props, State> {
     this.context.setValue('group', res)
   }
 
+  toggleModalVisible() {
+    this.setState({
+      ...this.state,
+      isOpen: !this.state.isOpen,
+    })
+  }
+
   async createGroup(event) {
     event.preventDefault()
 
@@ -124,113 +136,121 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
   render() {
     return (
-      <div
-        className={`${
-          this.state.error ? 'bg-red-100' : 'bg-white'
-        } flex-1 sign-in '`}
-      >
-        <form
-          onSubmit={this.createGroup}
-          className="px-8 pt-6 pb-8 mb-4 w-full"
+      <Fragment>
+        <Modal onClose={this.toggleModalVisible} isOpen={this.state.isOpen}>
+          <div>
+            <h1>Input group id</h1>
+            <form></form>
+          </div>
+        </Modal>
+        <div
+          className={`${
+            this.state.error ? 'bg-red-100' : 'bg-white'
+          } flex-1 sign-in '`}
         >
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2 w-full"
-            >
-              Name
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="name"
-              name="name"
-              required={true}
-              value={this.state.create.name}
-              onChange={this.handleChange}
-            />
-          </div>
+          <form
+            onSubmit={this.createGroup}
+            className="px-8 pt-6 pb-8 mb-4 w-full"
+          >
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-gray-700 text-sm font-bold mb-2 w-full"
+              >
+                Name
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="name"
+                name="name"
+                required={true}
+                value={this.state.create.name}
+                onChange={this.handleChange}
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="startSum"
-              className="block text-gray-700 text-sm font-bold mb-2 w-full"
-            >
-              Start sum
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="number"
-              name="startSum"
-              value={this.state.create.startSum}
-              onChange={this.handleChange}
-            />
-          </div>
+            <div>
+              <label
+                htmlFor="startSum"
+                className="block text-gray-700 text-sm font-bold mb-2 w-full"
+              >
+                Start sum
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="number"
+                name="startSum"
+                value={this.state.create.startSum}
+                onChange={this.handleChange}
+              />
+            </div>
 
-          <div className="p-4">
-            <div className="flex -mx-2">
-              <div className="w-1/2">
-                <label
-                  htmlFor="smallBlind"
-                  className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                >
-                  Small blind
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="number"
-                  name="smallBlind"
-                  value={this.state.create.smallBlind}
-                  onChange={this.handleChange}
-                />
-              </div>
+            <div className="p-4">
+              <div className="flex -mx-2">
+                <div className="w-1/2">
+                  <label
+                    htmlFor="smallBlind"
+                    className="block text-gray-700 text-sm font-bold mb-2 w-full"
+                  >
+                    Small blind
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="number"
+                    name="smallBlind"
+                    value={this.state.create.smallBlind}
+                    onChange={this.handleChange}
+                  />
+                </div>
 
-              <div className="w-1/2">
-                <label
-                  htmlFor="bigBlind"
-                  className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                >
-                  Big blind
-                </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  type="number"
-                  name="bigBlind"
-                  value={this.state.create.bigBlind}
-                  onChange={this.handleChange}
-                />
+                <div className="w-1/2">
+                  <label
+                    htmlFor="bigBlind"
+                    className="block text-gray-700 text-sm font-bold mb-2 w-full"
+                  >
+                    Big blind
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="number"
+                    name="bigBlind"
+                    value={this.state.create.bigBlind}
+                    onChange={this.handleChange}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <input
-              className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-              value="Create"
-            />
-          </div>
-
-          <div className="py-2">
-            <p>Or, if you have a groupID</p>
-            <button
-              className="w-1/2 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={this.joinGroup}
-            >
-              Join group
-            </button>
-          </div>
-
-          {this.state.error && (
-            <div
-              className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
-              role="alert"
-            >
-              <p className="font-bold">Error</p>
-              <p>{this.state.error}</p>
+            <div>
+              <input
+                className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+                value="Create"
+              />
             </div>
-          )}
-        </form>
-      </div>
+
+            <div className="py-2">
+              <p>Or, if you have a groupID</p>
+              <button
+                className="w-1/2 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={this.toggleModalVisible}
+              >
+                Join group
+              </button>
+            </div>
+
+            {this.state.error && (
+              <div
+                className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
+                role="alert"
+              >
+                <p className="font-bold">Error</p>
+                <p>{this.state.error}</p>
+              </div>
+            )}
+          </form>
+        </div>
+      </Fragment>
     )
   }
 }
