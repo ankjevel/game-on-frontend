@@ -8,7 +8,8 @@ import { isObject } from 'util'
 type Props = {}
 type State = {
   error: string
-  create: NewGroup
+  joinError: string
+  input: NewGroup & { join: string }
   isOpen: boolean
 }
 
@@ -21,11 +22,13 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
     this.state = {
       error: '',
-      create: {
+      joinError: '',
+      input: {
         name: '',
         startSum: 200,
         smallBlind: 2,
         bigBlind: 4,
+        join: '',
       },
       isOpen: false,
     }
@@ -43,9 +46,9 @@ class CreateOrJoinGroup extends Component<Props, State> {
       target: { name, value: valuePre },
     } = event
     const { state } = this
-    const { create } = state
+    const { input } = state
 
-    const isNumber = typeof create[name] === 'number'
+    const isNumber = typeof input[name] === 'number'
 
     const value = isNumber
       ? isNaN(parseInt(valuePre, 10))
@@ -60,8 +63,8 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
     this.setState({
       ...state,
-      create: {
-        ...create,
+      input: {
+        ...input,
         [name]: value,
       },
     })
@@ -69,19 +72,23 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
   async joinGroup(event) {
     event.preventDefault()
+    const {
+      state: {
+        input: { join },
+      },
+    } = this
 
-    const id = window.prompt('input group id')
+    const match = join.match(/[\d\w]{8}(?:-[\w\d]{4}){3}-[\w\d]{12}/i)
 
-    if (
-      id.trim() &&
-      id.includes(':') &&
-      id.split(':').length === 2 &&
-      id.trim().match(/[^a-z0-9-:]/) != null
-    ) {
+    if (match == null) {
+      this.setState({
+        ...this.state,
+        joinError: 'value does not look like a valid group id',
+      })
       return
     }
 
-    const res = await api.group.join(id.trim())
+    const res = await api.group.join(match[0])
 
     if (res == null) {
       return
@@ -102,7 +109,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
 
     const {
       state: {
-        create: { bigBlind, smallBlind, startSum },
+        input: { bigBlind, smallBlind, startSum, name },
       },
     } = this
 
@@ -124,7 +131,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
       return window.alert('small blind needs to b greater than 1')
     }
 
-    const res = await api.group.create(this.state.create)
+    const res = await api.group.create({ bigBlind, smallBlind, startSum, name })
 
     if (!res) {
       const error = 'Could not create group'
@@ -140,7 +147,22 @@ class CreateOrJoinGroup extends Component<Props, State> {
         <Modal onClose={this.toggleModalVisible} isOpen={this.state.isOpen}>
           <div>
             <h1>Input group id</h1>
-            <form></form>
+            <form onSubmit={this.joinGroup}>
+              <input
+                className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal outline-none"
+                name="join"
+                onChange={this.handleChange}
+              />
+              {this.state.joinError && (
+                <div
+                  className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
+                  role="alert"
+                >
+                  <p className="font-bold">Error</p>
+                  <p>{this.state.joinError}</p>
+                </div>
+              )}
+            </form>
           </div>
         </Modal>
         <div
@@ -164,7 +186,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 type="name"
                 name="name"
                 required={true}
-                value={this.state.create.name}
+                value={this.state.input.name}
                 onChange={this.handleChange}
               />
             </div>
@@ -180,7 +202,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="number"
                 name="startSum"
-                value={this.state.create.startSum}
+                value={this.state.input.startSum}
                 onChange={this.handleChange}
               />
             </div>
@@ -198,7 +220,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="number"
                     name="smallBlind"
-                    value={this.state.create.smallBlind}
+                    value={this.state.input.smallBlind}
                     onChange={this.handleChange}
                   />
                 </div>
@@ -214,7 +236,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     type="number"
                     name="bigBlind"
-                    value={this.state.create.bigBlind}
+                    value={this.state.input.bigBlind}
                     onChange={this.handleChange}
                   />
                 </div>
