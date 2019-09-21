@@ -33,8 +33,8 @@ export const Action = () => {
 
   const [usersLeft, setOrder] = useState([])
 
-  const maxBet = (group.users || [{ sum: -1 }]).find(
-    user => user.id === cUser.id
+  const maxBet = (
+    (group.users || []).find(user => user.id === cUser.id) || { sum: -1 }
   ).sum
 
   const [input, setInput] = useState({
@@ -127,37 +127,45 @@ export const Action = () => {
     )
   }
 
+  let userIndex = group.users.findIndex(user => user.id === cUser.id)
+  let usersCopy = group.users.slice(0)
+  usersCopy.splice(
+    0,
+    0,
+    ...usersCopy.splice(userIndex, group.users.length - userIndex).slice(1)
+  )
+
   const usersRows: {
     left: Row[]
     right: Row[]
     top: Row[]
-  } = group.users
-    .filter(user => user.id !== cUser.id)
-    .reduce(
-      (object, user, i, { length }) => {
-        const name = users[user.id]
-        const action = cAction.action.turn[user.id]
+  } = usersCopy.reduce(
+    (object, user, i, { length }) => {
+      const name = users[user.id]
+      const action = cAction.action.turn[user.id]
 
-        const half = Math.floor(length / 2)
-        const even = length % 2 === 0
-        const left = i < half
+      const half = Math.floor(length / 2)
+      const even = length % 2 === 0
+      const left = i < half
 
-        const top = !even && i === half
+      const top = !even && i === half
 
-        object[top ? 'top' : left ? 'left' : 'right'].push({
-          ...user,
-          name,
-          action,
-        })
+      object[top ? 'top' : left ? 'left' : 'right'].push({
+        ...user,
+        name,
+        action,
+      })
 
-        return object
-      },
-      {
-        left: [],
-        right: [],
-        top: [],
-      }
-    )
+      return object
+    },
+    {
+      left: [],
+      right: [],
+      top: [],
+    }
+  )
+  usersCopy = undefined
+  userIndex = undefined
 
   return (
     <Fragment>
