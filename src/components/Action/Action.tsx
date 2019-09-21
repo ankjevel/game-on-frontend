@@ -166,66 +166,14 @@ export const Action = () => {
         </div>
       </Modal>
 
-      <Modal
-        isOpen={modalRaiseVisibile}
-        onClose={() => setModalRaiseVisibile(!modalRaiseVisibile)}
-      >
-        <div className="inline-block">
-          <form
-            onSubmit={async event => {
-              event.preventDefault()
-
-              const currentBank = cUser.group.users.find(
-                user => user.id === cUser.id
-              ).sum
-
-              if (input.raise >= currentBank) {
-                window.alert('maybe go all in?')
-                return
-              }
-
-              await actions.raise(input.raise)
-
-              setModalRaiseVisibile(false)
-            }}
-          >
-            <label htmlFor="raise" className="w-full mb-10 block">
-              <h1>How much would you like to raise?</h1>
-            </label>
-            <input
-              type="number"
-              id="raise"
-              name="raise"
-              required={true}
-              value={input.raise}
-              onChange={event => {
-                event.preventDefault()
-                const value = event.target.valueAsNumber
-
-                if (isNaN(value)) {
-                  return
-                }
-
-                setInput({
-                  ...input,
-                  raise: value,
-                })
-              }}
-              className="w-full bg-gray-100 rounded p-5"
-            />
-            <input type="submit" className="invisible" />
-          </form>
-        </div>
-      </Modal>
-
-      <div className="top absolute inset-0 0">
+      <div className="top absolute select-none inset-0 z-0">
         <h1 className="absolute left-0 top-0 text-white p-4">{group.name}</h1>
         <h2 className="absolute right-0 top-0 text-white p-4">
           round: {cAction.action.round}
         </h2>
       </div>
 
-      <div className="users z-10">
+      <div className="users select-none z-0">
         <div className="left">
           {usersRows.left.map((user, i) => userElement(user, `left-${i}`))}
         </div>
@@ -237,14 +185,17 @@ export const Action = () => {
         </div>
       </div>
 
-      <div className="main px-4 py-6">
+      <div className="main px-4 py-6 z-10">
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <div>current bet: {currentBet}</div>
-            <div>your bet: {yourBet}</div>
-            <div>pot: {cAction.action.pot}</div>
-            <div>bank: {group.users.find(({ id }) => id === cUser.id).sum}</div>
-            {/* {cAction.action.round !== 4 && !callPending */}
+            <div className="select-none">
+              <div>current bet: {currentBet}</div>
+              <div>your bet: {yourBet}</div>
+              <div>pot: {cAction.action.pot}</div>
+              <div>
+                bank: {group.users.find(({ id }) => id === cUser.id).sum}
+              </div>
+            </div>
             {group.owner == cUser.id &&
               cAction.action.round === 4 &&
               !callPending && (
@@ -270,62 +221,81 @@ export const Action = () => {
         </div>
       </div>
 
-      {/* {!callPending && ( */}
-      <div className="bottom">
-        <div className="w-full flex flex-row">
-          {cAction.action.button !== cUser.id && (
-            <Fragment>
-              <button
-                onClick={() => actions.check()}
-                type="button"
-                className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base
+      {cAction.action.round !== 4 && !callPending && (
+        <div className="bottom z-10">
+          <div className="w-full flex flex-row">
+            {cAction.action.button !== cUser.id && (
+              <Fragment>
+                <button
+                  onClick={() => actions.check()}
+                  type="button"
+                  className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base
                       leading-none p-2 py-2 px-4 rounded"
-              >
-                {currentBet === yourBet
-                  ? cAction.action.round === 0
-                    ? 'bet'
-                    : 'check'
-                  : 'call'}
-              </button>
-              <button
-                type="button"
-                onClick={() => actions.fold()}
-                className="bg-red-500 hover:bg-red-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-              >
-                fold
-              </button>
-              <button
-                type="button"
-                onClick={() => setModalRaiseVisibile(!modalRaiseVisibile)}
-                className="bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-              >
-                raise
-              </button>
-              <button
-                type="button"
-                onClick={() => actions.allIn()}
-                className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-              >
-                all-in
-              </button>
-              <Slider
-                className="slider"
-                value={input.raise}
-                onChange={value => {
-                  setInput({
-                    ...input,
-                    raise: value,
-                  })
-                }}
-                min={1}
-                max={maxBet}
-              />
-              <h3 className="raise">{input.raise}</h3>
-            </Fragment>
-          )}
+                >
+                  {currentBet === yourBet
+                    ? cAction.action.round === 0
+                      ? 'bet'
+                      : 'check'
+                    : 'call'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => actions.fold()}
+                  className="bg-red-500 hover:bg-red-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                >
+                  fold
+                </button>
+                <button
+                  type="button"
+                  disabled={input.raise === maxBet}
+                  onClick={async event => {
+                    event.preventDefault()
+
+                    const currentBank = cUser.group.users.find(
+                      user => user.id === cUser.id
+                    ).sum
+
+                    if (input.raise >= currentBank) {
+                      window.alert('maybe go all in?')
+                      return
+                    }
+
+                    await actions.raise(input.raise)
+                  }}
+                  className={`bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
+                    input.raise === maxBet ? 'disabled' : ''
+                  }`}
+                >
+                  raise
+                </button>
+                <Slider
+                  className="slider"
+                  value={input.raise}
+                  onChange={value => {
+                    setInput({
+                      ...input,
+                      raise: value,
+                    })
+                  }}
+                  min={1}
+                  max={maxBet}
+                />
+                <h3 className="raise">{input.raise}</h3>
+                <button
+                  type="button"
+                  disabled={input.raise !== maxBet}
+                  onClick={() => actions.allIn()}
+                  className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
+                    input.raise !== maxBet ? 'disabled' : ''
+                  }`}
+                >
+                  all-in
+                </button>
+              </Fragment>
+            )}
+          </div>
         </div>
-      </div>
-      {/* )} */}
+      )}
     </Fragment>
   )
 }
