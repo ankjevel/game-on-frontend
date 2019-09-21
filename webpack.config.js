@@ -63,6 +63,7 @@ module.exports = {
         enforce: 'pre',
         test: /\.js$/,
         loader: 'source-map-loader',
+        exclude: [path.join(process.cwd(), 'node_modules')],
       },
     ],
   },

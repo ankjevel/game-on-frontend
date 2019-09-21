@@ -11,6 +11,7 @@ import Modal from '../Modal'
 type Row = {
   name: string
   id: User['id']
+  sum: number
   action: CActionContext['action']['turn']
 }
 
@@ -82,15 +83,25 @@ export const Action = () => {
 
   const userElement = (row: Row, key: string) => {
     return (
-      <div key={key} className="item">
-        <h1>
-          {cAction.action.button === row.id && (
-            <SVG src={require('../../svg/poker-chip.svg')} />
-          )}
-          {row.name}
-        </h1>
-        <div>{row.action.bet}</div>
-        <div>{row.action.status}</div>
+      <div
+        key={key}
+        className={`item ${cAction.action.button === row.id ? 'button' : ''}`}
+      >
+        <div className="player">
+          <div className="bet-and-action">
+            <div className="bet">
+              {cAction.action.big === row.id && (
+                <SVG className="big" src={require('../../svg/chip.svg')} />
+              )}
+              <SVG src={require('../../svg/chip.svg')} /> {row.action.bet}
+            </div>
+            <div className="action">{row.action.status}</div>
+          </div>
+          <div className="info">
+            <h2 className="name">{row.name}</h2>
+            <div>{row.sum}</div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -112,9 +123,11 @@ export const Action = () => {
 
         const top = i === half || (even && i === half - 1)
 
+        user.sum
+
         object[top ? 'top' : left ? 'left' : 'right'].push({
+          ...user,
           name,
-          id: user.id,
           action,
         })
 
@@ -204,7 +217,10 @@ export const Action = () => {
       </Modal>
 
       <div className="px-4 py-6">
-        <h1 className="absolute left-0 top-0 text-white">{group.name}</h1>
+        <h1 className="absolute left-0 top-0 text-white p-4">{group.name}</h1>
+        <h2 className="absolute right-0 top-0 text-white p-4">
+          {cAction.action.round}
+        </h2>
 
         <div className="users z-10">
           <div className="left">
@@ -222,7 +238,6 @@ export const Action = () => {
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
             <div>current bet: {currentBet}</div>
             <div>your bet: {yourBet}</div>
-            <div>round: {cAction.action.round}</div>
             <div>pot: {cAction.action.pot}</div>
             <div>bank: {group.users.find(({ id }) => id === cUser.id).sum}</div>
 
