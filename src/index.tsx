@@ -1,7 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
 import Modal from 'react-modal'
+import 'rc-slider/assets/index.css'
 import './index.css'
+
 import App from './components/App'
 import { Provider as Config } from './context/Config'
 import { Provider as User } from './context/User'
