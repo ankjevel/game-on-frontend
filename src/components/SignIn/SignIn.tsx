@@ -141,101 +141,102 @@ class SignIn extends Component<{}, State> {
 
   render() {
     return (
-      <div
-        className={`${
-          this.state.error ? 'bg-red-100' : 'bg-white'
-        } flex-1 sign-in '`}
-      >
-        <form
-          className="px-8 pt-6 pb-8 mb-4 w-full"
-          onSubmit={this.handleSubmit}
+      <div className="self-center auto w-full sm:w-full md:w-2/3 lg:w-2/3 xl:w-1/2 rounded overflow-hidden shadow-lg bg-white">
+        <div
+          className={`${
+            this.state.error ? 'bg-red-100' : 'bg-white'
+          } flex-1 sign-in '`}
         >
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2 w-full"
-            >
-              Username
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="name"
-              name="name"
-              required={true}
-              value={this.state.input.name}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password {this.state.create && '(minimum length: 8)'}
-            </label>
-
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              type="password"
-              name="password"
-              minLength={8}
-              required={true}
-              value={this.state.input.password}
-              onChange={this.handleChange}
-            />
-          </div>
-
-          {this.state.create && (
+          <form
+            className="px-8 pt-6 pb-8 mb-4 w-full"
+            onSubmit={this.handleSubmit}
+          >
             <div>
               <label
-                htmlFor="passwordRepeat"
+                htmlFor="name"
+                className="block text-gray-700 text-sm font-bold mb-2 w-full"
+              >
+                Username
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="name"
+                name="name"
+                required={true}
+                value={this.state.input.name}
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Repeat password
+                Password {this.state.create && '(minimum length: 8)'}
               </label>
 
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 type="password"
+                name="password"
                 minLength={8}
-                name="passwordRepeat"
                 required={true}
-                value={this.state.input.passwordRepeat}
+                value={this.state.input.password}
                 onChange={this.handleChange}
               />
             </div>
-          )}
 
-          <div className="p-4">
-            <div className="flex -mx-2">
-              <input
-                className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline"
-                type="submit"
-                value={this.state.create ? 'Create' : 'Login'}
-              />
-              <button
-                className="w-1/2 bg-blue-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline"
-                type="button"
-                onClick={this.toggleCreate}
+            {this.state.create && (
+              <div>
+                <label
+                  htmlFor="passwordRepeat"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Repeat password
+                </label>
+
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  type="password"
+                  minLength={8}
+                  name="passwordRepeat"
+                  required={true}
+                  value={this.state.input.passwordRepeat}
+                  onChange={this.handleChange}
+                />
+              </div>
+            )}
+
+            <div className="p-4">
+              <div className="flex -mx-2">
+                <input
+                  className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline"
+                  type="submit"
+                  value={this.state.create ? 'Create' : 'Login'}
+                />
+                <button
+                  className="w-1/2 bg-blue-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline"
+                  type="button"
+                  onClick={this.toggleCreate}
+                >
+                  {this.state.create ? 'Returning user?' : 'Create new?'}
+                </button>
+              </div>
+            </div>
+
+            {this.state.error && (
+              <div
+                className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
+                role="alert"
               >
-                {this.state.create ? 'Returning user?' : 'Create new?'}
-              </button>
-            </div>
-          </div>
+                <p className="font-bold">Error</p>
+                <p>{this.state.error}</p>
+              </div>
+            )}
+          </form>
 
-          {this.state.error && (
-            <div
-              className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
-              role="alert"
-            >
-              <p className="font-bold">Error</p>
-              <p>{this.state.error}</p>
-            </div>
-          )}
-        </form>
-
-        {/* <div className="absolute ml-2">
+          {/* <div className="absolute ml-2">
           <button
             onClick={this.handleForgot}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-bl rounded-br"
@@ -243,6 +244,7 @@ class SignIn extends Component<{}, State> {
             Forgot Password?
           </button>
         </div> */}
+        </div>
       </div>
     )
   }

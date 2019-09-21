@@ -202,19 +202,17 @@ export const App = () => {
   return (
     <Router>
       <div className="app flex items-center justify-center">
-        <div className="self-center auto w-full sm:w-full md:w-2/3 lg:w-2/3 xl:w-1/2 rounded overflow-hidden shadow-lg bg-white">
-          <Switch>
-            <Route path="/" exact component={RouteMain} />
-            <Route path="/sign-in" component={RouteSignIn} />
-            <Route path="/create" component={RouteCreate} />
-            <Route path="/group" exact component={RouteGroupWithOutID} />
-            <Route path="/group/leave" exact component={RouteLeaveGroup} />
-            <Route path="/group/:id" component={RouteGroup} />
-            <Route path="/action" exact component={RouteActionWithOutID} />
-            <Route path="/action/:id" component={RouteAction} />
-            <Route component={NotFound} />
-          </Switch>
-        </div>
+        <Switch>
+          <Route path="/" exact component={RouteMain} />
+          <Route path="/sign-in" component={RouteSignIn} />
+          <Route path="/create" component={RouteCreate} />
+          <Route path="/group" exact component={RouteGroupWithOutID} />
+          <Route path="/group/leave" exact component={RouteLeaveGroup} />
+          <Route path="/group/:id" component={RouteGroup} />
+          <Route path="/action" exact component={RouteActionWithOutID} />
+          <Route path="/action/:id" component={RouteAction} />
+          <Route component={NotFound} />
+        </Switch>
       </div>
     </Router>
   )

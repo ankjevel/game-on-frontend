@@ -1,14 +1,34 @@
-.circle-container {
-  @apply absolute inset-0 font-bold;
-  list-style: none;
-  left: 50%;
-  top: 50%;
-  width: 50vw;
-  height: 50vh;
+.users {
+  @apply absolute inset-0 font-bold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40;
 }
 
-.circle-container > * {
-  @apply block relative w-full text-center text-white;
-  left: -50%;
-  top: -25%;
+.left, .right, .top {
+  @apply flex w-full h-full items-center justify-center;
 }
+
+.left, .right {
+  @apply flex-col w-1/4 pt-24;
+}
+.top {
+  @apply flex-row w-2/4;
+}
+
+.left .item, .right .item {
+  @apply items-center justify-center;
+}
+
+.item {
+  @apply h-full w-full self-center flex flex-col text-white relative;
+}
+.item > * {
+  @apply inline-block w-full align-middle h-8 text-center;
+}
+
+.item svg {
+  @apply inline-block w-4 h-4 mr-2 stroke-current fill-current text-white;
+}
+/*
+.left { @apply bg-blue-300; }
+.right { @apply bg-red-300; }
+.top { @apply bg-green-300; }
+.item { @apply border; } */
