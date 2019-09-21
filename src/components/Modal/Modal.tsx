@@ -10,7 +10,7 @@ export const Modal: SFC<{
   const closeOnClick = props.shouldCloseOnOverlayClick
   return (
     <ReactModal
-      className="modal  self-center auto flex items-center justify-center overflow-hidden outline-none h-full w-full bg-transparent"
+      className="modal absolute self-center auto flex items-center justify-center overflow-hidden outline-none h-full w-full bg-transparent"
       isOpen={props.isOpen}
     >
       <IconX

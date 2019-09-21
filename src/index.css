@@ -52,3 +52,11 @@ body,
   white-space: nowrap;
 }
 
+.ReactModal__Body--open #root {
+  z-index: -1;
+}
+
+.ReactModalPortal {
+  z-index: 2147483647;
+  position: absolute;
+}

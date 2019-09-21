@@ -1,6 +1,3 @@
 .modal {
+  z-index: 2147483647;
 }
-
-/*
-self-center auto flex items-center justify-center overflow-hidden outline-none h-full w-full bg-transparent
-*/
