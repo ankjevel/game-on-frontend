@@ -1,8 +1,32 @@
+.users,
+.bottom,
+.main {
+  svg {
+    @apply inline-block stroke-current fill-current w-4 h-4;
+  }
+}
+
+.main {
+  .pot {
+    @apply block text-center pt-3 select-none rounded-full shadow-lg w-12 h-12 bg-white;
+  }
+}
+
+.bet {
+  svg {
+    @apply mr-2 -ml-8;
+  }
+
+  .big {
+    @apply -ml-12 absolute text-green-200;
+  }
+}
+
 .users {
   @apply absolute inset-0 font-bold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40;
 
   svg {
-    @apply inline-block stroke-current fill-current text-white w-4 h-4 mr-2 -ml-8;
+    @apply text-white mr-2 -ml-8;
   }
 
   .left,
@@ -40,8 +64,16 @@
     }
   }
 
-  .player {
+  .left .player {
     @apply border-r-4 border-transparent;
+  }
+
+  .right .player {
+    @apply border-l-4 border-transparent;
+  }
+
+  .top .player {
+    @apply border-b-4 border-transparent;
   }
 
   .button .player {
@@ -50,27 +82,42 @@
 }
 
 .bottom {
-  @apply z-10 absolute bottom-0 py-2 pl-2 pr-4 w-full;
-  background: rgba(0, 0, 0, .5);
+  @apply z-10 absolute bottom-0 py-2 pl-2 pr-4 w-full border-t-4 border-transparent bg-gray-100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-  > div {
-    @apply flex items-center justify-center flex-wrap;
+  &.turn {
+    @apply border-green-300;
+  }
+
+  .holder {
+    @apply flex items-center justify-center flex-wrap w-full;
   }
 
   .raise {
-    @apply inline-block bg-transparent bg-gray-500 text-white py-2 px-4 align-middle w-24 text-center mx-2;
-    background: rgba(0, 0, 0, .5);
+    @apply inline-block bg-transparent py-2 px-4 align-middle w-24 text-center mx-2;
   }
 
   .slider {
     @apply w-32 h-2 m-4;
 
     .rc-slider-handle {
-      @apply border-r-2 border-blue-400;
+      @apply border-r-2 border-gray-400;
 
       &:active {
         @apply shadow-none;
       }
+
+      &:focus {
+        box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+      }
+    }
+
+    .rc-slider-step {
+      @apply border-gray-600;
+    }
+
+    .rc-slider-track {
+      @apply bg-green-200;
     }
   }
 }

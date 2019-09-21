@@ -10,7 +10,7 @@ import SVG from 'react-inlinesvg'
 import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
 import update from 'immutability-helper'
 
-import api from '../../utils/api'
+import api, { user } from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
@@ -295,14 +295,8 @@ export const Action = () => {
       <div className="main px-4 py-6 z-10">
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <div className="select-none">
-              <div>current bet: {currentBet}</div>
-              <div>your bet: {yourBet}</div>
-              <div>pot: {cAction.action.pot}</div>
-              <div>
-                bank: {group.users.find(({ id }) => id === cUser.id).sum}
-              </div>
-            </div>
+            <div className="pot">{cAction.action.pot}</div>
+
             {group.owner == cUser.id &&
               cAction.action.round === 4 &&
               !callPending && (
@@ -336,79 +330,96 @@ export const Action = () => {
         </div>
       </div>
 
-      {/* {cAction.action.round !== 4 && !callPending && ( */}
-      <div className="bottom z-10">
-        <div className="container">
-          <Fragment>
-            <button
-              onClick={() => actions.check()}
-              type="button"
-              className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base
-                      leading-none p-2 py-2 px-4 rounded"
-            >
-              {currentBet === yourBet
-                ? cAction.action.round === 0
-                  ? 'bet'
-                  : 'check'
-                : 'call'}
-            </button>
-            <button
-              type="button"
-              onClick={() => actions.fold()}
-              className="bg-red-500 hover:bg-red-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-            >
-              fold
-            </button>
-            <button
-              type="button"
-              disabled={input.raise === maxBet}
-              onClick={async event => {
-                event.preventDefault()
+      <div
+        className={`bottom z-10 ${
+          cAction.action.button === cUser.id ? 'turn animated pulse' : ''
+        }`}
+      >
+        <div className="holder">
+          <div className="you">
+            <div className="bet">
+              {cAction.action.big === cUser.id && (
+                <SVG className="big" src={require('../../svg/chip.svg')} />
+              )}
+              <SVG src={require('../../svg/chip.svg')} /> {yourBet}
+            </div>
+            <div className="bank">
+              {group.users.find(({ id }) => id === cUser.id).sum}
+            </div>
+          </div>
 
-                const currentBank = cUser.group.users.find(
-                  user => user.id === cUser.id
-                ).sum
+          <button
+            onClick={() => !callPending && actions.check()}
+            disabled={callPending}
+            type="button"
+            className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
+          >
+            {currentBet === yourBet
+              ? cAction.action.round === 0
+                ? 'bet'
+                : 'check'
+              : 'call'}
+          </button>
+          <button
+            type="button"
+            disabled={callPending}
+            onClick={() => !callPending && actions.fold()}
+            className="bg-red-500 hover:bg-red-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4"
+          >
+            fold
+          </button>
+          <button
+            type="button"
+            disabled={callPending || input.raise === maxBet}
+            onClick={async event => {
+              event.preventDefault()
 
-                if (input.raise >= currentBank) {
-                  window.alert('maybe go all in?')
-                  return
-                }
+              if (callPending) {
+                return
+              }
 
-                await actions.raise(input.raise)
-              }}
-              className={`bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-                input.raise === maxBet ? 'disabled' : ''
-              }`}
-            >
-              raise
-            </button>
-            <Slider
-              className="slider"
-              value={input.raise}
-              onChange={value => {
-                setInput({
-                  ...input,
-                  raise: value,
-                })
-              }}
-              min={1}
-              max={maxBet}
-            />
-            <h3 className="raise ">{input.raise}</h3>
-            <button
-              type="button"
-              disabled={input.raise !== maxBet}
-              onClick={() => actions.allIn()}
-              className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-                input.raise !== maxBet ? 'disabled' : ''
-              }`}
-            >
-              all-in
-            </button>
-          </Fragment>
+              const currentBank = cUser.group.users.find(
+                user => user.id === cUser.id
+              ).sum
+
+              if (input.raise >= currentBank) {
+                window.alert('maybe go all in?')
+                return
+              }
+
+              await actions.raise(input.raise)
+            }}
+            className={`bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
+              input.raise === maxBet ? 'disabled' : ''
+            }`}
+          >
+            raise
+          </button>
+          <Slider
+            className="slider"
+            value={input.raise}
+            onChange={value => {
+              setInput({
+                ...input,
+                raise: value,
+              })
+            }}
+            min={1}
+            max={maxBet}
+          />
+          <p className="raise ">{input.raise}</p>
+          <button
+            type="button"
+            disabled={callPending || input.raise !== maxBet}
+            onClick={() => !callPending && actions.allIn()}
+            className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
+              input.raise !== maxBet ? 'disabled' : ''
+            }`}
+          >
+            all-in
+          </button>
         </div>
       </div>
-      {/* )} */}
     </Fragment>
   )
 }
