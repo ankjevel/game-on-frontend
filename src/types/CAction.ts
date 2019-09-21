@@ -51,9 +51,14 @@ export interface CActionSetValue {
   (key: 'action', value: Action): Promise<void>
 }
 
+export interface CActionRefresh {
+  (key: 'action'): Promise<void>
+}
+
 export type CAction = {
   action?: Action
   setValue: CActionSetValue
+  refresh: CActionRefresh
 }
 
 export default CAction

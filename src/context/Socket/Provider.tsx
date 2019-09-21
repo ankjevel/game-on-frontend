@@ -48,8 +48,12 @@ export const SocketProvider = props => {
       if (cUser && cUser.group != null && cUser.group.id === updatedGroup.id) {
         cUser.setValue('group', updatedGroup)
       }
+
+      if (cAction != null && cAction.action === null) {
+        cAction.refresh('action')
+      }
     })
-  }, [cConfig.api, cUser])
+  }, [cConfig.api, cUser, cAction])
 
   useEffect(() => {
     if (socket == null) return

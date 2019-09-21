@@ -21,13 +21,39 @@ export const ActionProvider = props => {
 
       setValue(state => ({ ...state, ...changed }))
     },
+    refresh: async key => {
+      switch (key) {
+        case 'action': {
+          if (
+            value.action == null &&
+            user.group != null &&
+            user.group.action != null
+          ) {
+            const action = await list.get(user.group.action, 'action')
+
+            if (!action) return
+
+            setValue(state => ({ ...state, action }))
+          }
+
+          break
+        }
+        default:
+          return
+      }
+    },
   })
 
   useEffect(() => {
     const apply = async () => {
-      if (value == null) return
       if (user.group == null) return
-      if (user.group.action == null) return setValue(null)
+      if (user.group.action == null) {
+        if (value.action != null) {
+          setValue(state => ({ ...state, action: null }))
+        }
+
+        return
+      }
 
       if (!value.action || value.action.id !== user.group.action) {
         const action = await list.get(user.group.action, 'action')
