@@ -1,4 +1,7 @@
 import React, { useContext, useState, Fragment } from 'react'
+
+import './App.css'
+
 import {
   BrowserRouter as Router,
   Redirect,

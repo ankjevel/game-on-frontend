@@ -1,4 +1,7 @@
 import React, { SFC } from 'react'
+
+import './Modal.css'
+
 import ReactModal from 'react-modal'
 import { IconX } from 'react-heroicons-ui'
 

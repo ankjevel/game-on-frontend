@@ -1,76 +1,83 @@
 .users {
   @apply absolute inset-0 font-bold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40;
-}
 
-.users .left,
-.users .right,
-.users .top {
-  @apply flex w-full h-full items-center justify-center;
-}
+  svg {
+    @apply inline-block stroke-current fill-current text-white w-4 h-4 mr-2 -ml-8;
+  }
 
-.users .left,
-.users .right {
-  @apply flex-col w-1/4 pt-24;
-}
+  .left,
+  .right,
+  .top {
+    @apply flex w-full h-full items-center justify-center;
+  }
 
-.users .top {
-  @apply flex-row w-2/4;
-}
+  .left,
+  .right {
+    @apply flex-col w-1/4 pt-24;
 
-.users .left .item,
-.users .right .item {
-  @apply items-center justify-center;
-}
+    .item {
+      @apply items-center justify-center;
+    }
+  }
 
-.users .item {
-  @apply relative h-full self-center flex flex-col text-white;
-}
+  .top {
+    @apply flex-row w-2/4;
+  }
 
-.users .item .player {
-  @apply inline-block align-middle text-center w-24 h-24;
-}
+  .item {
+    @apply relative h-full self-center flex flex-col text-white;
 
-.users .player {
-  @apply border-r-4 border-transparent;
-}
+    .player {
+      @apply inline-block align-middle text-center w-24 h-24;
+    }
 
-.users .button .player {
-  @apply border-green-200;
-}
+    svg {
+      @apply mr-2 -ml-8;
+    }
 
-.users .item svg {
-  @apply inline-block stroke-current fill-current text-white w-4 h-4 mr-2 -ml-8;
-}
+    .big {
+      @apply -ml-12 absolute text-green-200;
+    }
+  }
 
-.users .item .big {
-  @apply -ml-12 absolute text-green-200;
+  .player {
+    @apply border-r-4 border-transparent;
+  }
+
+  .button .player {
+    @apply border-green-200;
+  }
 }
 
 .bottom {
-  @apply absolute bottom-0 right-0 py-2 pl-4 pr-4 rounded-tl;
+  @apply z-10 absolute bottom-0 py-2 pl-2 pr-4 w-full;
   background: rgba(0, 0, 0, .5);
+
+  > div {
+    @apply flex items-center justify-center flex-wrap;
+  }
+
+  .raise {
+    @apply inline-block bg-transparent bg-gray-500 text-white py-2 px-4 align-middle w-24 text-center mx-2;
+    background: rgba(0, 0, 0, .5);
+  }
+
+  .slider {
+    @apply w-32 h-2 m-4;
+
+    .rc-slider-handle {
+      @apply border-r-2 border-blue-400;
+
+      &:active {
+        @apply shadow-none;
+      }
+    }
+  }
 }
 
-.bottom .raise {
-  @apply inline-block bg-transparent bg-gray-500 text-white py-2 px-4 align-middle w-24 text-center mx-2;
-  background: rgba(0, 0, 0, .5);
-}
-
-.bottom .slider {
-  @apply w-32 h-2 m-4;
-}
-
-.bottom .slider .rc-slider-handle {
-  @apply border-r-2 border-blue-400;
-  /* background: rgba(0, 0, 0, .5);
-  border: none; */
-}
-
-.bottom .slider .rc-slider-handle:active {
-  @apply shadow-none;
-}
-
-.disabled,
-.disabled:hover {
-  @apply cursor-not-allowed bg-gray-500;
+.disabled {
+  &,
+  &:hover {
+    @apply cursor-not-allowed bg-gray-500;
+  }
 }
