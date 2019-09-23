@@ -10,7 +10,7 @@ import SVG from 'react-inlinesvg'
 import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
 import update from 'immutability-helper'
 
-import api, { user } from '../../utils/api'
+import api from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
@@ -32,6 +32,7 @@ export const Action = () => {
   const [callPending, setCallPending] = useState(false)
 
   const [usersLeft, setOrder] = useState([])
+  const [winner, setWinner] = useState('')
 
   const maxBet = (
     (group.users || []).find(user => user.id === cUser.id) || { sum: -1 }
@@ -95,7 +96,12 @@ export const Action = () => {
     )
   }
 
-  if (group == null || cAction == null || cAction.action == null) {
+  if (
+    group == null ||
+    group.users == null ||
+    cAction == null ||
+    cAction.action == null
+  ) {
     return null
   }
 
@@ -177,20 +183,64 @@ export const Action = () => {
           {Object.values(cAction.action.turn).findIndex(
             action => action.status === 'allIn'
           ) === -1 ? (
-            <div className="inline-block relative w-64">
-              <select className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                <option>Who won?</option>
-                <option>Option 2</option>
-                <option>Option 3</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+            <div className="inline-block">
+              <div className="w-full mb-4 pl-2 pr-2 pt-2">
+                <h1>Who won?</h1>
+              </div>
+              <div className="inline-block relative w-64">
+                <select
+                  className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                  value={winner}
+                  onChange={event => {
+                    event.preventDefault()
+                    const {
+                      target: { value },
+                    } = event
+
+                    if (!value || !usersLeft.find(([key]) => key === value)) {
+                      return
+                    }
+
+                    setWinner(value)
+                  }}
                 >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
+                  {usersLeft
+                    .filter(([, { status }]) => status !== 'fold')
+                    .map(([key]) => (
+                      <option value={key} key={key}>
+                        {users[key]}
+                      </option>
+                    ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="w-full flex flex-col mb-4 pl-2 pr-2 pt-2">
+                <button
+                  type="button"
+                  className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 mt-4 border border-blue-500 hover:border-transparent rounded"
+                  onClick={async event => {
+                    event.preventDefault()
+                    if (
+                      window.confirm(
+                        `Is the selection correct? (${users[winner]})`
+                      ) === false
+                    ) {
+                      return
+                    }
+                    await actions.winner([winner])
+                    setModalEndIsVisible(!modalEndIsVisible)
+                  }}
+                >
+                  Declare winner
+                </button>
               </div>
             </div>
           ) : (
@@ -337,14 +387,9 @@ export const Action = () => {
       >
         <div className="holder">
           <div className="you">
-            <div className="bet">
-              {cAction.action.big === cUser.id && (
-                <SVG className="big" src={require('../../svg/chip.svg')} />
-              )}
-              <SVG src={require('../../svg/chip.svg')} /> {yourBet}
-            </div>
+            <div className="bet">bet: {yourBet}</div>
             <div className="bank">
-              {group.users.find(({ id }) => id === cUser.id).sum}
+              bank: {group.users.find(({ id }) => id === cUser.id).sum}
             </div>
           </div>
 
@@ -407,7 +452,7 @@ export const Action = () => {
             min={1}
             max={maxBet}
           />
-          <p className="raise ">{input.raise}</p>
+          <p className="raise ">raise: {input.raise}</p>
           <button
             type="button"
             disabled={callPending || input.raise !== maxBet}

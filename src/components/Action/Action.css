@@ -12,18 +12,18 @@
   }
 }
 
-.bet {
-  svg {
-    @apply mr-2 -ml-8;
-  }
-
-  .big {
-    @apply -ml-12 absolute text-green-200;
-  }
-}
-
 .users {
   @apply absolute inset-0 font-bold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40;
+
+  .bet {
+    svg {
+      @apply mr-2 -ml-8;
+    }
+
+    .big {
+      @apply -ml-12 absolute text-green-200;
+    }
+  }
 
   svg {
     @apply text-white mr-2 -ml-8;
@@ -91,6 +91,10 @@
 
   .holder {
     @apply flex items-center justify-center flex-wrap w-full;
+  }
+
+  .you {
+    @apply pr-4 text-sm;
   }
 
   .raise {
