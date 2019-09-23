@@ -46,10 +46,15 @@ export const ActionProvider = props => {
 
   useEffect(() => {
     const apply = async () => {
-      if (user.group == null) return
+      if (user.group == null) {
+        if (value.action != null) {
+          setValue(state => ({ ...state, action: undefined }))
+        }
+        return
+      }
       if (user.group.action == null) {
         if (value.action != null) {
-          setValue(state => ({ ...state, action: null }))
+          setValue(state => ({ ...state, action: undefined }))
         }
 
         return

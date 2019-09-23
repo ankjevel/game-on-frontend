@@ -34,6 +34,10 @@ export const App = () => {
       return '/action'
     }
 
+    if (user.group.users.find(({ id }) => id === user.id) == null) {
+      return '/create'
+    }
+
     return '/group'
   }
 

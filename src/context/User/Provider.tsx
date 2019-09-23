@@ -37,7 +37,17 @@ export const UserProvider = props => {
           return
       }
 
-      setValue(state => ({ ...state, ...changed }))
+      setValue(state => {
+        if (
+          changed.group &&
+          Array.isArray(changed.group.users) &&
+          changed.group.users.find(user => user.id === state.id) == null
+        ) {
+          changed.group = undefined
+        }
+
+        return { ...state, ...changed }
+      })
     },
   })
 
