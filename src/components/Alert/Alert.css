@@ -1,0 +1,23 @@
+.alert {
+  @apply animated fadeIn flex items-center text-white text-sm font-bold px-4 py-3;
+
+  &.info {
+    @apply bg-blue-500;
+  }
+
+  &.success {
+    @apply bg-green-500;
+  }
+
+  &.error {
+    @apply bg-red-500;
+  }
+
+  .message {
+  }
+
+  .close {
+    @apply cursor-pointer text-white fill-current;
+  }
+}
+

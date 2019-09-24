@@ -2,10 +2,13 @@ import { User } from 'Api'
 import CContext from '../../types/CUser'
 
 import React, { useState, useEffect } from 'react'
+import { useAlert } from 'react-alert'
+
 import Context from './context'
 import * as api from '../../utils/api'
 
 export const UserProvider = props => {
+  const alert = useAlert()
   const [value, setValue] = useState<CContext>({
     id: '',
     token: '',
@@ -59,6 +62,7 @@ export const UserProvider = props => {
       tokenValid: if (token) {
         const jwt = api.validate(token)
         if (!jwt || (await api.user.validToken(token)) == null) {
+          alert.error('token not valid')
           localStorage.removeItem('token')
           break tokenValid
         }

@@ -1,10 +1,12 @@
 import CContext from 'CAction'
 import React, { useEffect, useState, useContext } from 'react'
-import UserContext, { Context as User } from '../User'
-import Context from './context'
+import { useAlert } from 'react-alert'
 import { list } from '../../utils/api'
+import Context from './context'
+import UserContext, { Context as User } from '../User'
 
 export const ActionProvider = props => {
+  const alert = useAlert()
   const user = useContext<User>(UserContext)
   const [value, setValue] = useState<CContext>({
     action: undefined,
@@ -12,6 +14,7 @@ export const ActionProvider = props => {
       const changed: any = {}
       switch (key) {
         case 'action': {
+          console.log('new action', value)
           changed.action = value
           break
         }
@@ -33,6 +36,8 @@ export const ActionProvider = props => {
 
             if (!action) return
 
+            alert.info('force refreshed game')
+
             setValue(state => ({ ...state, action }))
           }
 
@@ -48,15 +53,17 @@ export const ActionProvider = props => {
     const apply = async () => {
       if (user.group == null) {
         if (value.action != null) {
+          alert.info('game ended')
           setValue(state => ({ ...state, action: undefined }))
         }
         return
       }
+
       if (user.group.action == null) {
         if (value.action != null) {
+          alert.info('game ended')
           setValue(state => ({ ...state, action: undefined }))
         }
-
         return
       }
 

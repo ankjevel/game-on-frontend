@@ -79,10 +79,10 @@ export const Action = () => {
         type: 'draw',
       })
     },
-    async winner(winners: string[]) {
+    async winner(order: string[]) {
       await req({
         type: 'winner',
-        winners,
+        order,
       })
     },
   }
