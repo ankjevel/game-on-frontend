@@ -24,7 +24,7 @@ export type UserSummary = {
 export type NewAction = {
   type: ActionType
   value?: number
-  order?: User['id'][]
+  order?: User['id'][][]
 }
 
 export interface KeyValue<T> {

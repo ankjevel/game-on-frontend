@@ -1,5 +1,5 @@
 import { NewAction, CAction as CActionContext } from 'CAction'
-import { User } from 'Api'
+import { User, Group } from 'Api'
 
 import React, { useContext, useState, Fragment } from 'react'
 
@@ -8,12 +8,12 @@ import './Action.css'
 import Slider from 'rc-slider'
 import SVG from 'react-inlinesvg'
 import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
-import update from 'immutability-helper'
 
 import api from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
+import { UserSummary } from 'CAction'
 
 type Row = {
   name: string
@@ -27,20 +27,17 @@ export const Action = () => {
   const cAction = useContext(actionContext)
   const [group] = useState(cUser.group)
   const [users] = useState(cUser.users)
-
   const [modalEndIsVisible, setModalEndIsVisible] = useState(false)
   const [callPending, setCallPending] = useState(false)
-
-  const [usersLeft, setOrder] = useState([])
-  const [winner, setWinner] = useState('')
+  const [usersLeft, setOrder] = useState<[User['id'], UserSummary][]>([])
+  const [winner, setWinner] = useState<User['id']>('')
+  const [winnerOrder, setWinnerOrder] = useState<User['id'][][]>([[]])
 
   const maxBet = (
     (group.users || []).find(user => user.id === cUser.id) || { sum: -1 }
   ).sum
 
-  const [input, setInput] = useState({
-    raise: Math.min(2, maxBet),
-  })
+  const [input, setInput] = useState({ raise: Math.min(2, maxBet) })
 
   const req = async (body: NewAction) => {
     setCallPending(true)
@@ -79,7 +76,7 @@ export const Action = () => {
         type: 'draw',
       })
     },
-    async winner(order: string[]) {
+    async winner(order: string[][]) {
       await req({
         type: 'winner',
         order,
@@ -87,13 +84,18 @@ export const Action = () => {
     },
   }
 
-  const changeOrder = (index: number, newIndex: number) => {
-    const user = usersLeft[index]
-    setOrder(
-      update(usersLeft, {
-        $splice: [[index, 1], [newIndex, 0, user]],
-      })
-    )
+  const changeWinnerOrder = (
+    index: number,
+    userID: User['id'],
+    newIndex: number
+  ) => {
+    const copy = JSON.parse(JSON.stringify(winnerOrder.slice(0)))
+    const userIndex = copy[index].findIndex(id => id === userID)
+    const user = copy[index].splice(userIndex, 1).pop()
+
+    copy[newIndex].push(user)
+
+    setWinnerOrder(copy)
   }
 
   if (
@@ -135,6 +137,7 @@ export const Action = () => {
 
   let userIndex = group.users.findIndex(user => user.id === cUser.id)
   let usersCopy = group.users.slice(0)
+
   usersCopy.splice(
     0,
     0,
@@ -170,6 +173,7 @@ export const Action = () => {
       top: [],
     }
   )
+
   usersCopy = undefined
   userIndex = undefined
 
@@ -235,7 +239,7 @@ export const Action = () => {
                     ) {
                       return
                     }
-                    await actions.winner([winner])
+                    await actions.winner([[winner]])
                     setModalEndIsVisible(!modalEndIsVisible)
                   }}
                 >
@@ -255,48 +259,64 @@ export const Action = () => {
                   </p>
                 </div>
               </div>
-              {usersLeft.map(([key], index, array) => {
-                const start = index == 0
-                const end = index === array.length - 1
-                const even = index % 2 === 0
+              {winnerOrder.map((keys, i, array) => {
+                const start = i == 0
+                const end = i === array.length - 1
 
                 return (
-                  <div
-                    key={key}
-                    className={`w-full flex flex-row pl-2 pr-2 pt-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
-                      'bg-gray-100'}`}
-                  >
-                    <div className="pl-2 font-bold flex-grow-0 flex-shrink-0">
-                      <span className="inline-block align-bottom w-full h-full">
-                        {index + 1}
-                      </span>
-                    </div>
+                  <Fragment key={`main-${i}`}>
+                    {keys.map((key, ii) => {
+                      const actualIndex = array
+                        .slice(0, i + 1)
+                        .reduce((index, current) => {
+                          const indexOf = current.indexOf(key)
+                          if (indexOf === -1) {
+                            return index + current.length
+                          }
+                          return index + indexOf
+                        }, 1)
+                      const even = actualIndex % 2 === 0
+                      const index = ii === 0 ? `${actualIndex}` : '.'
+                      return (
+                        <div
+                          key={`order-${key}`}
+                          className={`w-full flex flex-row pl-2 pr-2 pt-2 border-t border-gray-300 font-mono text-xs text-gray-700 whitespace-no-wrap ${even &&
+                            'bg-gray-100'}`}
+                        >
+                          <div className="pl-2 font-bold flex-grow-0 flex-shrink-0">
+                            <span className="inline-block align-bottom w-full h-full">
+                              {index}
+                            </span>
+                          </div>
 
-                    <div className="flex-grow-1 w-full pl-2 pr-4">
-                      <span className="inline-block align-bottom w-full h-full">
-                        {users[key]}
-                      </span>
-                    </div>
+                          <div className="flex-grow-1 w-full pl-2 pr-4">
+                            <span className="inline-block align-bottom w-full h-full">
+                              {users[key]}
+                            </span>
+                          </div>
 
-                    <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
-                      {!end && (
-                        <IconArrowDown
-                          className="cursor-pointer inline ml-2 w-6 h-4 hover:text-blue-500 fill-current text-gray-500 -mt-2"
-                          height={5}
-                          onClick={() => changeOrder(index, index + 1)}
-                        />
-                      )}
-                    </div>
-                    <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
-                      {!start && (
-                        <IconArrowUp
-                          className="cursor-pointer inline ml-2 w-6 h-4 hover:text-blue-500 fill-current text-gray-500 -mt-2"
-                          height={5}
-                          onClick={() => changeOrder(index, index - 1)}
-                        />
-                      )}
-                    </div>
-                  </div>
+                          <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
+                            {!end && (
+                              <IconArrowDown
+                                className="cursor-pointer inline ml-2 w-6 h-4 hover:text-blue-500 fill-current text-gray-500 -mt-2"
+                                height={5}
+                                onClick={() => changeWinnerOrder(i, key, i + 1)}
+                              />
+                            )}
+                          </div>
+                          <div className="w-8 h-5 flex-grow-0 flex-shrink-0">
+                            {!start && (
+                              <IconArrowUp
+                                className="cursor-pointer inline ml-2 w-6 h-4 hover:text-blue-500 fill-current text-gray-500 -mt-2"
+                                height={5}
+                                onClick={() => changeWinnerOrder(i, key, i - 1)}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </Fragment>
                 )
               })}
               <div className="w-full flex flex-col mb-4 pl-2 pr-2 pt-2">
@@ -310,7 +330,9 @@ export const Action = () => {
                       return
                     }
 
-                    await actions.winner(usersLeft.map(([key]) => key))
+                    await actions.winner(
+                      winnerOrder.filter(order => order.length > 0)
+                    )
 
                     setModalEndIsVisible(!modalEndIsVisible)
                   }}
@@ -362,11 +384,12 @@ export const Action = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      setOrder(
-                        Object.entries(cAction.action.turn).filter(
-                          ([, value]) => value.status !== 'fold'
-                        )
-                      )
+                      const unfolded = Object.entries(
+                        cAction.action.turn
+                      ).filter(([, value]) => value.status !== 'fold')
+
+                      setOrder(unfolded)
+                      setWinnerOrder(unfolded.slice().map(x => [x[0]]))
 
                       setModalEndIsVisible(!modalEndIsVisible)
                     }}
@@ -386,7 +409,7 @@ export const Action = () => {
         }`}
       >
         <div className="holder">
-          <div className="you">
+          <div className="you select-none">
             <div className="bet">bet: {yourBet}</div>
             <div className="bank">
               bank: {group.users.find(({ id }) => id === cUser.id).sum}
@@ -452,7 +475,7 @@ export const Action = () => {
             min={1}
             max={maxBet}
           />
-          <p className="raise ">raise: {input.raise}</p>
+          <p className="raise select-none">raise: {input.raise}</p>
           <button
             type="button"
             disabled={callPending || input.raise !== maxBet}
