@@ -19,6 +19,7 @@ export type ActionType =
 export type UserSummary = {
   bet: number
   status: ActionType
+  cards?: [string, string]
 }
 
 export type NewAction = {
@@ -31,18 +32,22 @@ export interface KeyValue<T> {
   [key: string]: T
 }
 
+export type Deck = Tuple<MaybeNull<string>, 52>
+
 export interface IAction<T, Y> {
-  id: string
-  round: 0 | 1 | 2 | 3 | 4
-  groupID: Group['id']
-  queued: KeyValue<T>
-  turn: KeyValue<Y>
-  button: User['id']
   big: User['id']
-  small: User['id']
+  button: User['id']
+  communityCards: string[]
+  deck: Deck
+  groupID: Group['id']
+  id: string
   pot: number
-  sittingOut?: User['id'][]
+  queued: KeyValue<T>
+  round: 0 | 1 | 2 | 3 | 4
   sidePot?: { id: User['id']; sum: number }[]
+  sittingOut?: User['id'][]
+  small: User['id']
+  turn: KeyValue<Y>
 }
 
 export type Action = IAction<NewAction, UserSummary>

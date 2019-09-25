@@ -58,7 +58,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
         : parseInt(valuePre, 10)
       : valuePre
           .trimLeft()
-          .replace(/ {1,}$/, '-')
+          .replace(/ {1,}/g, '-')
           .replace(/[^a-z0-9-åäö]/gi, '')
           .replace(/-{2,}/g, '-')
           .toLocaleLowerCase()

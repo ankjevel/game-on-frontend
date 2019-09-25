@@ -8,7 +8,13 @@
 
 .main {
   .pot {
-    @apply block text-center pt-3 select-none rounded-full shadow-lg w-12 h-12 bg-white;
+    @apply block text-center pt-3 select-none rounded-full shadow-lg w-12 h-12 bg-white self-center;
+  }
+  .cards {
+    @apply flex flex-row bg-white p-4;
+    .card {
+      @apply text-6xl;
+    }
   }
 }
 

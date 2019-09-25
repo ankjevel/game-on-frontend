@@ -1,5 +1,6 @@
 import { NewAction, CAction as CActionContext } from 'CAction'
-import { User, Group } from 'Api'
+import { User } from 'Api'
+import { UserSummary } from 'CAction'
 
 import React, { useContext, useState, Fragment } from 'react'
 
@@ -13,7 +14,7 @@ import api from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
-import { UserSummary } from 'CAction'
+import Card from '../Card'
 
 type Row = {
   name: string
@@ -107,8 +108,10 @@ export const Action = () => {
     return null
   }
 
+  const user = cAction.action.turn[cUser.id]
   const currentBet = cAction.action.turn[cAction.action.big].bet
-  const yourBet = cAction.action.turn[cUser.id].bet
+  const yourBet = (user && user.bet) || 0
+  const cards: string[] = (user && user.cards) || []
 
   const userElement = (row: Row, key: string) => {
     return (
@@ -367,10 +370,18 @@ export const Action = () => {
       <div className="main px-4 py-6 z-10">
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
+            {cAction.action.communityCards.length ? (
+              <div className="cards">
+                {cAction.action.communityCards.map(card => (
+                  <Card key={card} card={card} />
+                ))}
+              </div>
+            ) : null}
             <div className="pot">{cAction.action.pot}</div>
 
             {group.owner == cUser.id &&
               cAction.action.round === 4 &&
+              cAction.action.communityCards == null &&
               !callPending && (
                 <div className="w-full flex flex-row">
                   <button
@@ -414,6 +425,12 @@ export const Action = () => {
             <div className="bank">
               bank: {group.users.find(({ id }) => id === cUser.id).sum}
             </div>
+          </div>
+
+          <div className="p-2">
+            {cards.map(card => (
+              <Card key={card} card={card} />
+            ))}
           </div>
 
           <button
