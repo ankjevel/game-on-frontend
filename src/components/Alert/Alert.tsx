@@ -10,7 +10,6 @@ const AlertTemplate = ({
   style,
   close,
 }: AlertComponentPropsWithStyle) => {
-  console.log({ message, type })
   return (
     <div className={`alert ${type}`} style={style} role="alert">
       <p className="message">{message}</p>

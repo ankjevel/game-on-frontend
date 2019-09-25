@@ -3,6 +3,7 @@ import { Group } from 'Api'
 import CContext from 'CSocket'
 
 import React, { useState, useEffect, useContext } from 'react'
+import { useAlert } from 'react-alert'
 import io from 'socket.io-client'
 
 import Context from './context'
@@ -12,6 +13,7 @@ import UserContext, { Context as CUser } from '../User'
 
 let socket
 export const SocketProvider = props => {
+  const alert = useAlert()
   const cConfig = useContext<CConfig>(ConfigContext)
   const cUser = useContext<CUser>(UserContext)
   const cAction = useContext<CAction>(ActionContext)
@@ -33,7 +35,6 @@ export const SocketProvider = props => {
     socket.on('reconnect', () =>
       setValue(state => ({ ...state, room: '', connected: false }))
     )
-    socket.on('user:joined', _message => {})
     return () => {
       socket.close()
     }
@@ -41,7 +42,11 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     if (socket == null) return
-    if (socket.off) socket.off('update:group')
+    if (socket.off) {
+      socket.off('update:group')
+      socket.off('user:joined')
+      socket.off('user:left')
+    }
     if (cUser == null) return
 
     socket.on('update:group', (updatedGroup: Group) => {
@@ -53,7 +58,15 @@ export const SocketProvider = props => {
         cAction.refresh('action')
       }
     })
-  }, [cConfig.api, cUser, cAction])
+
+    socket.on('user:joined', message => {
+      alert.show(`user ${message.name} joined`)
+    })
+
+    socket.on('user:left', message => {
+      alert.show(`user ${message.name} left`)
+    })
+  }, [cConfig.api, cUser, cAction, alert])
 
   useEffect(() => {
     if (socket == null) return
