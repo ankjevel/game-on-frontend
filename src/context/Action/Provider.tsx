@@ -77,7 +77,7 @@ export const ActionProvider = props => {
     }
 
     apply()
-  }, [value, user.group, alert])
+  }, [value, user.group])
 
   return <Context.Provider value={value}>{props.children}</Context.Provider>
 }

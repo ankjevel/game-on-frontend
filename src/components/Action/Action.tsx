@@ -388,7 +388,6 @@ export const Action = () => {
 
             {group.owner == cUser.id &&
               cAction.action.round === 4 &&
-              cAction.action.communityCards == null &&
               !callPending && (
                 <div className="w-full flex flex-row">
                   <button

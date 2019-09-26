@@ -66,7 +66,7 @@ export const SocketProvider = props => {
     socket.on('user:left', message => {
       alert.show(`user ${message.name} left`)
     })
-  }, [cConfig.api, cUser, cAction, alert])
+  }, [cConfig.api, cUser, cAction])
 
   useEffect(() => {
     if (socket == null) return

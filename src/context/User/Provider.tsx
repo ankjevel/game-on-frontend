@@ -85,7 +85,7 @@ export const UserProvider = props => {
     }
 
     initConfig()
-  }, [alert])
+  }, [])
 
   useEffect(() => {
     const setValue = () => {

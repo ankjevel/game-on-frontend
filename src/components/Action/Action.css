@@ -17,7 +17,7 @@
       @apply flex flex-row p-4;
 
       .card {
-        /* @apply w-auto h-16 text-6xl mx-2; */
+        @apply w-auto h-16 text-6xl mx-2;
       }
     }
   }

@@ -5,12 +5,10 @@ enum Card {
   Clubs = 0xd0,
 }
 
-/**
- *
- * @param input Hex
- */
-export const toString = (input: string) =>
-  `&#x${(0x1f000 | parseInt(input, 16)).toString(16)};`
+export const toHex = (input: string) =>
+  (0x1f000 | parseInt(input, 16)).toString(16)
+
+export const toString = (input: string) => `&#x${toHex(input)};`
 
 export const html = (input: string) => ({
   __html: toString(input),
