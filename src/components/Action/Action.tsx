@@ -370,14 +370,21 @@ export const Action = () => {
       <div className="main px-4 py-6 z-10">
         <div>
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            {cAction.action.communityCards.length ? (
-              <div className="cards">
-                {cAction.action.communityCards.map(card => (
-                  <Card key={card} card={card} />
-                ))}
+            <div className="table">
+              <div className="bets">
+                <div className="bet">
+                  {cAction.action.turn[cAction.action.button].bet}
+                </div>
+                <div className="pot">Pot: {cAction.action.pot}</div>
               </div>
-            ) : null}
-            <div className="pot">{cAction.action.pot}</div>
+              {cAction.action.communityCards.length ? (
+                <div className="cards">
+                  {cAction.action.communityCards.map(card => (
+                    <Card key={card} card={card} />
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
             {group.owner == cUser.id &&
               cAction.action.round === 4 &&

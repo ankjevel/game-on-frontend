@@ -13,7 +13,7 @@ export const toString = (input: string) =>
   `&#x${(0x1f000 | parseInt(input, 16)).toString(16)};`
 
 export const html = (input: string) => ({
-  __html: `&#x${(0x1f000 | parseInt(input, 16)).toString(16)};`,
+  __html: toString(input),
 })
 
 export const isRed = (input: string) => {

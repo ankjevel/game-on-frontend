@@ -7,13 +7,18 @@
 }
 
 .main {
-  .pot {
-    @apply block text-center pt-3 select-none rounded-full shadow-lg w-12 h-12 bg-white self-center;
-  }
-  .cards {
-    @apply flex flex-row bg-white p-4;
-    .card {
-      @apply text-6xl;
+  .table {
+    @apply block text-center p-3 select-none w-full shadow-lg bg-black self-center text-white;
+
+    background-color: #4A5568;
+    background: linear-gradient(35deg, #4A5568, #1A202C);
+
+    .cards {
+      @apply flex flex-row p-4;
+
+      .card {
+        /* @apply w-auto h-16 text-6xl mx-2; */
+      }
     }
   }
 }

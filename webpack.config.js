@@ -27,7 +27,8 @@ module.exports = {
   ],
   entry: './src/index.tsx',
   devServer: {
-    contentBase: outputDir,
+    contentBase: path.join(__dirname, 'public/'),
+    compress: true,
     ...config.devServer,
   },
   module: {
