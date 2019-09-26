@@ -66,7 +66,7 @@ export const SocketProvider = props => {
     socket.on('user:left', message => {
       alert.show(`user ${message.name} left`)
     })
-  }, [cConfig.api, cUser, cAction])
+  }, [cUser, cAction])
 
   useEffect(() => {
     if (socket == null) return
@@ -82,7 +82,7 @@ export const SocketProvider = props => {
         cAction.setValue('action', updatedAction)
       }
     })
-  }, [cConfig.api, cAction])
+  }, [cAction, cAction.action])
 
   useEffect(() => {
     const exec = async () => {
@@ -114,7 +114,7 @@ export const SocketProvider = props => {
     }
 
     exec()
-  }, [cConfig.api, cUser.group, cUser.token, value.room, value.connected])
+  }, [cUser.group, cUser.token, value.room, value.connected])
 
   useEffect(() => {
     const handleToken = async () => {
@@ -127,7 +127,7 @@ export const SocketProvider = props => {
     }
 
     handleToken()
-  }, [cConfig.api, cUser, cUser.token])
+  }, [cUser, cUser.token])
 
   return (
     <Context.Provider value={value}>
