@@ -8,16 +8,29 @@
 
 .main {
   .table {
-    @apply block text-center p-3 select-none w-full shadow-lg bg-black self-center text-white;
-
-    background-color: #4A5568;
-    background: linear-gradient(35deg, #4A5568, #1A202C);
+    @apply block text-center p-3 select-none w-full self-center text-white;
 
     .cards {
       @apply flex flex-row p-4;
 
       .card {
-        @apply w-auto h-32 text-6xl mx-2;
+        @apply w-auto h-32 w-24 text-6xl mx-2 p-1 rounded;
+        background: rgba(25, 31, 43, .25);
+
+        &:nth-child(4n) {
+          @apply mx-5;
+        }
+      }
+    }
+
+    .bets {
+      .bet {
+        @apply w-auto inline-block pl-1 pr-2 py-0 rounded-full;
+        background: rgba(25, 31, 43, .25);
+      }
+
+      .chip {
+        @apply fill-current text-yellow-500 mr-2;
       }
     }
   }
@@ -90,18 +103,85 @@
   .button .player {
     @apply border-green-200;
   }
+
+  .cards {
+    .card {
+      @apply w-20 h-32 mx-1 p-0;
+    }
+  }
 }
 
 .bottom {
-  @apply z-10 absolute bottom-0 py-2 pl-2 pr-4 w-full border-t-4 border-transparent bg-gray-100;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  @apply z-10 absolute p-0 w-full text-white;
+  box-shadow: 0 0 40px rgba(61, 66, 79, .4);
+  bottom: -10rem;
+  transition: bottom 0.4s ease;
 
-  &.turn {
-    @apply border-green-300;
+  &.turn:not(.showdown) {
+    bottom: 0;
+
+    .holder {
+      @apply border-green-300;
+    }
+
+    .player-cards {
+      bottom: -1rem;
+      &:hover {
+        bottom: 5rem;
+      }
+    }
+  }
+
+  &.showdown {
+    .player-cards {
+      bottom: 10rem;
+
+      .card {
+        @apply mr-2;
+        transform: rotate(0);
+
+        &:nth-child(2n) {
+          transform: rotate(0);
+        }
+      }
+    }
+  }
+
+  .player-cards {
+    @apply absolute p-0 m-0 w-full select-none flex flex-row z-0;
+    bottom: 4rem;
+    left: 50%;
+    right: 50%;
+    transition: bottom 0.4s ease;
+
+    &:hover {
+      bottom: 10rem;
+
+      .card {
+        @apply mr-2;
+        transform: rotate(0);
+
+        &:nth-child(2n) {
+          transform: rotate(0);
+        }
+      }
+    }
+
+    .card {
+      @apply w-20 h-32 -mr-12 ml-0 p-0;
+      transition: margin-right 0.45s ease-in-out, transform 0.4s ease-in-out;
+      transform: rotate(27deg);
+      box-shadow: 0 0 10px rgba(61, 66, 79, .4);
+
+      &:nth-child(2n) {
+        transform: rotate(45deg);
+      }
+    }
   }
 
   .holder {
-    @apply flex items-center justify-center flex-wrap w-full;
+    @apply flex items-center justify-center flex-wrap w-full relative z-10 p-4 border-t-4 border-transparent;
+    background: rgba(25, 31, 43, 1);
   }
 
   .you {
@@ -123,7 +203,7 @@
       }
 
       &:focus {
-        box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+        box-shadow: 0 0 4px rgba(25, 31, 43, .5);
       }
     }
 

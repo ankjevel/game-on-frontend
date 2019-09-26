@@ -117,7 +117,11 @@ export const Action = () => {
     return (
       <div
         key={key}
-        className={`item ${cAction.action.button === row.id ? 'button' : ''}`}
+        className={`item ${
+          cAction.action.button === row.id && cAction.action.round !== 4
+            ? 'button'
+            : ''
+        }`}
       >
         <div className="player">
           <div className="bet-and-action">
@@ -132,6 +136,12 @@ export const Action = () => {
           <div className="info">
             <h2 className="name">{row.name}</h2>
             <div>{row.sum}</div>
+          </div>
+          <div className="cards">
+            {Array.isArray(row.action.cards) &&
+              row.action.cards.map(card => (
+                <Card key={`player-${card}`} card={card} />
+              ))}
           </div>
         </div>
       </div>
@@ -372,18 +382,22 @@ export const Action = () => {
           <div className="w-full text-left p-2 text-gray-700 flex flex-col">
             <div className="table">
               <div className="bets">
-                <div className="bet">
+                <h1 className="bet">
+                  <SVG className="chip" src={require('../../svg/chip.svg')} />
                   {cAction.action.turn[cAction.action.button].bet}
-                </div>
-                <div className="pot">Pot: {cAction.action.pot}</div>
+                </h1>
+                <h2 className="pot">Pot: {cAction.action.pot}</h2>
               </div>
-              {cAction.action.communityCards.length ? (
-                <div className="cards">
-                  {cAction.action.communityCards.map(card => (
-                    <Card key={card} card={card} />
-                  ))}
-                </div>
-              ) : null}
+              <div className="cards">
+                {cAction.action.communityCards.map(card => (
+                  <Card key={`community-${card}`} card={card} />
+                ))}
+                {[...Array(5 - cAction.action.communityCards.length)].map(
+                  (_, i) => (
+                    <div className="card" key={`blank_${i}`} />
+                  )
+                )}
+              </div>
             </div>
 
             {group.owner == cUser.id &&
@@ -421,22 +435,21 @@ export const Action = () => {
       </div>
 
       <div
-        className={`bottom z-10 ${
-          cAction.action.button === cUser.id ? 'turn animated pulse' : ''
-        }`}
+        className={`bottom animated ${
+          cAction.action.button === cUser.id ? 'turn' : ''
+        } ${cAction.action.round === 4 ? 'showdown' : ''}`}
       >
+        <div className="player-cards">
+          {cards.map(card => (
+            <Card key={`player-cards-${card}`} card={card} />
+          ))}
+        </div>
         <div className="holder">
           <div className="you select-none">
             <div className="bet">bet: {yourBet}</div>
             <div className="bank">
               bank: {group.users.find(({ id }) => id === cUser.id).sum}
             </div>
-          </div>
-
-          <div className="p-2">
-            {cards.map(card => (
-              <Card key={card} card={card} />
-            ))}
           </div>
 
           <button
