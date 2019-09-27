@@ -388,15 +388,22 @@ export const Action = () => {
                 </h1>
                 <h2 className="pot">Pot: {cAction.action.pot}</h2>
               </div>
-              <div className="cards">
-                {cAction.action.communityCards.map(card => (
-                  <Card key={`community-${card}`} card={card} />
-                ))}
-                {[...Array(5 - cAction.action.communityCards.length)].map(
-                  (_, i) => (
-                    <div className="card" key={`blank_${i}`} />
-                  )
-                )}
+              <div className="holder">
+                <div className="cards">
+                  {cAction.action.communityCards.map(card => (
+                    <Card key={`community-${card}`} card={card} className="" />
+                  ))}
+                  {[...Array(5 - cAction.action.communityCards.length)].map(
+                    (_, i) => (
+                      <div className="card" key={`blank_card_${i}`} />
+                    )
+                  )}
+                </div>
+                <div className="placeholders">
+                  {[...Array(5)].map((_, i) => (
+                    <div className="card" key={`placeholder_${i}`} />
+                  ))}
+                </div>
               </div>
             </div>
 
