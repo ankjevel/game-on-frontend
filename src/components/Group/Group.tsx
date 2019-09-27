@@ -50,12 +50,9 @@ export const Group = () => {
   }, [owner, user.group.owner, user.group.id])
 
   useEffect(() => {
-    if (
-      JSON.stringify(users.map(({ id }) => id)) ===
-      JSON.stringify(user.group.users.map(({ id }) => id))
-    ) {
-      return
-    }
+    const a = JSON.stringify(users.map(({ id }) => id))
+    const b = JSON.stringify(user.group.users.map(({ id }) => id))
+    if (a === b) return
     const apply = async () => {
       await api.group.order(
         user.group.id,

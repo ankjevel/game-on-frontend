@@ -73,7 +73,7 @@ export const SocketProvider = props => {
     if (value.userListen) return
 
     socket.on('update:group', (updatedGroup: Group) => {
-      if (cUser && cUser.group != null && cUser.group.id === updatedGroup.id) {
+      if (cUser) {
         cUser.setValue('group', updatedGroup)
       }
 

@@ -257,13 +257,11 @@ export const Action = () => {
             <div className="w-full text-left align-baseline flex flex-col">
               <div className="w-full flex flex-col mb-4 pl-2 pr-2 pt-2">
                 <h1>Who won?</h1>
-                <div>
-                  <p>
-                    <small>
-                      There are side-pots, so order needs to be specified
-                    </small>
-                  </p>
-                </div>
+                <p>
+                  <small>
+                    There are side-pots, so order needs to be specified
+                  </small>
+                </p>
               </div>
               {winnerOrder.map((keys, i, array) => {
                 const start = i == 0
@@ -353,12 +351,9 @@ export const Action = () => {
 
       <div className="top absolute select-none inset-0 z-0">
         <h1 className="absolute left-0 top-0 text-white p-4">{group.name}</h1>
-        <h2 className="absolute right-0 top-0 text-white p-4">
-          round: {cAction.action.round}
-        </h2>
       </div>
 
-      <div className="users select-none z-0">
+      <div className="users">
         <div className="left">
           {usersRows.left.map((user, i) => userElement(user, `left-${i}`))}
         </div>
@@ -371,74 +366,72 @@ export const Action = () => {
       </div>
 
       <div className="main px-4 py-6 z-10">
-        <div>
-          <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <div className="table">
-              <div className="bets">
-                <h1 className="bet">
-                  <SVG className="chip" src={require('../../svg/chip.svg')} />
-                  {cAction.action.turn[cAction.action.button].bet}
-                </h1>
-                <h2 className="pot">Pot: {cAction.action.pot}</h2>
-              </div>
-              <div className="holder">
-                <TransitionGroup className="cards">
-                  {cAction.action.communityCards.map(card => (
-                    <CSSTransition
-                      classNames="community-card"
-                      timeout={500}
-                      key={`community-card-${card}`}
-                    >
-                      <span>
-                        <Card card={card} />
-                      </span>
-                    </CSSTransition>
-                  ))}
-                  {[...Array(5 - cAction.action.communityCards.length)].map(
-                    (_, i) => (
-                      <div className="card" key={`blank_card_${i}`} />
-                    )
-                  )}
-                </TransitionGroup>
-                <div className="placeholders">
-                  {placeholders.map((_, i) => (
-                    <div className="card" key={`placeholder_${i}`} />
-                  ))}
-                </div>
+        <div className="w-full text-left p-2 text-gray-700 flex flex-col">
+          <div className="table">
+            <div className="bets">
+              <h1 className="bet">
+                <SVG className="chip" src={require('../../svg/chip.svg')} />
+                {big.bet}
+              </h1>
+              <h2 className="pot">Pot: {cAction.action.pot}</h2>
+            </div>
+            <div className="holder">
+              <TransitionGroup className="cards">
+                {cAction.action.communityCards.map(card => (
+                  <CSSTransition
+                    classNames="community-card"
+                    timeout={500}
+                    key={`community-card-${card}`}
+                  >
+                    <span>
+                      <Card card={card} />
+                    </span>
+                  </CSSTransition>
+                ))}
+                {[...Array(5 - cAction.action.communityCards.length)].map(
+                  (_, i) => (
+                    <div className="card" key={`blank_card_${i}`} />
+                  )
+                )}
+              </TransitionGroup>
+              <div className="placeholders">
+                {placeholders.map((_, i) => (
+                  <div className="card" key={`placeholder_${i}`} />
+                ))}
               </div>
             </div>
-
-            {group.owner == cUser.id &&
-              cAction.action.round === 4 &&
-              !callPending && (
-                <div className="w-full flex flex-row">
-                  <button
-                    type="button"
-                    onClick={() => actions.draw()}
-                    className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                  >
-                    draw
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const unfolded = Object.entries(
-                        cAction.action.turn
-                      ).filter(([, value]) => value.status !== 'fold')
-
-                      setOrder(unfolded)
-                      setWinnerOrder(unfolded.slice().map(x => [x[0]]))
-
-                      setModalEndIsVisible(!modalEndIsVisible)
-                    }}
-                    className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                  >
-                    winner
-                  </button>
-                </div>
-              )}
           </div>
+
+          {group.owner == cUser.id &&
+            cAction.action.round === 4 &&
+            !callPending && (
+              <div className="w-full flex flex-row">
+                <button
+                  type="button"
+                  onClick={() => actions.draw()}
+                  className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                >
+                  draw
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const unfolded = Object.entries(cAction.action.turn).filter(
+                      ([, value]) => value.status !== 'fold'
+                    )
+
+                    setOrder(unfolded)
+                    setWinnerOrder(unfolded.slice().map(x => [x[0]]))
+
+                    setModalEndIsVisible(!modalEndIsVisible)
+                  }}
+                  className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                >
+                  winner
+                </button>
+              </div>
+            )}
         </div>
       </div>
 
@@ -511,15 +504,20 @@ export const Action = () => {
               })
             }}
             min={1}
-            max={userTurn.bet}
+            max={userGroup.sum - (big.bet - userTurn.bet)}
           />
           <p className="raise select-none">raise: {input.raise}</p>
           <button
             type="button"
-            disabled={callPending || input.raise !== userTurn.bet}
+            disabled={
+              callPending ||
+              input.raise < userGroup.sum - (big.bet - userTurn.bet)
+            }
             onClick={() => !callPending && actions.allIn()}
             className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-              input.raise !== userTurn.bet ? 'disabled' : ''
+              input.raise < userGroup.sum - (big.bet - userTurn.bet)
+                ? 'disabled'
+                : ''
             }`}
           >
             all-in
