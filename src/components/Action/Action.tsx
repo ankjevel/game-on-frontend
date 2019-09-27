@@ -235,7 +235,7 @@ export const Action = () => {
               <div className="w-full flex flex-col mb-4 pl-2 pr-2 pt-2">
                 <button
                   type="button"
-                  className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 mt-4 border border-blue-500 hover:border-transparent rounded"
+                  className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white text-base leading-none py-2 px-4 mt-4 border border-blue-500 hover:border-transparent rounded"
                   onClick={async event => {
                     event.preventDefault()
                     if (
@@ -326,7 +326,7 @@ export const Action = () => {
               <div className="w-full flex flex-col mb-4 pl-2 pr-2 pt-2">
                 <button
                   type="button"
-                  className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 mt-4 border border-blue-500 hover:border-transparent rounded"
+                  className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white text-base leading-none py-2 px-4 mt-4 border border-blue-500 hover:border-transparent rounded"
                   onClick={async event => {
                     event.preventDefault()
 
@@ -373,7 +373,9 @@ export const Action = () => {
                 <SVG className="chip" src={require('../../svg/chip.svg')} />
                 {big.bet}
               </h1>
-              <h2 className="pot">Pot: {cAction.action.pot}</h2>
+              <h3 className="pot">
+                <strong>Pot:</strong> {cAction.action.pot}
+              </h3>
             </div>
             <div className="holder">
               <TransitionGroup className="cards">
@@ -400,6 +402,14 @@ export const Action = () => {
                 ))}
               </div>
             </div>
+            <div className="you">
+              <h3 className="bet">
+                <strong>Bet:</strong> {userTurn.bet}
+              </h3>
+              <h3 className="bank">
+                <strong>Bank:</strong> {userGroup.sum}
+              </h3>
+            </div>
           </div>
 
           {group.owner == cUser.id &&
@@ -409,7 +419,7 @@ export const Action = () => {
                 <button
                   type="button"
                   onClick={() => actions.draw()}
-                  className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
                 >
                   draw
                 </button>
@@ -426,7 +436,7 @@ export const Action = () => {
 
                     setModalEndIsVisible(!modalEndIsVisible)
                   }}
-                  className="bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
                 >
                   winner
                 </button>
@@ -446,16 +456,11 @@ export const Action = () => {
           ))}
         </div>
         <div className="holder">
-          <div className="you select-none">
-            <div className="bet">bet: {userTurn.bet}</div>
-            <div className="bank">bank: {userGroup.sum}</div>
-          </div>
-
           <button
             onClick={() => !callPending && actions.check()}
             disabled={callPending}
             type="button"
-            className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
+            className="bg-blue-400 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
           >
             {big.bet === userTurn.bet
               ? cAction.action.round === 0
@@ -467,7 +472,7 @@ export const Action = () => {
             type="button"
             disabled={callPending}
             onClick={() => !callPending && actions.fold()}
-            className="bg-red-500 hover:bg-red-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4"
+            className="bg-red-500 hover:bg-red-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4"
           >
             fold
           </button>
@@ -488,7 +493,7 @@ export const Action = () => {
 
               await actions.raise(input.raise)
             }}
-            className={`bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
+            className={`bg-blue-500 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
               input.raise === big.bet ? 'disabled' : ''
             }`}
           >
@@ -506,7 +511,9 @@ export const Action = () => {
             min={1}
             max={userGroup.sum - (big.bet - userTurn.bet)}
           />
-          <p className="raise select-none">raise: {input.raise}</p>
+          <h3 className="raise select-none">
+            <strong>Raise:</strong> {input.raise}
+          </h3>
           <button
             type="button"
             disabled={
@@ -514,7 +521,7 @@ export const Action = () => {
               input.raise < userGroup.sum - (big.bet - userTurn.bet)
             }
             onClick={() => !callPending && actions.allIn()}
-            className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
+            className={`bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
               input.raise < userGroup.sum - (big.bet - userTurn.bet)
                 ? 'disabled'
                 : ''

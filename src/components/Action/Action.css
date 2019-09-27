@@ -70,30 +70,48 @@
       @apply flex flex-row p-4;
     }
 
-    .community-card-enter {
-      opacity: 0;
+    .community {
+      &-card-enter {
+        opacity: 0;
+      }
+
+      &-card-enter-active {
+        opacity: 1;
+        transition: opacity 500ms ease-in;
+      }
+
+      &-card-exit {
+        opacity: 1;
+      }
+
+      &-card-exit-active {
+        opacity: 0;
+        transition: opacity 500ms ease-in;
+      }
+
+      &-card-enter {
+        animation-name: fly-in;
+        animation-duration: 1s;
+        animation-direction: alternate;
+        animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
+        transform-style: preserve-3d;
+      }
     }
 
-    .community-card-enter-active {
-      opacity: 1;
-      transition: opacity 500ms ease-in;
-    }
+    .you {
+      @apply text-sm flex flex-row w-auto m-auto;
 
-    .community-card-exit {
-      opacity: 1;
-    }
+      h3 {
+        @apply flex-1 p-2 text-center w-auto block;
 
-    .community-card-exit-active {
-      opacity: 0;
-      transition: opacity 500ms ease-in;
-    }
+        &:nth-of-type(1) {
+          @apply text-right;
+        }
 
-    .community-card-enter {
-      animation-name: fly-in;
-      animation-duration: 1s;
-      animation-direction: alternate;
-      animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
-      transform-style: preserve-3d;
+        &:nth-of-type(2) {
+          @apply text-left;
+        }
+      }
     }
 
     .bets {
@@ -110,7 +128,7 @@
 }
 
 .users {
-  @apply absolute inset-0 font-bold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40 select-none z-0;
+  @apply absolute inset-0 font-semibold m-0 p-4 flex flex-row w-full h-full pointer-events-none pb-40 select-none z-0;
 
   .bet {
     svg {
@@ -261,10 +279,6 @@
   .holder {
     @apply flex items-center justify-center flex-wrap w-full relative z-10 p-4 border-t-4 border-transparent;
     background: #0c0c0d;
-  }
-
-  .you {
-    @apply pr-4 text-sm;
   }
 
   .raise {

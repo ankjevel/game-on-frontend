@@ -16,7 +16,7 @@ import { Provider as Action } from './context/Action'
 Modal.setAppElement('#root')
 
 const reactAlertOptions = {
-  position: positions.BOTTOM_LEFT,
+  position: positions.TOP_LEFT,
   timeout: 5000,
 }
 
