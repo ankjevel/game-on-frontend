@@ -21,6 +21,7 @@ export const SocketProvider = props => {
     id: '',
     room: '',
     connected: false,
+    userSet: false,
   })
 
   useEffect(() => {
@@ -86,7 +87,7 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const exec = async () => {
-      if (value.connected === false) {
+      if (value.connected === false || value.userSet === false) {
         return
       }
 
@@ -114,20 +115,26 @@ export const SocketProvider = props => {
     }
 
     exec()
-  }, [cUser.group, cUser.token, value.room, value.connected])
+  }, [cUser.group, cUser.token, value.room, value.connected, value.userSet])
 
   useEffect(() => {
     const handleToken = async () => {
+      if (value.connected === false) {
+        return
+      }
+
       const { token } = cUser
       if (token) {
         await socket.emit('user:join', token)
       } else {
         await socket.emit('user:leave', token)
       }
+
+      setValue(state => ({ ...state, userSet: !!token }))
     }
 
     handleToken()
-  }, [cUser, cUser.token])
+  }, [cUser, cUser.token, value.connected])
 
   return (
     <Context.Provider value={value}>

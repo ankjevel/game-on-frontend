@@ -32,9 +32,15 @@ export const Action = () => {
   const [users] = useState(cUser.users)
   const [modalEndIsVisible, setModalEndIsVisible] = useState(false)
   const [callPending, setCallPending] = useState(false)
-  const [usersLeft, setOrder] = useState<[User['id'], UserSummary][]>([])
-  const [winner, setWinner] = useState<User['id']>('')
-  const [winnerOrder, setWinnerOrder] = useState<User['id'][][]>([[]])
+  const [usersLeft, setOrder] = useState(
+    Object.entries(cAction.action.turn).filter(
+      ([, value]) => value.status !== 'fold'
+    )
+  )
+  const [winner, setWinner] = useState(usersLeft[0][0])
+  const [winnerOrder, setWinnerOrder] = useState(
+    usersLeft.slice().map(x => [x[0]])
+  )
   const [placeholders] = useState([...Array(5)].map(_ => null))
   const [userTurn] = useState(cAction.action.turn[cUser.id])
   const [userGroup] = useState(group.users.find(user => user.id === cUser.id))
