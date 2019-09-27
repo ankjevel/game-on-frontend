@@ -3,6 +3,8 @@ export type CSocket = {
   room: string
   connected: boolean
   userSet: boolean
+  userListen: boolean
+  actionListen: boolean
 }
 
 export default CSocket

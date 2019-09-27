@@ -14,15 +14,36 @@ import UserContext, { Context as CUser } from '../User'
 let socket
 export const SocketProvider = props => {
   const alert = useAlert()
+
   const cConfig = useContext<CConfig>(ConfigContext)
   const cUser = useContext<CUser>(UserContext)
   const cAction = useContext<CAction>(ActionContext)
+
   const [value, setValue] = useState<CContext>({
     id: '',
     room: '',
     connected: false,
     userSet: false,
+    userListen: false,
+    actionListen: false,
   })
+
+  const resetGroup = async () => {
+    await socket.emit('group:leave')
+    await socket.off('update:group')
+    await socket.off('user:joined')
+    await socket.off('user:left')
+    await socket.off('update:action')
+    for (const sub of socket.subs) {
+      await sub.destroy()
+    }
+    await setValue(state => ({
+      ...state,
+      userListen: false,
+      actionListen: false,
+      room: '',
+    }))
+  }
 
   useEffect(() => {
     if (socket != null) {
@@ -30,12 +51,16 @@ export const SocketProvider = props => {
     }
 
     socket = io(cConfig.api)
-    socket.on('connect', () =>
+
+    socket.on('connect', () => {
       setValue(state => ({ ...state, id: socket.id, connected: true }))
-    )
-    socket.on('reconnect', () =>
+    })
+
+    socket.on('reconnect', async () => {
+      await resetGroup()
       setValue(state => ({ ...state, room: '', connected: false }))
-    )
+    })
+
     return () => {
       socket.close()
     }
@@ -43,12 +68,9 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     if (socket == null) return
-    if (socket.off) {
-      socket.off('update:group')
-      socket.off('user:joined')
-      socket.off('user:left')
-    }
     if (cUser == null) return
+    if (value.connected === false) return
+    if (value.userListen) return
 
     socket.on('update:group', (updatedGroup: Group) => {
       if (cUser && cUser.group != null && cUser.group.id === updatedGroup.id) {
@@ -67,33 +89,31 @@ export const SocketProvider = props => {
     socket.on('user:left', message => {
       alert.show(`user ${message.name} left`)
     })
-  }, [cUser, cAction])
+
+    setValue(state => ({ ...state, userListen: true }))
+  }, [cUser, cAction, value.connected, value.userListen])
 
   useEffect(() => {
     if (socket == null) return
-    if (socket.off) socket.off('update:action')
+    if (value.connected === false) return
+    if (value.actionListen) return
     if (cAction == null) return
 
     socket.on('update:action', (updatedAction: Action) => {
-      if (
-        cAction &&
-        cAction.action != null &&
-        cAction.action.id === updatedAction.id
-      ) {
-        cAction.setValue('action', updatedAction)
-      }
+      cAction.setValue('action', updatedAction)
     })
-  }, [cAction, cAction.action])
+
+    setValue(state => ({ ...state, actionListen: true }))
+  }, [cAction, cAction.action, value.connected, value.actionListen])
 
   useEffect(() => {
     const exec = async () => {
-      if (value.connected === false || value.userSet === false) {
-        return
-      }
+      if (value.connected === false) return
+      if (value.userSet === false) return
 
       if (cUser.group == null) {
         if (value.room !== '') {
-          await socket.emit('group:leave')
+          await resetGroup()
         }
 
         return
@@ -108,10 +128,7 @@ export const SocketProvider = props => {
         token: cUser.token,
       })
 
-      setValue(state => ({
-        ...state,
-        room: cUser.group.id,
-      }))
+      setValue(state => ({ ...state, room: cUser.group.id }))
     }
 
     exec()
@@ -125,6 +142,9 @@ export const SocketProvider = props => {
 
       const { token } = cUser
       if (token) {
+        if (value.userListen) return
+        if (value.actionListen) return
+
         await socket.emit('user:join', token)
       } else {
         await socket.emit('user:leave', token)
@@ -134,7 +154,13 @@ export const SocketProvider = props => {
     }
 
     handleToken()
-  }, [cUser, cUser.token, value.connected])
+  }, [
+    cUser,
+    cUser.token,
+    value.connected,
+    value.userListen,
+    value.actionListen,
+  ])
 
   return (
     <Context.Provider value={value}>
