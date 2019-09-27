@@ -9,6 +9,7 @@ import './Action.css'
 import Slider from 'rc-slider'
 import SVG from 'react-inlinesvg'
 import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import api from '../../utils/api'
 import userContext from '../../context/User'
@@ -26,6 +27,7 @@ type Row = {
 export const Action = () => {
   const cUser = useContext(userContext)
   const cAction = useContext(actionContext)
+
   const [group] = useState(cUser.group)
   const [users] = useState(cUser.users)
   const [modalEndIsVisible, setModalEndIsVisible] = useState(false)
@@ -33,12 +35,11 @@ export const Action = () => {
   const [usersLeft, setOrder] = useState<[User['id'], UserSummary][]>([])
   const [winner, setWinner] = useState<User['id']>('')
   const [winnerOrder, setWinnerOrder] = useState<User['id'][][]>([[]])
-
-  const maxBet = (
-    (group.users || []).find(user => user.id === cUser.id) || { sum: -1 }
-  ).sum
-
-  const [input, setInput] = useState({ raise: Math.min(2, maxBet) })
+  const [placeholders] = useState([...Array(5)].map(_ => null))
+  const [userTurn] = useState(cAction.action.turn[cUser.id])
+  const [userGroup] = useState(group.users.find(user => user.id === cUser.id))
+  const [big] = useState(cAction.action.turn[cAction.action.big])
+  const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
 
   const req = async (body: NewAction) => {
     setCallPending(true)
@@ -49,7 +50,7 @@ export const Action = () => {
     async check() {
       await req({
         type:
-          currentBet === yourBet
+          big.bet === userTurn.bet
             ? cAction.action.round === 0
               ? 'bet'
               : 'check'
@@ -98,20 +99,6 @@ export const Action = () => {
 
     setWinnerOrder(copy)
   }
-
-  if (
-    group == null ||
-    group.users == null ||
-    cAction == null ||
-    cAction.action == null
-  ) {
-    return null
-  }
-
-  const user = cAction.action.turn[cUser.id]
-  const currentBet = cAction.action.turn[cAction.action.big].bet
-  const yourBet = (user && user.bet) || 0
-  const cards: string[] = (user && user.cards) || []
 
   const userElement = (row: Row, key: string) => {
     return (
@@ -389,18 +376,26 @@ export const Action = () => {
                 <h2 className="pot">Pot: {cAction.action.pot}</h2>
               </div>
               <div className="holder">
-                <div className="cards">
+                <TransitionGroup className="cards">
                   {cAction.action.communityCards.map(card => (
-                    <Card key={`community-${card}`} card={card} className="" />
+                    <CSSTransition
+                      classNames="community-card"
+                      timeout={500}
+                      key={`community-card-${card}`}
+                    >
+                      <span>
+                        <Card card={card} />
+                      </span>
+                    </CSSTransition>
                   ))}
                   {[...Array(5 - cAction.action.communityCards.length)].map(
                     (_, i) => (
                       <div className="card" key={`blank_card_${i}`} />
                     )
                   )}
-                </div>
+                </TransitionGroup>
                 <div className="placeholders">
-                  {[...Array(5)].map((_, i) => (
+                  {placeholders.map((_, i) => (
                     <div className="card" key={`placeholder_${i}`} />
                   ))}
                 </div>
@@ -447,16 +442,14 @@ export const Action = () => {
         } ${cAction.action.round === 4 ? 'showdown' : ''}`}
       >
         <div className="player-cards">
-          {cards.map(card => (
+          {(userTurn.cards || ([] as string[])).map(card => (
             <Card key={`player-cards-${card}`} card={card} />
           ))}
         </div>
         <div className="holder">
           <div className="you select-none">
-            <div className="bet">bet: {yourBet}</div>
-            <div className="bank">
-              bank: {group.users.find(({ id }) => id === cUser.id).sum}
-            </div>
+            <div className="bet">bet: {userTurn.bet}</div>
+            <div className="bank">bank: {userGroup.sum}</div>
           </div>
 
           <button
@@ -465,7 +458,7 @@ export const Action = () => {
             type="button"
             className="bg-blue-400 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
           >
-            {currentBet === yourBet
+            {big.bet === userTurn.bet
               ? cAction.action.round === 0
                 ? 'bet'
                 : 'check'
@@ -481,7 +474,7 @@ export const Action = () => {
           </button>
           <button
             type="button"
-            disabled={callPending || input.raise === maxBet}
+            disabled={callPending || input.raise === userTurn.bet}
             onClick={async event => {
               event.preventDefault()
 
@@ -489,11 +482,7 @@ export const Action = () => {
                 return
               }
 
-              const currentBank = cUser.group.users.find(
-                user => user.id === cUser.id
-              ).sum
-
-              if (input.raise >= currentBank) {
+              if (input.raise >= userGroup.sum) {
                 window.alert('maybe go all in?')
                 return
               }
@@ -501,7 +490,7 @@ export const Action = () => {
               await actions.raise(input.raise)
             }}
             className={`bg-blue-500 hover:bg-blue-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
-              input.raise === maxBet ? 'disabled' : ''
+              input.raise === big.bet ? 'disabled' : ''
             }`}
           >
             raise
@@ -516,15 +505,15 @@ export const Action = () => {
               })
             }}
             min={1}
-            max={maxBet}
+            max={userTurn.bet}
           />
           <p className="raise select-none">raise: {input.raise}</p>
           <button
             type="button"
-            disabled={callPending || input.raise !== maxBet}
+            disabled={callPending || input.raise !== userTurn.bet}
             onClick={() => !callPending && actions.allIn()}
             className={`bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-              input.raise !== maxBet ? 'disabled' : ''
+              input.raise !== userTurn.bet ? 'disabled' : ''
             }`}
           >
             all-in

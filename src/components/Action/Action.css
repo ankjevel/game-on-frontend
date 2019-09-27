@@ -35,7 +35,7 @@
 
       .card {
         background: rgba(25, 31, 43, .25);
-         box-shadow: none;
+        box-shadow: none;
       }
     }
 
@@ -47,19 +47,39 @@
       }
     }
 
-    .cards, .placeholders {
+    .cards {
+      @apply z-10;
+    }
+
+    .cards,
+    .placeholders {
       @apply flex flex-row p-4;
     }
 
-    .cards {
-      @apply z-10;
-      .card {
-        animation-name: fly-in;
-        animation-duration: 1s;
-        animation-direction: alternate;
-        animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
-        transform-style: preserve-3d;
-      }
+    .community-card-enter {
+      opacity: 0;
+    }
+
+    .community-card-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+
+    .community-card-exit {
+      opacity: 1;
+    }
+
+    .community-card-exit-active {
+      opacity: 0;
+      transition: opacity 500ms ease-in;
+    }
+
+    .community-card-enter {
+      animation-name: fly-in;
+      animation-duration: 1s;
+      animation-direction: alternate;
+      animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
+      transform-style: preserve-3d;
     }
 
     .bets {
@@ -145,6 +165,7 @@
 
   .cards {
     @apply flex flex-row p-0;
+
     .card {
       @apply w-20 h-32 mx-1 p-0;
     }

@@ -20,7 +20,13 @@ export type RouteParams = {
   }
 }
 
-export type ERoute = '/' | '/sign-in' | '/create' | '/group' | '/action'
+export type ERoute =
+  | '/'
+  | '/sign-in'
+  | '/create'
+  | '/group'
+  | '/action'
+  | '/wait'
 
 export interface IRoute {
   (params?: RouteParams): JSX.Element

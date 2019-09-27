@@ -1,4 +1,4 @@
-import React, { useContext, useState, Fragment } from 'react'
+import React, { useContext, useState, SFC, Fragment } from 'react'
 
 import './App.css'
 
@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom'
 import { RouteParams, IMaybeRedirect, ERoute, IRoute } from '../../types/Route'
 import userContext from '../../context/User'
+import actionContext from '../../context/Action'
 import Action from '../Action'
 import CreateOrJoinGroup from '../CreateOrJoinGroup'
 import Group from '../Group'
@@ -18,8 +19,13 @@ import api from '../../utils/api'
 
 export const App = () => {
   const user = useContext(userContext)
+  const action = useContext(actionContext)
   const [render, updateRender] = useState(false)
   const [active, updateActive] = useState(false)
+
+  const pretty = (key: string) => {
+    return key.replace(/^.+?:/, '')
+  }
 
   const checkState = (): ERoute => {
     if (user.id === '') {
@@ -30,7 +36,15 @@ export const App = () => {
       return '/create'
     }
 
-    if (user.group.action != null) {
+    if (user.group.action != null && action.action == null) {
+      return '/wait'
+    }
+
+    if (
+      user.group.action != null &&
+      action.action != null &&
+      user.group.action === action.action.id
+    ) {
       return '/action'
     }
 
@@ -61,19 +75,11 @@ export const App = () => {
       case '/create':
         return <Redirect to={`${route}`} from="/" />
       case '/group':
-        return (
-          <Redirect
-            to={`/group/${user.group.id.replace(/group:/, '')}`}
-            from="/"
-          />
-        )
+        return <Redirect to={`/group/${pretty(user.group.id)}`} from="/" />
       case '/action':
-        return (
-          <Redirect
-            to={`/action/${user.group.action.replace(/action:/, '')}`}
-            from="/"
-          />
-        )
+        return <Redirect to={`/action/${pretty(user.group.action)}`} from="/" />
+      case '/wait':
+        return <WaitRedirect />
     }
     return <NotFound />
   }
@@ -123,8 +129,8 @@ export const App = () => {
     }
 
     if (user.group != null) {
-      if (user.group.id !== (id.startsWith('group:') ? id : `group:${id}`)) {
-        return <Redirect to={`/group/${user.group.id}`} />
+      if (pretty(user.group.id) !== pretty(id)) {
+        return <Redirect to={`/group/${pretty(user.group.id)}`} />
       }
 
       return <Group />
@@ -147,10 +153,7 @@ export const App = () => {
     return maybeRedirect(params, '/group') || user.group == null ? (
       <Redirect to="/" from="/route" />
     ) : (
-      <Redirect
-        to={`${'/group'}/${user.group.id.replace('group:', '')}`}
-        from="/group"
-      />
+      <Redirect to={`${'/group'}/${pretty(user.group.id)}`} from="/group" />
     )
   }
 
@@ -160,11 +163,22 @@ export const App = () => {
       <Redirect to="/" from="/action" />
     ) : (
       <Redirect
-        to={`${'/action'}/${user.group.action.replace('action:', '')}`}
+        to={`${'/action'}/${pretty(user.group.action)}`}
         from="/action"
       />
     )
   }
+
+  const Wait: IRoute = () => {
+    return <WaitRedirect />
+  }
+
+  const WaitRedirect: SFC<{}> = () =>
+    action.action != null ? (
+      <Redirect to={`/action/${pretty(user.group.action)}`} />
+    ) : (
+      <Fragment />
+    )
 
   const RouteAction: IRoute = params => {
     if (active) return null
@@ -179,10 +193,8 @@ export const App = () => {
     }
 
     if (user.group != null) {
-      if (
-        user.group.action !== (id.startsWith('action:') ? id : `action:${id}`)
-      ) {
-        return <Redirect to={`/action/${user.group.action}`} />
+      if (pretty(user.group.action) !== pretty(id)) {
+        return <Redirect to={`/action/${pretty(user.group.action)}`} />
       }
 
       return <Action />
@@ -218,6 +230,7 @@ export const App = () => {
           <Route path="/group/:id" component={RouteGroup} />
           <Route path="/action" exact component={RouteActionWithOutID} />
           <Route path="/action/:id" component={RouteAction} />
+          <Route path="/wait" component={Wait} />
           <Route component={NotFound} />
         </Switch>
       </div>
