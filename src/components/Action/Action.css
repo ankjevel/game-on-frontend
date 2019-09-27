@@ -55,46 +55,28 @@
 
     .card {
       @apply w-auto h-32 w-24 text-6xl mx-2 p-0 rounded relative z-10;
-
-      &:nth-child(4n) {
-        @apply mx-5;
-      }
     }
 
     .cards {
       @apply z-10;
-    }
 
-    .cards,
-    .placeholders {
-      @apply flex flex-row p-4;
-    }
-
-    .community {
-      &-card-enter {
-        opacity: 0;
-      }
-
-      &-card-enter-active {
-        opacity: 1;
-        transition: opacity 500ms ease-in;
-      }
-
-      &-card-exit {
-        opacity: 1;
-      }
-
-      &-card-exit-active {
-        opacity: 0;
-        transition: opacity 500ms ease-in;
-      }
-
-      &-card-enter {
+      /* .card {
         animation-name: fly-in;
         animation-duration: 1s;
         animation-direction: alternate;
         animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
         transform-style: preserve-3d;
+      } */
+    }
+
+    .cards,
+    .placeholders {
+      @apply flex flex-row p-4;
+
+      .card {
+        &:nth-of-type(4) {
+          @apply mx-4;
+        }
       }
     }
 

@@ -61,9 +61,16 @@ export interface CActionRefresh {
 }
 
 export type CAction = {
-  action?: Action
   setValue: CActionSetValue
   refresh: CActionRefresh
+  big?: Action['big']
+  button?: Action['button']
+  communityCards?: Action['communityCards']
+  id?: Action['id']
+  pot?: Action['pot']
+  round?: Action['round']
+  turn?: Action['turn']
+  sidePot?: Action['sidePot']
 }
 
 export default CAction

@@ -77,7 +77,7 @@ export const SocketProvider = props => {
         cUser.setValue('group', updatedGroup)
       }
 
-      if (cAction != null && cAction.action === null) {
+      if (cAction.id === null) {
         cAction.refresh('action')
       }
     })
@@ -91,20 +91,20 @@ export const SocketProvider = props => {
     })
 
     setValue(state => ({ ...state, userListen: true }))
-  }, [cUser, cAction, value.connected, value.userListen])
+  }, [cUser, cAction.id, value.connected, value.userListen])
 
   useEffect(() => {
     if (socket == null) return
     if (value.connected === false) return
     if (value.actionListen) return
-    if (cAction == null) return
+    if (cAction.id == null) return
 
     socket.on('update:action', (updatedAction: Action) => {
       cAction.setValue('action', updatedAction)
     })
 
     setValue(state => ({ ...state, actionListen: true }))
-  }, [cAction, cAction.action, value.connected, value.actionListen])
+  }, [cAction, cAction.id, value.connected, value.actionListen])
 
   useEffect(() => {
     const exec = async () => {

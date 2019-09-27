@@ -1,6 +1,5 @@
 import { NewAction, CAction as CActionContext } from 'CAction'
 import { User } from 'Api'
-import { UserSummary } from 'CAction'
 
 import React, { useContext, useState, Fragment } from 'react'
 
@@ -9,7 +8,6 @@ import './Action.css'
 import Slider from 'rc-slider'
 import SVG from 'react-inlinesvg'
 import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
-import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 import api from '../../utils/api'
 import userContext from '../../context/User'
@@ -21,46 +19,43 @@ type Row = {
   name: string
   id: User['id']
   sum: number
-  action: CActionContext['action']['turn']
+  action: CActionContext['turn']
 }
 
 export const Action = () => {
   const cUser = useContext(userContext)
   const cAction = useContext(actionContext)
 
-  const [group] = useState(cUser.group)
-  const [users] = useState(cUser.users)
+  const { group, users } = cUser
+  const { turn, communityCards, round, pot, button } = cAction
+  const usersLeft = Object.entries(turn).filter(
+    ([, value]) => value.status !== 'fold'
+  )
+
   const [modalEndIsVisible, setModalEndIsVisible] = useState(false)
   const [callPending, setCallPending] = useState(false)
-  const [usersLeft, setOrder] = useState(
-    Object.entries(cAction.action.turn).filter(
-      ([, value]) => value.status !== 'fold'
-    )
-  )
   const [winner, setWinner] = useState(usersLeft[0][0])
   const [winnerOrder, setWinnerOrder] = useState(
     usersLeft.slice().map(x => [x[0]])
   )
-  const [placeholders] = useState([...Array(5)].map(_ => null))
-  const [userTurn] = useState(cAction.action.turn[cUser.id])
-  const [userGroup] = useState(group.users.find(user => user.id === cUser.id))
-  const [big] = useState(cAction.action.turn[cAction.action.big])
+
+  const placeholders = [...Array(5)].map(_ => null)
+  const userTurn = turn[cUser.id]
+  const userGroup = group.users.find(user => user.id === cUser.id)
+  const big = turn[cAction.big]
+
   const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
 
   const req = async (body: NewAction) => {
     setCallPending(true)
-    await api.action.newAction(cAction.action.id, group.id, body)
+    await api.action.newAction(cAction.id, cUser.group.id, body)
   }
 
   const actions = {
     async check() {
       await req({
         type:
-          big.bet === userTurn.bet
-            ? cAction.action.round === 0
-              ? 'bet'
-              : 'check'
-            : 'call',
+          big.bet === userTurn.bet ? (round === 0 ? 'bet' : 'check') : 'call',
       })
     },
     async raise(value: number) {
@@ -110,16 +105,12 @@ export const Action = () => {
     return (
       <div
         key={key}
-        className={`item ${
-          cAction.action.button === row.id && cAction.action.round !== 4
-            ? 'button'
-            : ''
-        }`}
+        className={`item ${button === row.id && round !== 4 ? 'button' : ''}`}
       >
         <div className="player">
           <div className="bet-and-action">
             <div className="bet">
-              {cAction.action.big === row.id && (
+              {cAction.big === row.id && (
                 <SVG className="big" src={require('../../svg/chip.svg')} />
               )}
               <SVG src={require('../../svg/chip.svg')} /> {row.action.bet}
@@ -157,7 +148,7 @@ export const Action = () => {
   } = usersCopy.reduce(
     (object, user, i, { length }) => {
       const name = users[user.id]
-      const action = cAction.action.turn[user.id]
+      const action = turn[user.id]
 
       const half = Math.floor(length / 2)
       const even = length % 2 === 0
@@ -190,7 +181,7 @@ export const Action = () => {
         onClose={() => setModalEndIsVisible(!modalEndIsVisible)}
       >
         <div className="">
-          {Object.values(cAction.action.turn).findIndex(
+          {Object.values(turn).findIndex(
             action => action.status === 'allIn'
           ) === -1 ? (
             <div className="inline-block">
@@ -374,28 +365,19 @@ export const Action = () => {
                 {big.bet}
               </h1>
               <h3 className="pot">
-                <strong>Pot:</strong> {cAction.action.pot}
+                <strong>Pot:</strong> {pot}
               </h3>
             </div>
             <div className="holder">
-              <TransitionGroup className="cards">
-                {cAction.action.communityCards.map(card => (
-                  <CSSTransition
-                    classNames="community-card"
-                    timeout={500}
-                    key={`community-card-${card}`}
-                  >
-                    <span>
-                      <Card card={card} />
-                    </span>
-                  </CSSTransition>
+              <div className="cards">
+                {communityCards.map(card => (
+                  <Card card={card} key={`community-card-${card}`} />
                 ))}
-                {[...Array(5 - cAction.action.communityCards.length)].map(
-                  (_, i) => (
-                    <div className="card" key={`blank_card_${i}`} />
-                  )
-                )}
-              </TransitionGroup>
+                {[...Array(5 - communityCards.length)].map((_, i) => (
+                  <div className="card" key={`blank_card_${i}`} />
+                ))}
+              </div>
+
               <div className="placeholders">
                 {placeholders.map((_, i) => (
                   <div className="card" key={`placeholder_${i}`} />
@@ -412,43 +394,34 @@ export const Action = () => {
             </div>
           </div>
 
-          {group.owner == cUser.id &&
-            cAction.action.round === 4 &&
-            !callPending && (
-              <div className="w-full flex flex-row">
-                <button
-                  type="button"
-                  onClick={() => actions.draw()}
-                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                >
-                  draw
-                </button>
+          {group.owner == cUser.id && round === 4 && !callPending && (
+            <div className="w-full flex flex-row">
+              <button
+                type="button"
+                onClick={() => actions.draw()}
+                className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+              >
+                draw
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const unfolded = Object.entries(cAction.action.turn).filter(
-                      ([, value]) => value.status !== 'fold'
-                    )
-
-                    setOrder(unfolded)
-                    setWinnerOrder(unfolded.slice().map(x => [x[0]]))
-
-                    setModalEndIsVisible(!modalEndIsVisible)
-                  }}
-                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                >
-                  winner
-                </button>
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={() => {
+                  setModalEndIsVisible(!modalEndIsVisible)
+                }}
+                className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+              >
+                winner
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       <div
-        className={`bottom animated ${
-          cAction.action.button === cUser.id ? 'turn' : ''
-        } ${cAction.action.round === 4 ? 'showdown' : ''}`}
+        className={`bottom animated ${button === cUser.id ? 'turn' : ''} ${
+          round === 4 ? 'showdown' : ''
+        }`}
       >
         <div className="player-cards">
           {(userTurn.cards || ([] as string[])).map(card => (
@@ -463,7 +436,7 @@ export const Action = () => {
             className="bg-blue-400 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
           >
             {big.bet === userTurn.bet
-              ? cAction.action.round === 0
+              ? round === 0
                 ? 'bet'
                 : 'check'
               : 'call'}

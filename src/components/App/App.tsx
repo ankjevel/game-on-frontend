@@ -36,14 +36,14 @@ export const App = () => {
       return '/create'
     }
 
-    if (user.group.action != null && action.action == null) {
+    if (user.group.action != null && action.id == null) {
       return '/wait'
     }
 
     if (
       user.group.action != null &&
-      action.action != null &&
-      user.group.action === action.action.id
+      action.id != null &&
+      user.group.action === action.id
     ) {
       return '/action'
     }
@@ -174,7 +174,7 @@ export const App = () => {
   }
 
   const WaitRedirect: SFC<{}> = () =>
-    action.action != null ? (
+    action.id != null ? (
       <Redirect to={`/action/${pretty(user.group.action)}`} />
     ) : (
       <Fragment />
