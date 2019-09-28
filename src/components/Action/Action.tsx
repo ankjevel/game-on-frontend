@@ -51,6 +51,7 @@ export const Action = () => {
   const req = async (body: NewAction) => {
     setCallPending(true)
     await api.action.newAction(actionID, group.id, body)
+    setCallPending(false)
   }
 
   const actions = {

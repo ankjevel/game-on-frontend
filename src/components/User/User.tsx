@@ -37,8 +37,8 @@ export const User: SFC<{
           <h2 className="name">{row.name}</h2>
         </div>
         <div className="cards">
-          {cards.map(card => (
-            <Card key={`player-${card}`} card={card} />
+          {cards.map((card, i) => (
+            <Card key={`player-${row.id}-${i}-${card}`} card={card} />
           ))}
         </div>
       </div>
