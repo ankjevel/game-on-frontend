@@ -212,6 +212,11 @@ export const App = () => {
     return null
   }
 
+  const SignOut: IRoute = () => {
+    user.setValue('jwt', { name: '', id: '' } as any)
+    return <Redirect to="/" />
+  }
+
   const NotFound = () => (
     <div>
       <h1>Sorry, can’t find that.</h1>
@@ -231,6 +236,7 @@ export const App = () => {
           <Route path="/action" exact component={RouteActionWithOutID} />
           <Route path="/action/:id" component={RouteAction} />
           <Route path="/wait" component={Wait} />
+          <Route path="/sign-out" component={SignOut} />
           <Route component={NotFound} />
         </Switch>
       </div>

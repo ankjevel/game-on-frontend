@@ -8,7 +8,7 @@ export const Card: SFC<{
   card: string
   className?: string
 }> = ({ card, className: cn }) => (
-  <div className={`card ${cn || ''}`} key={card}>
+  <div className={`card ${cn || ''}`}>
     <svg viewBox="0 0 62.8738 87.8251">
       <use xlinkHref="/cards.svg#card" x="0" y="0" />
       <use

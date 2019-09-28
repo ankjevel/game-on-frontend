@@ -1,7 +1,7 @@
-import { NewAction, CAction as CActionContext } from 'CAction'
+import { NewAction, UserSummary } from 'CAction'
 import { User } from 'Api'
 
-import React, { useContext, useState, Fragment } from 'react'
+import React, { useContext, useState, Fragment, SFC } from 'react'
 
 import './Action.css'
 
@@ -14,20 +14,33 @@ import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
 import Card from '../Card'
+import ActionStatus from '../ActionStatus'
 
 type Row = {
   name: string
   id: User['id']
   sum: number
-  action: CActionContext['turn']
+  action: UserSummary
 }
 
-export const Action = () => {
-  const cUser = useContext(userContext)
-  const cAction = useContext(actionContext)
+export const Chip: SFC<{
+  className?: string
+}> = ({ className }) => (
+  <SVG className={className} src={require('../../svg/chip.svg')} />
+)
 
-  const { group, users } = cUser
-  const { turn, communityCards, round, pot, button } = cAction
+export const Action = () => {
+  const {
+    turn,
+    communityCards,
+    round,
+    pot,
+    button,
+    id: actionID,
+    big: bigID,
+  } = useContext(actionContext)
+  const { id: userID, group, users } = useContext(userContext)
+
   const usersLeft = Object.entries(turn).filter(
     ([, value]) => value.status !== 'fold'
   )
@@ -40,15 +53,15 @@ export const Action = () => {
   )
 
   const placeholders = [...Array(5)].map(_ => null)
-  const userTurn = turn[cUser.id]
-  const userGroup = group.users.find(user => user.id === cUser.id)
-  const big = turn[cAction.big]
+  const userTurn = turn[userID]
+  const userGroup = group.users.find(user => user.id === userID)
+  const big = turn[bigID]
 
   const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
 
   const req = async (body: NewAction) => {
     setCallPending(true)
-    await api.action.newAction(cAction.id, cUser.group.id, body)
+    await api.action.newAction(actionID, group.id, body)
   }
 
   const actions = {
@@ -110,16 +123,13 @@ export const Action = () => {
         <div className="player">
           <div className="bet-and-action">
             <div className="bet">
-              {cAction.big === row.id && (
-                <SVG className="big" src={require('../../svg/chip.svg')} />
-              )}
-              <SVG src={require('../../svg/chip.svg')} /> {row.action.bet}
+              {bigID === row.id && <Chip className="big" />}
+              <Chip /> {row.action.bet} / {row.sum}
             </div>
-            <div className="action">{row.action.status}</div>
+            <ActionStatus status={row.action.status} />
           </div>
           <div className="info">
             <h2 className="name">{row.name}</h2>
-            <div>{row.sum}</div>
           </div>
           <div className="cards">
             {Array.isArray(row.action.cards) &&
@@ -132,7 +142,7 @@ export const Action = () => {
     )
   }
 
-  let userIndex = group.users.findIndex(user => user.id === cUser.id)
+  let userIndex = group.users.findIndex(user => user.id === userID)
   let usersCopy = group.users.slice(0)
 
   usersCopy.splice(
@@ -394,7 +404,7 @@ export const Action = () => {
             </div>
           </div>
 
-          {group.owner == cUser.id && round === 4 && !callPending && (
+          {group.owner == userID && round === 4 && !callPending && (
             <div className="w-full flex flex-row">
               <button
                 type="button"
@@ -419,7 +429,7 @@ export const Action = () => {
       </div>
 
       <div
-        className={`bottom animated ${button === cUser.id ? 'turn' : ''} ${
+        className={`bottom animated ${button === userID ? 'turn' : ''} ${
           round === 4 ? 'showdown' : ''
         }`}
       >

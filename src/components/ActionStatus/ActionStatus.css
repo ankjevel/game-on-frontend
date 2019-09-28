@@ -1,0 +1,39 @@
+.action-status {
+  @apply rounded inline-block px-4 py-0 my-2;
+  &.none,
+  &.bet,
+  &.check,
+  &.call,
+  &.raise,
+  &.allIn,
+  &.fold,
+  &.draw,
+  &.winner,
+  &.back,
+  &.bank,
+  &.join,
+  &.leave,
+  &.sittingOut {
+
+  }
+
+  &.none {
+    @apply bg-gray-800 text-white;
+  }
+
+  &.bet, &.check {
+    @apply bg-gray-100 text-black;
+  }
+
+  &.fold, &.sittingOut {
+    @apply bg-red-400 text-gray-100;
+  }
+
+  &.raise {
+    @apply bg-blue-500 text-white;
+  }
+
+  &.allIn {
+    @apply bg-green-700 text-white;
+  }
+}
