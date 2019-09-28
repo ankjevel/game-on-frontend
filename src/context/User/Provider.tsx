@@ -7,15 +7,19 @@ import { useAlert } from 'react-alert'
 import Context from './context'
 import * as api from '../../utils/api'
 
+export const reset = () => ({
+  id: '',
+  token: '',
+  name: '',
+  group: undefined,
+  ready: false,
+  users: {},
+})
+
 export const UserProvider = props => {
   const alert = useAlert()
   const [value, setValue] = useState<CContext>({
-    id: '',
-    token: '',
-    name: '',
-    group: undefined,
-    ready: false,
-    users: {},
+    ...reset(),
     setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {
@@ -34,6 +38,11 @@ export const UserProvider = props => {
           changed.name = value.name
           changed.id = value.id
           break
+        }
+
+        case 'reset': {
+          await setValue(state => ({ ...state, ...reset() }))
+          return localStorage.clear()
         }
 
         default:

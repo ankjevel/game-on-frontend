@@ -79,7 +79,7 @@ export const App = () => {
       case '/action':
         return <Redirect to={`/action/${pretty(user.group.action)}`} from="/" />
       case '/wait':
-        return <WaitRedirect />
+        return <WaitRedirect to="/" waitFor={''} toBe={''} />
     }
     return <NotFound />
   }
@@ -169,16 +169,53 @@ export const App = () => {
     )
   }
 
-  const Wait: IRoute = () => {
-    return <WaitRedirect />
-  }
+  const Wait: IRoute = () => (
+    <WaitRedirect
+      to={`/action/${pretty(user.group.action)}`}
+      waitFor={action.id}
+      toNotBe={null}
+    />
+  )
 
-  const WaitRedirect: SFC<{}> = () =>
-    action.id != null ? (
-      <Redirect to={`/action/${pretty(user.group.action)}`} />
+  const toCheck = (array: [boolean, boolean, any][]) =>
+    array.find(([, , x]) => x !== undefined)
+
+  const checkValue = (
+    isStrict: boolean,
+    isNot: boolean,
+    value: any,
+    waitFor: any
+  ) =>
+    isStrict
+      ? isNot
+        ? waitFor !== value
+        : waitFor === value
+      : isNot
+      ? waitFor != value
+      : waitFor == value
+
+  const WaitRedirect: SFC<{
+    to: string
+    waitFor?: any
+    toBe?: any
+    toBeEql?: any
+    toNotBe?: any
+    toNotBeEql?: any
+  }> = ({ to, waitFor, toBe, toBeEql, toNotBe, toNotBeEql }) => {
+    return checkValue.apply(this, [
+      ...toCheck([
+        [true, false, toBeEql],
+        [true, true, toNotBeEql],
+        [false, false, toBe],
+        [false, true, toNotBe],
+      ]),
+      waitFor,
+    ]) ? (
+      <Redirect to={to} />
     ) : (
       <Fragment />
     )
+  }
 
   const RouteAction: IRoute = params => {
     if (active) return null
@@ -213,8 +250,18 @@ export const App = () => {
   }
 
   const SignOut: IRoute = () => {
-    user.setValue('jwt', { name: '', id: '' } as any)
-    return <Redirect to="/" />
+    if (user.id == '') {
+      return <Redirect to="/" />
+    }
+
+    user.setValue('reset', '')
+
+    window.setTimeout(() => {
+      // dirty and ugly fix. SORRY.
+      location.reload()
+    }, 500)
+
+    return <WaitRedirect to="/" waitFor={user.id} toBe={''} />
   }
 
   const NotFound = () => (

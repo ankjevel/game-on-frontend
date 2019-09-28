@@ -23,18 +23,22 @@ const getProp = (action: Action) => {
   }
 }
 
+export const reset = () => ({
+  big: undefined,
+  button: undefined,
+  communityCards: undefined,
+  id: undefined,
+  pot: undefined,
+  round: undefined,
+  turn: undefined,
+  sidePot: undefined,
+})
+
 export const ActionProvider = props => {
   const alert = useAlert()
   const user = useContext<User>(UserContext)
   const [value, setValue] = useState<CContext>({
-    big: undefined,
-    button: undefined,
-    communityCards: undefined,
-    id: undefined,
-    pot: undefined,
-    round: undefined,
-    turn: undefined,
-    sidePot: undefined,
+    ...reset(),
     setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {
@@ -78,7 +82,7 @@ export const ActionProvider = props => {
       if (user.group == null) {
         if (value.id != null) {
           alert.info('game ended')
-          setValue(state => ({ ...state, action: undefined }))
+          setValue(state => ({ ...state, ...reset() }))
         }
         return
       }
@@ -86,7 +90,7 @@ export const ActionProvider = props => {
       if (user.group.action == null) {
         if (value.id != null) {
           alert.info('game ended')
-          setValue(state => ({ ...state, action: undefined }))
+          setValue(state => ({ ...state, ...reset() }))
         }
         return
       }
