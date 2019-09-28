@@ -1,33 +1,22 @@
-import { NewAction, UserSummary } from 'CAction'
-import { User } from 'Api'
+import { NewAction } from 'CAction'
+import { Row } from 'ActionView'
+import CUser from 'CUser'
 
-import React, { useContext, useState, Fragment, SFC } from 'react'
+import React, { useContext, useState, Fragment } from 'react'
 
 import './Action.css'
 
 import Slider from 'rc-slider'
-import SVG from 'react-inlinesvg'
-import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
+import { IconArrowUp, IconArrowDown, IconUpload } from 'react-heroicons-ui'
+import { Link } from 'react-router-dom'
 
 import api from '../../utils/api'
 import userContext from '../../context/User'
 import actionContext from '../../context/Action'
 import Modal from '../Modal'
 import Card from '../Card'
-import ActionStatus from '../ActionStatus'
-
-type Row = {
-  name: string
-  id: User['id']
-  sum: number
-  action: UserSummary
-}
-
-export const Chip: SFC<{
-  className?: string
-}> = ({ className }) => (
-  <SVG className={className} src={require('../../svg/chip.svg')} />
-)
+import Chip from '../Chip'
+import User from '../User'
 
 export const Action = () => {
   const {
@@ -102,7 +91,7 @@ export const Action = () => {
 
   const changeWinnerOrder = (
     index: number,
-    userID: User['id'],
+    userID: CUser['id'],
     newIndex: number
   ) => {
     const copy = JSON.parse(JSON.stringify(winnerOrder.slice(0)))
@@ -112,34 +101,6 @@ export const Action = () => {
     copy[newIndex].push(user)
 
     setWinnerOrder(copy)
-  }
-
-  const userElement = (row: Row, key: string) => {
-    return (
-      <div
-        key={key}
-        className={`item ${button === row.id && round !== 4 ? 'button' : ''}`}
-      >
-        <div className="player">
-          <div className="bet-and-action">
-            <div className="bet">
-              {bigID === row.id && <Chip className="big" />}
-              <Chip /> {row.action.bet} / {row.sum}
-            </div>
-            <ActionStatus status={row.action.status} />
-          </div>
-          <div className="info">
-            <h2 className="name">{row.name}</h2>
-          </div>
-          <div className="cards">
-            {Array.isArray(row.action.cards) &&
-              row.action.cards.map(card => (
-                <Card key={`player-${card}`} card={card} />
-              ))}
-          </div>
-        </div>
-      </div>
-    )
   }
 
   let userIndex = group.users.findIndex(user => user.id === userID)
@@ -350,19 +311,49 @@ export const Action = () => {
         </div>
       </Modal>
 
-      <div className="top absolute select-none inset-0 z-0">
-        <h1 className="absolute left-0 top-0 text-white p-4">{group.name}</h1>
+      <div className="main-top">
+        <h1 className="title">{group.name}</h1>
+        <Link className="sign-out" to="/sign-out">
+          <IconUpload />
+        </Link>
       </div>
 
       <div className="users">
         <div className="left">
-          {usersRows.left.map((user, i) => userElement(user, `left-${i}`))}
+          {usersRows.left.map((user, i) => (
+            <User
+              key={`left-${i}`}
+              position="left"
+              row={user}
+              bigID={bigID}
+              round={round}
+              button={button}
+            />
+          ))}
         </div>
         <div className="top">
-          {usersRows.top.map((user, i) => userElement(user, `top-${i}`))}
+          {usersRows.top.map((user, i) => (
+            <User
+              key={`top-${i}`}
+              position="top"
+              row={user}
+              bigID={bigID}
+              round={round}
+              button={button}
+            />
+          ))}
         </div>
         <div className="right">
-          {usersRows.right.map((user, i) => userElement(user, `right-${i}`))}
+          {usersRows.right.map((user, i) => (
+            <User
+              key={`right-${i}`}
+              position="right"
+              row={user}
+              bigID={bigID}
+              round={round}
+              button={button}
+            />
+          ))}
         </div>
       </div>
 
@@ -371,7 +362,7 @@ export const Action = () => {
           <div className="table">
             <div className="bets">
               <h1 className="bet">
-                <SVG className="chip" src={require('../../svg/chip.svg')} />
+                <Chip className="chip" />
                 {big.bet}
               </h1>
               <h3 className="pot">

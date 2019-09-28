@@ -7,7 +7,7 @@ export const ActionStatus: SFC<{
   className?: string
   status: UserSummary['status']
 }> = ({ className: cn, status }) => {
-  const className = `action-status ${status} ${cn || ''}`
+  const className = `action-status action-status-${status} ${cn || ''}`
   let text: string
 
   switch (status) {
@@ -30,7 +30,7 @@ export const ActionStatus: SFC<{
 
   return (
     <div className={className}>
-      <h3>{text}</h3>
+      <div>{text}</div>
     </div>
   )
 }

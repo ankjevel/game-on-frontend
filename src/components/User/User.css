@@ -1,0 +1,50 @@
+.user-item {
+  @apply relative h-full self-center flex flex-col text-white;
+
+  .bet-and-action {
+    @apply flex flex-col;
+  }
+
+  .bet {
+    @apply w-auto inline-block pl-1 pr-2 py-0 rounded-full bg-gray-900;
+    /* background: rgba(25, 31, 43, 1); */
+
+    svg {
+      @apply mr-1 ml-0 fill-current text-white text-sm h-3;
+    }
+  }
+
+  &.is-big {
+    .bet {
+      @apply bg-green-900;
+    }
+  }
+
+  &.left,
+  &.right {
+    @apply items-center justify-center;
+  }
+
+  .player {
+    @apply inline-block align-middle text-center w-24 h-24 border-2 border-transparent;
+  }
+
+  .name {
+    @apply inline-block border-b-4 border-transparent;
+  }
+
+  &.is-button .name {
+    @apply border-green-500;
+    animation-name: border-color;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+  }
+
+  .cards {
+    @apply flex flex-row p-0;
+
+    .card {
+      @apply w-20 h-32 mx-1 p-0;
+    }
+  }
+}
