@@ -29,6 +29,7 @@
 
 .main {
   @apply z-20;
+
   .table {
     @apply block text-center p-3 select-none w-full self-center text-white;
 
@@ -49,6 +50,21 @@
 
     .card {
       @apply w-auto h-32 w-24 text-6xl mx-2 p-0 rounded relative z-10;
+    }
+
+    .bets {
+      .pot {
+        @apply text-lg pt-2;
+      }
+    }
+
+    .key-value {
+      @apply font-bold;
+
+      span {
+        @apply uppercase font-normal;
+        font-size: smaller;
+      }
     }
 
     .cards {
@@ -75,7 +91,13 @@
     }
 
     .you {
-      @apply text-sm flex flex-row w-auto m-auto;
+      @apply flex flex-row w-auto m-auto text-gray-700;
+
+      transition: color .5s ease;
+
+      &:hover {
+        @apply text-white;
+      }
 
       h3 {
         @apply flex-1 p-2 text-center w-auto block;
@@ -126,6 +148,7 @@
 
   &.turn:not(.showdown) {
     bottom: 0;
+    transition: bottom 0.4s ease;
 
     .holder {
       @apply border-green-500;

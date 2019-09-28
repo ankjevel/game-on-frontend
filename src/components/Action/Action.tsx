@@ -365,8 +365,8 @@ export const Action = () => {
                 <Chip className="chip" />
                 {big.bet}
               </h1>
-              <h3 className="pot">
-                <strong>Pot:</strong> {pot}
+              <h3 className="pot key-value">
+                <span>Pot</span> {pot}
               </h3>
             </div>
             <div className="holder">
@@ -386,11 +386,11 @@ export const Action = () => {
               </div>
             </div>
             <div className="you">
-              <h3 className="bet">
-                <strong>Bet:</strong> {userTurn.bet}
+              <h3 className="bet key-value">
+                <span>Your bet</span> {userTurn.bet}
               </h3>
-              <h3 className="bank">
-                <strong>Bank:</strong> {userGroup.sum}
+              <h3 className="bank key-value">
+                <span>Bank</span> {userGroup.sum}
               </h3>
             </div>
           </div>

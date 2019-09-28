@@ -26,7 +26,7 @@
   }
 
   .player {
-    @apply inline-block align-middle text-center w-24 h-24 border-2 border-transparent;
+    @apply inline-block align-middle text-center w-24 h-24 border-2 border-transparent relative;
   }
 
   .name {
@@ -40,11 +40,26 @@
     animation-iteration-count: infinite;
   }
 
+  &.right .cards {
+    left: -3rem;
+    right: inherit;
+  }
+
   .cards {
-    @apply flex flex-row p-0;
+    @apply absolute h-full w-full;
+    bottom: -.5rem;
+    right: -3rem;
 
     .card {
-      @apply w-20 h-32 mx-1 p-0;
+      @apply m-0 p-0 inline-block;
+      width: 62.8738px;
+      height: 87.8251px;
+      transform: rotate(-4deg) scale(.4);
+
+      &:nth-of-type(2n) {
+        @apply -ml-12;
+        transform: rotate(23deg) scale(.4);
+      }
     }
   }
 }

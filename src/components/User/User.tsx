@@ -19,6 +19,8 @@ export const User: SFC<{
   const big = bigID === row.id ? 'is-big' : ''
   const className = `user-item ${position} ${big} ${button}`.trim()
 
+  const cards = row.action.cards || [null, null]
+
   return (
     <div
       className={className}
@@ -35,10 +37,9 @@ export const User: SFC<{
           <h2 className="name">{row.name}</h2>
         </div>
         <div className="cards">
-          {Array.isArray(row.action.cards) &&
-            row.action.cards.map(card => (
-              <Card key={`player-${card}`} card={card} />
-            ))}
+          {cards.map(card => (
+            <Card key={`player-${card}`} card={card} />
+          ))}
         </div>
       </div>
     </div>
