@@ -8,8 +8,7 @@ import React, { useState, Fragment, memo } from 'react'
 import './Action.css'
 
 import Slider from 'rc-slider'
-import { IconArrowUp, IconArrowDown, IconUpload } from 'react-heroicons-ui'
-import { Link } from 'react-router-dom'
+import { IconArrowUp, IconArrowDown } from 'react-heroicons-ui'
 
 import api from '../../utils/api'
 import Modal from '../Modal'
@@ -17,6 +16,7 @@ import Card from '../Card'
 import Chip from '../Chip'
 import User from '../User'
 import PlayerHand from '../PlayerHand'
+import SignOut from '../SignOut'
 
 export const Action = memo(
   ({
@@ -319,9 +319,7 @@ export const Action = memo(
 
         <div className="main-top">
           <h1 className="title">{group.name}</h1>
-          <Link className="sign-out" to="/sign-out">
-            <IconUpload />
-          </Link>
+          <SignOut className="sign-out" />
         </div>
 
         <div className="users">

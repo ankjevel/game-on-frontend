@@ -7,6 +7,7 @@ import userContext from '../../context/User'
 import { IconArrowUp, IconArrowDown, IconStar } from 'react-heroicons-ui'
 import update from 'immutability-helper'
 import api from '../../utils/api'
+import SignOut from '../SignOut'
 
 export const Group = () => {
   const user = useContext(userContext)
@@ -254,110 +255,114 @@ export const Group = () => {
   }
 
   return (
-    <div className="self-center auto w-full sm:w-full md:w-2/3 lg:w-2/3 xl:w-1/2 rounded overflow-hidden shadow-lg bg-white">
-      <div className="px-4 py-6">
-        <div>
-          <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <div className="flex -mx-2">
-              {isOwner ? (
-                <span className="font-semibold flex w-full px-2">
-                  <IconStar
-                    className="inline-block mt-1 fill-current text-red-500"
-                    height={10}
-                  />
-                  <input
-                    className="font-semibold inline-block w-full"
-                    value={name}
-                    onChange={updateName}
-                  />
-                </span>
-              ) : (
-                <h1 className="font-semibold w-full px-2">{name}</h1>
-              )}
+    <div className="group-view">
+      <SignOut className="sign-out" />
+
+      <div className="main-container">
+        <div className="px-4 py-6">
+          <div>
+            <div className="w-full text-left p-2 text-gray-700 flex flex-col">
+              <div className="flex -mx-2">
+                {isOwner ? (
+                  <span className="font-semibold flex w-full px-2">
+                    <IconStar
+                      className="inline-block mt-1 fill-current text-red-500"
+                      height={10}
+                    />
+                    <input
+                      className="font-semibold inline-block w-full"
+                      value={name}
+                      onChange={updateName}
+                    />
+                  </span>
+                ) : (
+                  <h1 className="font-semibold w-full px-2">{name}</h1>
+                )}
+              </div>
+            </div>
+
+            <div className="w-full flex flex-col text-xs font-semibold text-gray-700 bg-gray-200 relative">
+              <div className="w-full flex flex-row">
+                <div className="p-2 w-full">
+                  <h2>Small blind</h2>
+                </div>
+                <div className="p-2 w-full">
+                  <h2>Big blind</h2>
+                </div>
+                <div className="p-2 w-full">
+                  <h2>Start sum</h2>
+                </div>
+                {isOwner && changed && (
+                  <button
+                    type="button"
+                    onClick={updateGroup}
+                    className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
+                  >
+                    update
+                  </button>
+                )}
+              </div>
+
+              <div className="w-full align-baseline flex flex-row border-t border-gray-300 font-mono text-xs text-gray-700 bg-white">
+                {isOwner ? (
+                  <Fragment>
+                    <div className="p-2 w-full">
+                      <input
+                        type="number"
+                        onChange={updateStartSums}
+                        name="small"
+                        value={input.small}
+                      />
+                    </div>
+                    <div className="p-2 w-full">
+                      <input
+                        type="number"
+                        onChange={updateStartSums}
+                        name="big"
+                        value={input.big}
+                      />
+                    </div>
+                    <div className="p-2 w-full">
+                      <input
+                        type="number"
+                        onChange={updateStartSums}
+                        name="startSum"
+                        value={input.startSum}
+                      />
+                    </div>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <div className="p-2 w-full">{input.small}</div>
+                    <div className="p-2 w-full">{input.big}</div>
+                    <div className="p-2 w-full">{input.startSum}</div>
+                  </Fragment>
+                )}
+              </div>
+            </div>
+
+            <div className="w-full mt-10 text-left align-baseline flex flex-col">
+              {users.map(({ id }, i, array) => renderUser(id, i, array.length))}
             </div>
           </div>
 
-          <div className="w-full flex flex-col text-xs font-semibold text-gray-700 bg-gray-200 relative">
-            <div className="w-full flex flex-row">
-              <div className="p-2 w-full">
-                <h2>Small blind</h2>
-              </div>
-              <div className="p-2 w-full">
-                <h2>Big blind</h2>
-              </div>
-              <div className="p-2 w-full">
-                <h2>Start sum</h2>
-              </div>
-              {isOwner && changed && (
-                <button
-                  type="button"
-                  onClick={updateGroup}
-                  className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
-                >
-                  update
-                </button>
-              )}
-            </div>
-
-            <div className="w-full align-baseline flex flex-row border-t border-gray-300 font-mono text-xs text-gray-700 bg-white">
-              {isOwner ? (
-                <Fragment>
-                  <div className="p-2 w-full">
-                    <input
-                      type="number"
-                      onChange={updateStartSums}
-                      name="small"
-                      value={input.small}
-                    />
-                  </div>
-                  <div className="p-2 w-full">
-                    <input
-                      type="number"
-                      onChange={updateStartSums}
-                      name="big"
-                      value={input.big}
-                    />
-                  </div>
-                  <div className="p-2 w-full">
-                    <input
-                      type="number"
-                      onChange={updateStartSums}
-                      name="startSum"
-                      value={input.startSum}
-                    />
-                  </div>
-                </Fragment>
-              ) : (
-                <Fragment>
-                  <div className="p-2 w-full">{input.small}</div>
-                  <div className="p-2 w-full">{input.big}</div>
-                  <div className="p-2 w-full">{input.startSum}</div>
-                </Fragment>
-              )}
-            </div>
-          </div>
-
-          <div className="w-full mt-10 text-left align-baseline flex flex-col">
-            {users.map(({ id }, i, array) => renderUser(id, i, array.length))}
-          </div>
-        </div>
-
-        <div className="pt-4 mt-4">
-          <Link
-            className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-            to="/group/leave"
-          >
-            Leave group
-          </Link>
-          {isOwner && (
-            <button
-              type="button"
-              onClick={startGame}
-              className="inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+          <div className="pt-4 mt-4">
+            <Link
+              className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              to="/group/leave"
             >
-              Start game
-            </button>
-          )}
+              Leave group
+            </Link>
+            {isOwner && (
+              <button
+                type="button"
+                onClick={startGame}
+                className="inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+              >
+                Start game
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

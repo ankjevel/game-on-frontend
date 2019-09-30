@@ -14,16 +14,7 @@
   }
 
   .sign-out {
-    @apply absolute right-0 top-0 m-4 text-gray-600 stroke-current fill-current w-6 h-6 block cursor-pointer;
-    transform: rotate(90deg);
-
-    svg {
-      @apply w-4 h-4 inline-block m-auto;
-    }
-
-    &:hover {
-      @apply text-white;
-    }
+    @apply absolute right-0 top-0;
   }
 }
 

@@ -11,7 +11,11 @@ export const PlayerHand: SFC<{
   const text = getText(hand) || ''
   const className = `player-hand ${cn}`.trim()
 
-  return <div className={className}>{text}</div>
+  return (
+    <h3 className={className}>
+      <span>On hand:</span> {text}
+    </h3>
+  )
 }
 
 export default PlayerHand

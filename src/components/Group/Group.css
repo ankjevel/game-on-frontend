@@ -1,0 +1,31 @@
+.group-view {
+  @apply w-0 flex flex-col;
+  flex-basis: 100%;
+
+  .sign-out {
+    @apply fixed right-0 top-0;
+  }
+
+  .main-container {
+    @apply self-center w-full rounded overflow-hidden shadow-lg bg-white;
+
+    @screen sm {
+      @apply w-full;
+    }
+
+    @screen md {
+      @apply w-2/3;
+    }
+
+    @screen lg {
+      @apply w-2/3;
+    }
+
+    @screen xl {
+      @apply w-1/2;
+    }
+  }
+}
+
+
+

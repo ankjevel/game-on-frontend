@@ -1,3 +1,8 @@
 .player-hand {
-  @apply block w-full h-full h-4;
+  @apply block w-full h-full h-4 font-bold;
+
+  span {
+    @apply uppercase font-normal;
+    font-size: smaller;
+  }
 }
