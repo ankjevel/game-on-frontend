@@ -145,7 +145,7 @@ class SignIn extends Component<{}, State> {
 
   render() {
     return (
-      <div className="sign-in">
+      <div className="c_sign-in">
         <div className={`container ${this.state.error ? 'error' : ''}`}>
           <form onSubmit={this.handleSubmit}>
             <div>

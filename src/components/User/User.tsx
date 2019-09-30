@@ -20,7 +20,7 @@ export const User: SFC<{
 }> = ({ row, bigID, round, button: buttonID, position }) => {
   const button = buttonID === row.id && round !== 4 ? 'is-button' : ''
   const big = bigID === row.id ? 'is-big' : ''
-  const className = `user-item ${position} ${big} ${button}`.trim()
+  const className = `c_user-item ${position} ${big} ${button}`.trim()
 
   const cards = row.action.cards || [null, null]
   const hand = getHand(row.action.hand)

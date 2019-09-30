@@ -12,23 +12,16 @@ export const Modal: SFC<{
 }> = props => {
   const closeOnClick = props.shouldCloseOnOverlayClick
   return (
-    <ReactModal
-      className="modal absolute self-center auto flex items-center justify-center overflow-hidden outline-none h-full w-full bg-transparent"
-      isOpen={props.isOpen}
-    >
-      <IconX
-        className="cursor-pointer animated fadeIn absolute center bottom-0 z-10 mb-10 w-10 h-10 bg-white rounded-full"
-        onClick={props.onClose}
-      />
+    <ReactModal className="c_modal" isOpen={props.isOpen}>
+      <IconX className="icon" onClick={props.onClose} />
 
       <div
         onClick={closeOnClick && props.onClose}
-        className={`absolute z-0 left-0 top-o bottom-0 right-0 overflow-hidden h-full w-full bg-blue-100 opacity-50 ${
-          closeOnClick ? 'cursor-pointer' : ''
-        }`}
+        className={`bg ${closeOnClick ? 'close-on-click' : ''}`}
       />
-      <div className="relative animated zoomInLeft z-1 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div className="mb-4">{props.children}</div>
+
+      <div className="container">
+        <div className="content">{props.children}</div>
       </div>
     </ReactModal>
   )

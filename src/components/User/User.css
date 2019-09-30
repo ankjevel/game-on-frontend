@@ -1,4 +1,4 @@
-.user-item {
+.c_user-item {
   @apply relative h-full self-center flex flex-col text-white;
 
   .bet-and-action {

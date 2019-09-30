@@ -1,4 +1,4 @@
-.sign-in {
+.c_sign-in {
   @apply self-center w-full rounded overflow-hidden shadow-lg bg-white m-0 p-0 h-auto;
 
   @screen sm {

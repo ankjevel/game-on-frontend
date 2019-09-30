@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 export const SignOut: SFC<{
   className?: string
 }> = ({ className: cn }) => {
-  const className = `sign-out ${cn}`.trim()
+  const className = `c_sign-out ${cn}`.trim()
 
   return (
     <Link className={className} to="/sign-out">

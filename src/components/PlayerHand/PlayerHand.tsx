@@ -9,7 +9,7 @@ export const PlayerHand: SFC<{
   hand: Hand
 }> = ({ className: cn, hand }) => {
   const text = getText(hand) || ''
-  const className = `player-hand ${cn}`.trim()
+  const className = `c_player-hand ${cn}`.trim()
 
   return (
     <h3 className={className}>

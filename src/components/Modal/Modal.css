@@ -1,3 +1,23 @@
-.modal {
+.c_modal {
+  @apply absolute self-center flex items-center justify-center overflow-hidden outline-none h-full w-full bg-transparent;
+
   z-index: 2147483647;
+
+  .icon {
+    @apply cursor-pointer animated fadeIn absolute bottom-0 z-10 mb-10 w-10 h-10 bg-white rounded-full;
+  }
+
+  .bg {
+    @apply absolute z-0 left-0 top-0 bottom-0 right-0 overflow-hidden h-full w-full bg-blue-100 opacity-50;
+    &.close-on-click {
+      @apply cursor-pointer;
+    }
+  }
+
+  .container {
+    @apply relative animated zoomInLeft z-10 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4;
+  }
+  .content {
+    @apply mb-4;
+  }
 }
