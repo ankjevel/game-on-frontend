@@ -8,7 +8,7 @@ export const Card: SFC<{
   card: MaybeNull<string>
   className?: string
 }> = ({ card, className: cn }) => {
-  const className = `card ${cn || ''}`.trim()
+  const className = `card ${card == null ? 'none' : ''} ${cn || ''}`.trim()
   const backClassName = `back ${card == null ? 'rotate' : ''}`.trim()
   return (
     <div className={className}>

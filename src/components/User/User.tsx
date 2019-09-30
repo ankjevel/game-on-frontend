@@ -7,6 +7,9 @@ import './User.css'
 import { Chip } from '../Chip'
 import { Card } from '../Card'
 import { ActionStatus } from '../ActionStatus'
+import { PlayerHand } from '../PlayerHand'
+
+import getHand from '../../utils/hand'
 
 export const User: SFC<{
   row: Row
@@ -20,11 +23,14 @@ export const User: SFC<{
   const className = `user-item ${position} ${big} ${button}`.trim()
 
   const cards = row.action.cards || [null, null]
+  const hand = getHand(row.action.hand)
 
   return (
     <div
       className={className}
-      title={`Bet: ${row.action.bet} / Bank: ${row.sum}`}
+      title={`${hand ? `${hand} | ` : ''}Bet: ${row.action.bet} / Bank: ${
+        row.sum
+      }`}
     >
       <div className="player">
         <div className="bet-and-action">

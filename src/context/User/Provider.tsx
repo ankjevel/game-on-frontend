@@ -65,6 +65,7 @@ export const UserProvider = props => {
 
   useEffect(() => {
     const initConfig = async () => {
+      if (value.ready) return
       const ready = true
       const token: MaybeNull<string> = localStorage.getItem('token') || ''
 
@@ -94,7 +95,7 @@ export const UserProvider = props => {
     }
 
     initConfig()
-  }, [])
+  }, [value.ready])
 
   useEffect(() => {
     const setValue = () => {

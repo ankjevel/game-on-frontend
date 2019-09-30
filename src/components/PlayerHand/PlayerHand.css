@@ -1,0 +1,3 @@
+.player-hand {
+  @apply block w-full h-full h-4;
+}

@@ -1,4 +1,11 @@
-import React, { useContext, useState, SFC, Fragment } from 'react'
+import React, {
+  useContext,
+  useState,
+  lazy,
+  Suspense,
+  Fragment,
+  memo,
+} from 'react'
 
 import './App.css'
 
@@ -16,6 +23,7 @@ import CreateOrJoinGroup from '../CreateOrJoinGroup'
 import Group from '../Group'
 import SignIn from '../SignIn'
 import api from '../../utils/api'
+import { User } from 'Api'
 
 export const App = () => {
   const user = useContext(userContext)
@@ -194,28 +202,34 @@ export const App = () => {
       ? waitFor != value
       : waitFor == value
 
-  const WaitRedirect: SFC<{
-    to: string
-    waitFor?: any
-    toBe?: any
-    toBeEql?: any
-    toNotBe?: any
-    toNotBeEql?: any
-  }> = ({ to, waitFor, toBe, toBeEql, toNotBe, toNotBeEql }) => {
-    return checkValue.apply(this, [
-      ...toCheck([
-        [true, false, toBeEql],
-        [true, true, toNotBeEql],
-        [false, false, toBe],
-        [false, true, toNotBe],
-      ]),
+  const WaitRedirect = memo(
+    ({
+      to,
       waitFor,
-    ]) ? (
-      <Redirect to={to} />
-    ) : (
-      <Fragment />
-    )
-  }
+      toBe,
+      toBeEql,
+      toNotBe,
+      toNotBeEql,
+    }: {
+      to: string
+      waitFor?: any
+      toBe?: any
+      toBeEql?: any
+      toNotBe?: any
+      toNotBeEql?: any
+    }) => {
+      const res = checkValue.apply(this, [
+        ...toCheck([
+          [true, false, toBeEql],
+          [true, true, toNotBeEql],
+          [false, false, toBe],
+          [false, true, toNotBe],
+        ]),
+        waitFor,
+      ])
+      return res ? <Redirect to={to} /> : <Fragment />
+    }
+  )
 
   const RouteAction: IRoute = params => {
     if (active) return null
@@ -234,7 +248,20 @@ export const App = () => {
         return <Redirect to={`/action/${pretty(user.group.action)}`} />
       }
 
-      return <Action />
+      return (
+        <Action
+          turn={action.turn}
+          communityCards={action.communityCards}
+          round={action.round}
+          pot={action.pot}
+          button={action.button}
+          actionID={action.id}
+          bigID={action.big}
+          userID={user.id}
+          group={user.group}
+          users={user.users}
+        />
+      )
     }
 
     const join = async () => {
@@ -254,14 +281,22 @@ export const App = () => {
       return <Redirect to="/" />
     }
 
-    user.setValue('reset', '')
+    const WhenDone = lazy(async () => {
+      await user.setValue('reset', '')
 
-    window.setTimeout(() => {
-      // dirty and ugly fix. SORRY.
-      location.reload()
-    }, 500)
+      return {
+        default: () => <Fragment />,
+      }
+    })
 
-    return <WaitRedirect to="/" waitFor={user.id} toBe={''} />
+    return (
+      <Fragment>
+        {user.id}
+        <Suspense fallback={<div>Loading...</div>}>
+          <WhenDone />
+        </Suspense>
+      </Fragment>
+    )
   }
 
   const NotFound = () => (
@@ -272,7 +307,7 @@ export const App = () => {
 
   return (
     <Router>
-      <div className="app flex items-center justify-center">
+      <div className="app">
         <Switch>
           <Route path="/" exact component={RouteMain} />
           <Route path="/sign-in" component={RouteSignIn} />

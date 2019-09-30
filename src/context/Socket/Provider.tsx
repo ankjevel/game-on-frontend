@@ -29,14 +29,17 @@ export const SocketProvider = props => {
   })
 
   const resetGroup = async () => {
-    await socket.emit('group:leave')
-    await socket.off('update:group')
-    await socket.off('user:joined')
-    await socket.off('user:left')
-    await socket.off('update:action')
-    for (const sub of socket.subs) {
-      await sub.destroy()
+    if (socket && socket.emit) {
+      await socket.emit('group:leave')
+      await socket.off('update:group')
+      await socket.off('user:joined')
+      await socket.off('user:left')
+      await socket.off('update:action')
+      for (const sub of socket.subs) {
+        await sub.destroy()
+      }
     }
+
     await setValue(state => ({
       ...state,
       userListen: false,
@@ -46,14 +49,16 @@ export const SocketProvider = props => {
   }
 
   useEffect(() => {
-    if (socket != null) {
-      return
-    }
+    if (socket != null || value.id !== '') return
 
     socket = io(cConfig.api)
 
     socket.on('connect', () => {
-      setValue(state => ({ ...state, id: socket.id, connected: true }))
+      setValue(state => ({
+        ...state,
+        id: socket.id,
+        connected: true,
+      }))
     })
 
     socket.on('reconnect', async () => {
@@ -62,7 +67,10 @@ export const SocketProvider = props => {
     })
 
     return () => {
-      socket.close()
+      if (value.id === '' && socket != null) {
+        socket.close()
+        socket = undefined
+      }
     }
   }, [cConfig.api])
 

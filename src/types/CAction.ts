@@ -20,6 +20,7 @@ export type UserSummary = {
   bet: number
   status: ActionType
   cards?: [string, string]
+  hand?: number
 }
 
 export type NewAction = {

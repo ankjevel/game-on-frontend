@@ -47,7 +47,7 @@
 
   .cards {
     @apply absolute h-full w-full;
-    bottom: -.5rem;
+    bottom: 0rem;
     right: -3rem;
 
     .card {
