@@ -6,6 +6,7 @@ import './CreateOrJoinGroup.css'
 import UserContext from '../../context/User'
 import * as api from '../../utils/api'
 import Modal from '../Modal'
+import SignOut from '../SignOut'
 
 type Props = {}
 type State = {
@@ -147,20 +148,19 @@ class CreateOrJoinGroup extends Component<Props, State> {
     return (
       <Fragment>
         <Modal onClose={this.toggleModalVisible} isOpen={this.state.isOpen}>
-          <div>
+          <div className="create-or-join-group-modal">
             <h1>Input group id</h1>
             <form onSubmit={this.joinGroup}>
               <input
-                className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal outline-none"
+                className="join"
                 name="join"
                 onChange={this.handleChange}
               />
               {this.state.joinError && (
-                <div
-                  className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
-                  role="alert"
-                >
-                  <p className="font-bold">Error</p>
+                <div className="error" role="alert">
+                  <p>
+                    <strong>Error</strong>
+                  </p>
                   <p>{this.state.joinError}</p>
                 </div>
               )}
@@ -168,25 +168,14 @@ class CreateOrJoinGroup extends Component<Props, State> {
           </div>
         </Modal>
 
-        <div className="self-center auto w-full sm:w-full md:w-2/3 lg:w-2/3 xl:w-1/2 rounded overflow-hidden shadow-lg bg-white">
-          <div
-            className={`${
-              this.state.error ? 'bg-red-100' : 'bg-white'
-            } flex-1 sign-in '`}
-          >
-            <form
-              onSubmit={this.createGroup}
-              className="px-8 pt-6 pb-8 mb-4 w-full"
-            >
+        <div className="create-or-join-group">
+          <SignOut className="sign-out" />
+          <div className={`sign-in ${this.state.error ? 'error' : ''}`}>
+            <form onSubmit={this.createGroup}>
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                >
-                  Name
-                </label>
+                <label htmlFor="name">Name</label>
                 <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="input-type"
                   type="name"
                   name="name"
                   required={true}
@@ -196,14 +185,9 @@ class CreateOrJoinGroup extends Component<Props, State> {
               </div>
 
               <div>
-                <label
-                  htmlFor="startSum"
-                  className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                >
-                  Start sum
-                </label>
+                <label htmlFor="startSum">Start sum</label>
                 <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="input-type"
                   type="number"
                   name="startSum"
                   value={this.state.input.startSum}
@@ -211,17 +195,12 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 />
               </div>
 
-              <div className="p-4">
-                <div className="flex -mx-2">
-                  <div className="w-1/2">
-                    <label
-                      htmlFor="smallBlind"
-                      className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                    >
-                      Small blind
-                    </label>
+              <div className="buttons">
+                <div>
+                  <div className="button">
+                    <label htmlFor="smallBlind">Small blind</label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="input-type"
                       type="number"
                       name="smallBlind"
                       value={this.state.input.smallBlind}
@@ -229,15 +208,10 @@ class CreateOrJoinGroup extends Component<Props, State> {
                     />
                   </div>
 
-                  <div className="w-1/2">
-                    <label
-                      htmlFor="bigBlind"
-                      className="block text-gray-700 text-sm font-bold mb-2 w-full"
-                    >
-                      Big blind
-                    </label>
+                  <div className="button">
+                    <label htmlFor="bigBlind">Big blind</label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="input-type"
                       type="number"
                       name="bigBlind"
                       value={this.state.input.bigBlind}
@@ -246,18 +220,15 @@ class CreateOrJoinGroup extends Component<Props, State> {
                   </div>
                 </div>
               </div>
+
               <div>
-                <input
-                  className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                  value="Create"
-                />
+                <input className="input-button" type="submit" value="Create" />
               </div>
 
-              <div className="py-2">
+              <div>
                 <p>Or, if you have a groupID</p>
                 <button
-                  className="w-1/2 bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="input-button"
                   type="button"
                   onClick={this.toggleModalVisible}
                 >
@@ -266,11 +237,10 @@ class CreateOrJoinGroup extends Component<Props, State> {
               </div>
 
               {this.state.error && (
-                <div
-                  className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
-                  role="alert"
-                >
-                  <p className="font-bold">Error</p>
+                <div className="error" role="alert">
+                  <p>
+                    <strong>Error</strong>
+                  </p>
                   <p>{this.state.error}</p>
                 </div>
               )}

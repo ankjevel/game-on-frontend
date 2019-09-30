@@ -23,7 +23,6 @@ import CreateOrJoinGroup from '../CreateOrJoinGroup'
 import Group from '../Group'
 import SignIn from '../SignIn'
 import api from '../../utils/api'
-import { User } from 'Api'
 
 export const App = () => {
   const user = useContext(userContext)

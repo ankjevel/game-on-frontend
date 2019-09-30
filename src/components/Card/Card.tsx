@@ -18,7 +18,7 @@ export const Card: SFC<{
 
           <use
             xlinkHref={`/cards.svg#${toHex(card)}`}
-            className={`face ${isRed(card) ? 'text-red-600' : 'text-gray-800'}`}
+            className={`face ${isRed(card) ? 'is-red' : ''}`}
             x="0"
             y="0"
             style={{ stroke: 'transparent' }}
