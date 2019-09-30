@@ -166,7 +166,10 @@ class CreateOrJoinGroup extends Component<Props, State> {
           <SignOut className="sign-out" />
           <div className={`sign-in ${this.state.error ? 'error' : ''}`}>
             <form onSubmit={this.createGroup}>
-              <div>
+              <div className="input">
+                <h1>Create a new Group</h1>
+              </div>
+              <div className="input">
                 <label htmlFor="name">Name</label>
                 <input
                   className="input-type"
@@ -178,7 +181,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 />
               </div>
 
-              <div>
+              <div className="input">
                 <label htmlFor="startSum">Start sum</label>
                 <input
                   className="input-type"
@@ -189,48 +192,47 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 />
               </div>
 
-              <div className="buttons">
-                <div>
-                  <div className="button">
-                    <label htmlFor="smallBlind">Small blind</label>
-                    <input
-                      className="input-type"
-                      type="number"
-                      name="smallBlind"
-                      value={this.state.input.smallBlind}
-                      onChange={this.handleChange}
-                    />
-                  </div>
+              <div className="input split">
+                <div className="split-item left">
+                  <label htmlFor="smallBlind">Small blind</label>
+                  <input
+                    className="input-type"
+                    type="number"
+                    name="smallBlind"
+                    value={this.state.input.smallBlind}
+                    onChange={this.handleChange}
+                  />
+                </div>
 
-                  <div className="button">
-                    <label htmlFor="bigBlind">Big blind</label>
-                    <input
-                      className="input-type"
-                      type="number"
-                      name="bigBlind"
-                      value={this.state.input.bigBlind}
-                      onChange={this.handleChange}
-                    />
-                  </div>
+                <div className="split-item right">
+                  <label htmlFor="bigBlind">Big blind</label>
+                  <input
+                    className="input-type"
+                    type="number"
+                    name="bigBlind"
+                    value={this.state.input.bigBlind}
+                    onChange={this.handleChange}
+                  />
                 </div>
               </div>
 
-              <div>
+              <div className="input">
                 <input className="input-button" type="submit" value="Create" />
               </div>
 
-              <div>
-                <p>Or, if you have a groupID</p>
+              <InputError message={this.state.error} />
+
+              <hr />
+
+              <div className="input">
                 <button
                   className="input-button"
                   type="button"
                   onClick={this.toggleModalVisible}
                 >
-                  Join group
+                  Join existing group
                 </button>
               </div>
-
-              <InputError message={this.state.error} />
             </form>
           </div>
         </div>

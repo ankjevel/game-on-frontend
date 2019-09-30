@@ -1,21 +1,5 @@
 .create-or-join-group {
-  @apply self-center w-full rounded overflow-hidden shadow-lg bg-white;
-
-  @screen sm {
-    @apply w-full;
-  }
-
-  @screen md {
-    @apply w-2/3;
-  }
-
-  @screen lg {
-    @apply w-2/3;
-  }
-
-  @screen xl {
-    @apply w-1/2;
-  }
+  @apply text-gray-700 w-full flex items-center;
 
   .sign-out {
     @apply fixed right-0 top-0;
@@ -36,7 +20,23 @@
   }
 
   .sign-in {
-    @apply flex-1 bg-white;
+    @apply bg-white w-full self-center rounded overflow-hidden shadow-lg bg-white m-auto;
+
+    @screen sm {
+      @apply w-full;
+    }
+
+    @screen md {
+      @apply w-2/3;
+    }
+
+    @screen lg {
+      @apply w-2/3;
+    }
+
+    @screen xl {
+      @apply w-1/2;
+    }
 
     &-error {
       @apply bg-red-100;
@@ -44,10 +44,14 @@
 
     form {
       @apply px-8 pt-6 pb-8 mb-4 w-full;
+
+      > div {
+        @apply p-2;
+      }
     }
 
     label {
-      @apply block text-gray-700 text-sm font-bold mb-2 w-full;
+      @apply block text-sm font-bold mb-2 w-full;
     }
 
     .buttons {
@@ -62,11 +66,13 @@
       }
 
       .button {
-        @apply w-1/2 px-4;
+        @apply w-full px-4 py-4;
       }
     }
 
     .input {
+      @apply flex w-full flex-col;
+
       &-type,
       &-button {
         @apply rounded py-2;
@@ -77,15 +83,31 @@
       }
 
       &-type {
-        @apply shadow appearance-none border w-full px-3 text-gray-700 leading-tight;
+        @apply shadow appearance-none border w-full px-3 leading-tight;
       }
 
       &-button {
-        @apply w-1/2 bg-blue-500 text-white font-bold px-4;
+        @apply bg-blue-500 text-white font-bold px-4 cursor-pointer w-1/2;
 
         &:hover {
           @apply bg-blue-700;
         }
+      }
+    }
+
+    .split {
+      @apply flex flex-row;
+
+      &-item {
+        @apply w-full;
+      }
+
+      .left {
+        @apply pr-2;
+      }
+
+      .right {
+        @apply pl-2;
       }
     }
   }
