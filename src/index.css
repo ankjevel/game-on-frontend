@@ -87,6 +87,13 @@ h6 {
   font-weight: 400;
 }
 
+input {
+  &:active,
+  &:focus {
+    @apply outline-none shadow-outline;
+  }
+}
+
 html,
 body,
 #root {

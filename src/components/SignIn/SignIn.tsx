@@ -5,6 +5,7 @@ import './SignIn.css'
 
 import UserContext from '../../context/User'
 import * as api from '../../utils/api'
+import InputError from '../InputError'
 
 class SignIn extends Component<{}, State> {
   static contextType = UserContext
@@ -144,25 +145,13 @@ class SignIn extends Component<{}, State> {
 
   render() {
     return (
-      <div className="self-center auto w-full sm:w-full md:w-2/3 lg:w-2/3 xl:w-1/2 rounded overflow-hidden shadow-lg bg-white">
-        <div
-          className={`${
-            this.state.error ? 'bg-red-100' : 'bg-white'
-          } flex-1 sign-in '`}
-        >
-          <form
-            className="px-8 pt-6 pb-8 mb-4 w-full"
-            onSubmit={this.handleSubmit}
-          >
+      <div className="sign-in">
+        <div className={`container ${this.state.error ? 'error' : ''}`}>
+          <form onSubmit={this.handleSubmit}>
             <div>
-              <label
-                htmlFor="name"
-                className="block text-gray-700 text-sm font-bold mb-2 w-full"
-              >
-                Username
-              </label>
+              <label htmlFor="name">Username</label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="input-text"
                 type="name"
                 name="name"
                 required={true}
@@ -172,15 +161,13 @@ class SignIn extends Component<{}, State> {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Password {this.state.create && '(minimum length: 8)'}
+              <label htmlFor="password">
+                Password
+                {this.state.create && <small> (minimum length: 8)</small>}
               </label>
 
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="input-text"
                 type="password"
                 name="password"
                 minLength={8}
@@ -192,15 +179,10 @@ class SignIn extends Component<{}, State> {
 
             {this.state.create && (
               <div>
-                <label
-                  htmlFor="passwordRepeat"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Repeat password
-                </label>
+                <label htmlFor="passwordRepeat">Repeat password</label>
 
                 <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  className="input-text"
                   type="password"
                   minLength={8}
                   name="passwordRepeat"
@@ -211,15 +193,15 @@ class SignIn extends Component<{}, State> {
               </div>
             )}
 
-            <div className="p-4">
-              <div className="flex -mx-2">
+            <div className="buttons">
+              <div>
                 <input
-                  className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline"
+                  className="input button left"
                   type="submit"
                   value={this.state.create ? 'Create' : 'Login'}
                 />
                 <button
-                  className="w-1/2 bg-blue-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline"
+                  className="input button dim right"
                   type="button"
                   onClick={this.toggleCreate}
                 >
@@ -228,25 +210,8 @@ class SignIn extends Component<{}, State> {
               </div>
             </div>
 
-            {this.state.error && (
-              <div
-                className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
-                role="alert"
-              >
-                <p className="font-bold">Error</p>
-                <p>{this.state.error}</p>
-              </div>
-            )}
+            <InputError message={this.state.error} />
           </form>
-
-          {/* <div className="absolute ml-2">
-          <button
-            onClick={this.handleForgot}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-bl rounded-br"
-          >
-            Forgot Password?
-          </button>
-        </div> */}
         </div>
       </div>
     )

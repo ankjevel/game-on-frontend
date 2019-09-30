@@ -1,4 +1,74 @@
 .sign-in {
-  /* border: 1px solid tomato; */
-  min-width: 50%
+  @apply self-center w-full rounded overflow-hidden shadow-lg bg-white m-0 p-0 h-auto;
+
+  @screen sm {
+    @apply w-full;
+  }
+
+  @screen md {
+    @apply w-2/3;
+  }
+
+  @screen lg {
+    @apply w-2/3;
+  }
+
+  @screen xl {
+    @apply w-1/2;
+  }
+
+  .container {
+    @apply w-full h-full p-0 m-0;
+    flex-basis: 100%;
+
+    &.error {
+      @apply bg-red-100;
+    }
+  }
+
+  form {
+    @apply px-8 pt-6 pb-8 w-full;
+  }
+
+  label {
+    @apply block text-gray-700 text-sm font-bold mb-2 w-full;
+  }
+
+  .input {
+    &-text {
+      @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+    }
+
+    &:focus {
+      @apply outline-none shadow-outline;
+    }
+  }
+
+  .buttons {
+    @apply p-4 -mx-2;
+
+    > div {
+      @apply flex -mx-2;
+    }
+
+    .button {
+      @apply w-1/2 bg-blue-500 text-white font-bold py-2 px-4 rounded-none;
+
+      &.dim {
+        @apply bg-blue-300;
+      }
+
+      &.left {
+        @apply rounded-l;
+      }
+
+      &.right {
+        @apply rounded-r;
+      }
+
+      &:hover {
+        @apply bg-blue-700;
+      }
+    }
+  }
 }

@@ -7,6 +7,7 @@ import UserContext from '../../context/User'
 import * as api from '../../utils/api'
 import Modal from '../Modal'
 import SignOut from '../SignOut'
+import InputError from '../InputError'
 
 type Props = {}
 type State = {
@@ -156,14 +157,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 name="join"
                 onChange={this.handleChange}
               />
-              {this.state.joinError && (
-                <div className="error" role="alert">
-                  <p>
-                    <strong>Error</strong>
-                  </p>
-                  <p>{this.state.joinError}</p>
-                </div>
-              )}
+              <InputError message={this.state.joinError} />
             </form>
           </div>
         </Modal>
@@ -236,14 +230,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 </button>
               </div>
 
-              {this.state.error && (
-                <div className="error" role="alert">
-                  <p>
-                    <strong>Error</strong>
-                  </p>
-                  <p>{this.state.error}</p>
-                </div>
-              )}
+              <InputError message={this.state.error} />
             </form>
           </div>
         </div>
