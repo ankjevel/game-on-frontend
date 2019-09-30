@@ -11,7 +11,7 @@ const AlertTemplate = ({
   close,
 }: AlertComponentPropsWithStyle) => {
   return (
-    <div className={`alert ${type}`} style={style} role="alert">
+    <div className={`c_alert ${type}`} style={style} role="alert">
       <p className="message">{message}</p>
       <button className="close" onClick={close}>
         <IconX />

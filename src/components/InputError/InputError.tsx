@@ -7,7 +7,7 @@ export const InputError: SFC<{
   title?: string
   className?: string
 }> = ({ title = 'Error', message, className: cn }) => {
-  const className = `input-error ${cn || ''}`.trim()
+  const className = `c_input-error ${cn || ''}`.trim()
   return message ? (
     <div className={className} role="alert">
       <p>

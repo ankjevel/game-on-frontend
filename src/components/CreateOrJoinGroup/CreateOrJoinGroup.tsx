@@ -149,7 +149,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
     return (
       <Fragment>
         <Modal onClose={this.toggleModalVisible} isOpen={this.state.isOpen}>
-          <div className="create-or-join-group-modal">
+          <div className="c_create-or-join-group-modal">
             <h1>Input group id</h1>
             <form onSubmit={this.joinGroup}>
               <input
@@ -162,7 +162,7 @@ class CreateOrJoinGroup extends Component<Props, State> {
           </div>
         </Modal>
 
-        <div className="create-or-join-group">
+        <div className="c_create-or-join-group">
           <SignOut className="sign-out" />
           <div className={`sign-in ${this.state.error ? 'error' : ''}`}>
             <form onSubmit={this.createGroup}>

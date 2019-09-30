@@ -44,7 +44,11 @@ export const User: SFC<{
         </div>
         <div className="cards">
           {cards.map((card, i) => (
-            <Card key={`player-${row.id}-${i}-${card}`} card={card} />
+            <Card
+              className="card"
+              key={`player-${row.id}-${i}-${card}`}
+              card={card}
+            />
           ))}
         </div>
       </div>

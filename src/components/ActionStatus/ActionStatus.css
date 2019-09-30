@@ -1,46 +1,46 @@
-.action-status {
+.c_action-status {
   @apply rounded inline-block px-3 py-1 my-2;
 
   div {
     @apply font-bold text-xs uppercase;
   }
 
-  &-none,
-  &-bet,
-  &-check,
-  &-call,
-  &-raise,
-  &-allIn,
-  &-fold,
-  &-draw,
-  &-winner,
-  &-back,
-  &-bank,
-  &-join,
-  &-leave,
-  &-sittingOut {
+  &.none,
+  &.bet,
+  &.check,
+  &.call,
+  &.raise,
+  &.allIn,
+  &.fold,
+  &.draw,
+  &.winner,
+  &.back,
+  &.bank,
+  &.join,
+  &.leave,
+  &.sittingOut {
   }
 
-  &-none {
+  &.none {
     @apply p-0;
   }
 
-  &-bet,
-  &-call,
-  &-check {
+  &.bet,
+  &.call,
+  &.check {
     @apply bg-gray-800 text-white;
   }
 
-  &-fold,
-  &-sittingOut {
+  &.fold,
+  &.sittingOut {
     @apply bg-red-400 text-gray-100;
   }
 
-  &-raise {
+  &.raise {
     @apply bg-blue-500 text-white;
   }
 
-  &-allIn {
+  &.allIn {
     @apply bg-green-700 text-white;
   }
 }

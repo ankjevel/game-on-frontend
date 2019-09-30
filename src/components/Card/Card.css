@@ -1,4 +1,4 @@
-.card {
+.c_card {
   @apply relative select-none p-0 m-0;
   box-shadow: 0 0 10px rgba(25, 31, 43, .25);
 

@@ -1,4 +1,4 @@
-.app {
+.c_app {
   @apply flex items-center justify-center relative;
   min-height: 100%;
   min-width: 100%;

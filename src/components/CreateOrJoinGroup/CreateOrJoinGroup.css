@@ -1,4 +1,4 @@
-.create-or-join-group {
+.c_create-or-join-group {
   @apply text-gray-700 w-full flex items-center;
 
   .sign-out {

@@ -7,7 +7,7 @@ export const ActionStatus: SFC<{
   className?: string
   status: UserSummary['status']
 }> = ({ className: cn, status }) => {
-  const className = `action-status action-status-${status} ${cn || ''}`
+  const className = `c_action-status ${status} ${cn || ''}`
   let text: string
 
   switch (status) {

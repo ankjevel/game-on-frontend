@@ -306,7 +306,7 @@ export const App = () => {
 
   return (
     <Router>
-      <div className="app">
+      <div className="c_app">
         <Switch>
           <Route path="/" exact component={RouteMain} />
           <Route path="/sign-in" component={RouteSignIn} />

@@ -255,7 +255,7 @@ export const Group = () => {
   }
 
   return (
-    <div className="group-view">
+    <div className="c_group-view">
       <SignOut className="sign-out" />
 
       <div className="main-container">

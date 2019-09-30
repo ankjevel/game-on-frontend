@@ -153,7 +153,7 @@ export const Action = memo(
           isOpen={modalEndIsVisible}
           onClose={() => setModalEndIsVisible(!modalEndIsVisible)}
         >
-          <div className="">
+          <div className="c_action-modal">
             {Object.values(turn).findIndex(
               action => action.status === 'allIn'
             ) === -1 ? (
@@ -317,197 +317,207 @@ export const Action = memo(
           </div>
         </Modal>
 
-        <div className="main-top">
-          <h1 className="title">{group.name}</h1>
-          <SignOut className="sign-out" />
-        </div>
-
-        <div className="users">
-          <div className="left">
-            {usersRows.left.reverse().map((user, i) => (
-              <User
-                key={`left-${i}`}
-                position="left"
-                row={user}
-                bigID={bigID}
-                round={round}
-                button={button}
-              />
-            ))}
+        <div className="c_action">
+          <div className="main-top">
+            <h1 className="title">{group.name}</h1>
+            <SignOut className="sign-out" />
           </div>
-          <div className="top">
-            {usersRows.top.map((user, i) => (
-              <User
-                key={`top-${i}`}
-                position="top"
-                row={user}
-                bigID={bigID}
-                round={round}
-                button={button}
-              />
-            ))}
-          </div>
-          <div className="right">
-            {usersRows.right.map((user, i) => (
-              <User
-                key={`right-${i}`}
-                position="right"
-                row={user}
-                bigID={bigID}
-                round={round}
-                button={button}
-              />
-            ))}
-          </div>
-        </div>
 
-        <div className="main px-4 py-6 z-10">
-          <div className="w-full text-left p-2 text-gray-700 flex flex-col">
-            <div className="table">
-              <div className="bets">
-                <h1 className="bet">
-                  <Chip className="chip" />
-                  {big.bet}
-                </h1>
-                <h3 className="pot key-value">
-                  <span>Pot</span> {pot}
-                </h3>
-              </div>
-              <div className="holder">
-                <div className="cards">
-                  {communityCards.map(card => (
-                    <Card card={card} key={`community-card-${card}`} />
-                  ))}
-                  {[...Array(5 - communityCards.length)].map((_, i) => (
-                    <div className="card none" key={`blank_card_${i}`} />
-                  ))}
-                </div>
-
-                <div className="placeholders">
-                  {placeholders.map((_, i) => (
-                    <div className="card" key={`placeholder_${i}`} />
-                  ))}
-                </div>
-              </div>
-              <div className="you">
-                <h3 className="bet key-value">
-                  <span>Your bet</span> {userTurn.bet}
-                </h3>
-                <h3 className="bank key-value">
-                  <span>Bank</span> {userGroup.sum}
-                </h3>
-                <PlayerHand className="hand" hand={userTurn.hand} />
-              </div>
+          <div className="users">
+            <div className="left">
+              {usersRows.left.reverse().map((user, i) => (
+                <User
+                  key={`left-${i}`}
+                  position="left"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                />
+              ))}
             </div>
+            <div className="top">
+              {usersRows.top.map((user, i) => (
+                <User
+                  key={`top-${i}`}
+                  position="top"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                />
+              ))}
+            </div>
+            <div className="right">
+              {usersRows.right.map((user, i) => (
+                <User
+                  key={`right-${i}`}
+                  position="right"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                />
+              ))}
+            </div>
+          </div>
 
-            {group.owner == userID && round === 4 && !callPending && (
-              <div className="w-full flex flex-row">
-                <button
-                  type="button"
-                  onClick={() => actions.draw()}
-                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                >
-                  draw
-                </button>
+          <div className="main">
+            <div>
+              <div className="table">
+                <div className="bets">
+                  <h1 className="bet">
+                    <Chip className="chip" />
+                    {big.bet}
+                  </h1>
+                  <h3 className="pot key-value">
+                    <span>Pot</span> {pot}
+                  </h3>
+                </div>
+                <div className="holder">
+                  <div className="cards">
+                    {communityCards.map(card => (
+                      <Card
+                        card={card}
+                        className="card"
+                        key={`community-card-${card}`}
+                      />
+                    ))}
+                    {[...Array(5 - communityCards.length)].map((_, i) => (
+                      <div className="card none" key={`blank_card_${i}`} />
+                    ))}
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setModalEndIsVisible(!modalEndIsVisible)
-                  }}
-                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                >
-                  winner
-                </button>
+                  <div className="placeholders">
+                    {placeholders.map((_, i) => (
+                      <div className="card" key={`placeholder_${i}`} />
+                    ))}
+                  </div>
+                </div>
+                <div className="you">
+                  <h3 className="bet key-value">
+                    <span>Your bet</span> {userTurn.bet}
+                  </h3>
+                  <h3 className="bank key-value">
+                    <span>Bank</span> {userGroup.sum}
+                  </h3>
+                  <PlayerHand className="hand" hand={userTurn.hand} />
+                </div>
               </div>
-            )}
+
+              {group.owner == userID && round === 4 && !callPending && (
+                <div className="w-full flex flex-row">
+                  <button
+                    type="button"
+                    onClick={() => actions.draw()}
+                    className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                  >
+                    draw
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalEndIsVisible(!modalEndIsVisible)
+                    }}
+                    className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                  >
+                    winner
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div
-          className={`bottom animated ${button === userID ? 'turn' : ''} ${
-            round === 4 ? 'showdown' : ''
-          }`}
-        >
-          <div className="player-cards">
-            {(userTurn.cards || ([] as string[])).map(card => (
-              <Card key={`player-cards-${card}`} card={card} />
-            ))}
-          </div>
-          <div className="holder">
-            <button
-              onClick={() => !callPending && actions.check()}
-              disabled={callPending}
-              type="button"
-              className="bg-blue-400 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
-            >
-              {big.bet === userTurn.bet
-                ? round === 0
-                  ? 'bet'
-                  : 'check'
-                : 'call'}
-            </button>
-            <button
-              type="button"
-              disabled={callPending}
-              onClick={() => !callPending && actions.fold()}
-              className="bg-red-500 hover:bg-red-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4"
-            >
-              fold
-            </button>
-            <button
-              type="button"
-              disabled={callPending || input.raise === userTurn.bet}
-              onClick={async event => {
-                event.preventDefault()
+          <div
+            className={`bottom ${button === userID ? 'turn' : ''} ${
+              round === 4 ? 'showdown' : ''
+            }`}
+          >
+            <div className="player-cards">
+              {(userTurn.cards || ([] as string[])).map(card => (
+                <Card
+                  className="card"
+                  key={`player-cards-${card}`}
+                  card={card}
+                />
+              ))}
+            </div>
+            <div className="holder">
+              <button
+                onClick={() => !callPending && actions.check()}
+                disabled={callPending}
+                type="button"
+                className="bg-blue-400 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
+              >
+                {big.bet === userTurn.bet
+                  ? round === 0
+                    ? 'bet'
+                    : 'check'
+                  : 'call'}
+              </button>
+              <button
+                type="button"
+                disabled={callPending}
+                onClick={() => !callPending && actions.fold()}
+                className="bg-red-500 hover:bg-red-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4"
+              >
+                fold
+              </button>
+              <button
+                type="button"
+                disabled={callPending || input.raise === userTurn.bet}
+                onClick={async event => {
+                  event.preventDefault()
 
-                if (callPending) {
-                  return
+                  if (callPending) {
+                    return
+                  }
+
+                  if (input.raise >= userGroup.sum) {
+                    window.alert('maybe go all in?')
+                    return
+                  }
+
+                  await actions.raise(input.raise)
+                }}
+                className={`bg-blue-500 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
+                  input.raise === big.bet ? 'disabled' : ''
+                }`}
+              >
+                raise
+              </button>
+              <Slider
+                className="slider"
+                value={input.raise}
+                onChange={value => {
+                  setInput({
+                    ...input,
+                    raise: value,
+                  })
+                }}
+                min={1}
+                max={userGroup.sum - (big.bet - userTurn.bet)}
+              />
+              <h3 className="raise select-none">
+                <strong>Raise:</strong> {input.raise}
+              </h3>
+              <button
+                type="button"
+                disabled={
+                  callPending ||
+                  input.raise < userGroup.sum - (big.bet - userTurn.bet)
                 }
-
-                if (input.raise >= userGroup.sum) {
-                  window.alert('maybe go all in?')
-                  return
-                }
-
-                await actions.raise(input.raise)
-              }}
-              className={`bg-blue-500 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
-                input.raise === big.bet ? 'disabled' : ''
-              }`}
-            >
-              raise
-            </button>
-            <Slider
-              className="slider"
-              value={input.raise}
-              onChange={value => {
-                setInput({
-                  ...input,
-                  raise: value,
-                })
-              }}
-              min={1}
-              max={userGroup.sum - (big.bet - userTurn.bet)}
-            />
-            <h3 className="raise select-none">
-              <strong>Raise:</strong> {input.raise}
-            </h3>
-            <button
-              type="button"
-              disabled={
-                callPending ||
-                input.raise < userGroup.sum - (big.bet - userTurn.bet)
-              }
-              onClick={() => !callPending && actions.allIn()}
-              className={`bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-                input.raise < userGroup.sum - (big.bet - userTurn.bet)
-                  ? 'disabled'
-                  : ''
-              }`}
-            >
-              all-in
-            </button>
+                onClick={() => !callPending && actions.allIn()}
+                className={`bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
+                  input.raise < userGroup.sum - (big.bet - userTurn.bet)
+                    ? 'disabled'
+                    : ''
+                }`}
+              >
+                all-in
+              </button>
+            </div>
           </div>
         </div>
       </Fragment>
