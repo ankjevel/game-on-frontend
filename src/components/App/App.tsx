@@ -86,7 +86,7 @@ export const App = () => {
       case '/action':
         return <Redirect to={`/action/${pretty(user.group.action)}`} from="/" />
       case '/wait':
-        return <WaitRedirect to="/" waitFor={''} toBe={''} />
+        return <WaitRedirect to="/" />
     }
     return <NotFound />
   }
@@ -284,17 +284,14 @@ export const App = () => {
       await user.setValue('reset', '')
 
       return {
-        default: () => <Fragment />,
+        default: () => <h1>Hello</h1>,
       }
     })
 
     return (
-      <Fragment>
-        {user.id}
-        <Suspense fallback={<div>Loading...</div>}>
-          <WhenDone />
-        </Suspense>
-      </Fragment>
+      <Suspense fallback={<div>Loading...</div>}>
+        <WhenDone />
+      </Suspense>
     )
   }
 

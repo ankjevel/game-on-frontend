@@ -15,6 +15,7 @@ export type ActionType =
   | 'join'
   | 'leave'
   | 'sittingOut'
+  | 'confirm'
 
 export type UserSummary = {
   bet: number

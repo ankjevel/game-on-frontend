@@ -23,6 +23,7 @@ export type RouteParams = {
 export type ERoute =
   | '/'
   | '/sign-in'
+  | '/sign-out'
   | '/create'
   | '/group'
   | '/action'

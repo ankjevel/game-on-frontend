@@ -1,6 +1,6 @@
 import Context from 'CConfig'
 import context from './context'
-import Provider from './Provider'
+import Provider from './Config'
 
-export { context, Provider, Context }
+export { context, Provider, Provider as Config, Context }
 export default context

@@ -20,15 +20,15 @@ export const SocketProvider = props => {
   const cAction = useContext<CAction>(ActionContext)
 
   const [value, setValue] = useState<CContext>({
-    id: '',
+    id: socket != null ? socket.id : '',
+    connected: socket != null && socket.connected,
     room: '',
-    connected: false,
     userSet: false,
     userListen: false,
     actionListen: false,
   })
 
-  const resetGroup = async () => {
+  const resetGroup = async props => {
     if (socket && socket.emit) {
       await socket.emit('group:leave')
       await socket.off('update:group')
@@ -42,9 +42,12 @@ export const SocketProvider = props => {
 
     await setValue(state => ({
       ...state,
-      userListen: false,
       actionListen: false,
+      id: socket != null ? socket.id : '',
+      connected: socket != null && socket.connected,
       room: '',
+      userListen: false,
+      ...props,
     }))
   }
 
@@ -62,16 +65,12 @@ export const SocketProvider = props => {
     })
 
     socket.on('reconnect', async () => {
-      await resetGroup()
-      setValue(state => ({ ...state, room: '', connected: false }))
-    })
-
-    return () => {
-      if (value.id === '' && socket != null) {
-        socket.close()
-        socket = undefined
+      if (value.connected && socket.socket) {
+        socket.socket.connect()
+        return
       }
-    }
+      await resetGroup({})
+    })
   }, [cConfig.api])
 
   useEffect(() => {
@@ -116,12 +115,13 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const exec = async () => {
+      console.log(value, cUser, socket)
       if (value.connected === false) return
       if (value.userSet === false) return
 
       if (cUser.group == null) {
         if (value.room !== '') {
-          await resetGroup()
+          await resetGroup({})
         }
 
         return
@@ -144,7 +144,7 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const handleToken = async () => {
-      if (value.connected === false) {
+      if (value.connected === false || socket == null) {
         return
       }
 

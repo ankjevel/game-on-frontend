@@ -1,6 +1,6 @@
 import Context from 'CAction'
 import context from './context'
-import Provider from './Provider'
+import Provider from './Action'
 
-export { context, Provider, Context }
+export { context, Provider, Provider as Action, Context }
 export default context

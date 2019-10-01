@@ -20,7 +20,7 @@
   }
 
   .main {
-    @apply px-4 py-6 z-20;
+    @apply px-4 py-6 z-20 relative;
 
     > div {
       @appl w-full text-left p-2 text-gray-700 flex flex-col;
@@ -149,7 +149,7 @@
   }
 
   .bottom {
-    @apply z-10 absolute p-0 w-full text-white left-0 bottom-0 -mb-20;
+    @apply z-30 absolute p-0 w-full text-white left-0 bottom-0 -mb-20;
     box-shadow: 0 0 40px rgba(61, 66, 79, .4);
     transition: margin-bottom 0.4s ease;
 
