@@ -28,7 +28,7 @@ export const SocketProvider = props => {
     actionListen: false,
   })
 
-  const resetGroup = async props => {
+  const resetGroup = async () => {
     if (socket && socket.emit) {
       await socket.emit('group:leave')
       await socket.off('update:group')
@@ -39,16 +39,6 @@ export const SocketProvider = props => {
         await sub.destroy()
       }
     }
-
-    await setValue(state => ({
-      ...state,
-      actionListen: false,
-      id: socket != null ? socket.id : '',
-      connected: socket != null && socket.connected,
-      room: '',
-      userListen: false,
-      ...props,
-    }))
   }
 
   useEffect(() => {
@@ -69,13 +59,13 @@ export const SocketProvider = props => {
         socket.socket.connect()
         return
       }
-      await resetGroup({})
+      await resetGroup()
     })
   }, [cConfig.api])
 
   useEffect(() => {
     if (socket == null) return
-    if (cUser == null) return
+    if (cUser == null || cUser.id == null) return
     if (value.connected === false) return
     if (value.userListen) return
 
@@ -98,7 +88,7 @@ export const SocketProvider = props => {
     })
 
     setValue(state => ({ ...state, userListen: true }))
-  }, [cUser, cAction.id, value.connected, value.userListen])
+  }, [cUser, cUser.id, cAction.id, value.connected, value.userListen])
 
   useEffect(() => {
     if (socket == null) return
@@ -115,13 +105,12 @@ export const SocketProvider = props => {
 
   useEffect(() => {
     const exec = async () => {
-      console.log(value, cUser, socket)
       if (value.connected === false) return
       if (value.userSet === false) return
 
       if (cUser.group == null) {
         if (value.room !== '') {
-          await resetGroup({})
+          await resetGroup()
         }
 
         return
@@ -150,12 +139,12 @@ export const SocketProvider = props => {
 
       const { token } = cUser
       if (token) {
-        if (value.userListen) return
+        if (value.userListen && value.userSet) return
         if (value.actionListen) return
 
         await socket.emit('user:join', token)
-      } else {
-        await socket.emit('user:leave', token)
+      } else if (value.userSet) {
+        await socket.emit('user:leave')
       }
 
       setValue(state => ({ ...state, userSet: !!token }))
