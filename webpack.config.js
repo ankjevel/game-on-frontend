@@ -1,14 +1,20 @@
 const path = require('path')
 const Config = require('./lib/Config')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const outputDir = path.join(__dirname, 'dist/')
 const configPlugin = new Config({})
 const config = configPlugin.serverConfig
+const dev = config.mode === 'development'
 
 module.exports = {
   mode: config.mode,
   optimization: {
     usedExports: true,
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   devtool: 'source-map',
   output: {
@@ -20,9 +26,14 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: 'public/index.html',
+    new MiniCssExtractPlugin({
+      filename: dev ? '[name].css' : '[name].[hash].css',
+      chunkFilename: dev ? '[id].css' : '[id].[hash].css',
     }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+    }),
+    new CopyWebpackPlugin([{ from: 'public/', to: outputDir }]),
     configPlugin,
   ],
   entry: './src/index.tsx',
@@ -42,6 +53,10 @@ module.exports = {
         use: [
           { loader: 'style-loader' },
           {
+            loader: MiniCssExtractPlugin.loader,
+            options: { hmr: dev },
+          },
+          {
             loader: 'css-loader',
             options: { importLoaders: 1 },
           },
@@ -52,6 +67,21 @@ module.exports = {
               plugins: [
                 require('tailwindcss'),
                 require('postcss-nested'),
+                ...(config.mode === 'production'
+                  ? [
+                      require('@fullhuman/postcss-purgecss')({
+                        content: [
+                          './src/**/*.tsx',
+                          './src/**/*.css',
+                          './src/index.css',
+                        ],
+                        css: ['./src/**/*.css', './src/index.css'],
+                        keyframes: true,
+                        whitelistPatterns: [/[ac]_[a-z0-9-_:/]+/gi],
+                      }),
+                      require('cssnano'),
+                    ]
+                  : []),
                 require('autoprefixer'),
               ],
             },

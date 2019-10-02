@@ -204,8 +204,8 @@ export const App = () => {
   const WaitRedirect = memo(
     ({
       to,
-      waitFor,
-      toBe,
+      waitFor = '',
+      toBe = '',
       toBeEql,
       toNotBe,
       toNotBeEql,

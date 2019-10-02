@@ -29,6 +29,7 @@ export const SocketProvider = props => {
   })
 
   const resetGroup = async () => {
+    console.log('resetGroup')
     if (socket && socket.emit) {
       await socket.emit('group:leave')
       await socket.off('update:group')
@@ -38,10 +39,12 @@ export const SocketProvider = props => {
       for (const sub of socket.subs) {
         await sub.destroy()
       }
+      await socket.close()
     }
   }
 
   useEffect(() => {
+    console.log('main', socket)
     if (socket != null || value.id !== '') return
 
     socket = io(cConfig.api)

@@ -28,7 +28,7 @@ COPY --from=builder /build/dist dist
 COPY bin bin
 COPY lib lib
 
-RUN chown $USER -R  dist/js
+RUN chown $USER -R dist
 
 USER $USER
 

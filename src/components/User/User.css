@@ -35,7 +35,7 @@
 
   &.is-button .name {
     @apply border-green-500;
-    animation-name: border-color;
+    animation-name: borderColor;
     animation-duration: 5s;
     animation-iteration-count: infinite;
   }

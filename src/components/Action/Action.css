@@ -73,7 +73,7 @@
     @apply z-10;
 
     .card:not(.none) {
-      /* animation-name: fly-in;
+      /* animation-name: flyIn;
       animation-duration: 1s;
       animation-direction: alternate;
       animation-timing-function: cubic-bezier(0.1, , 0.2, 0);
@@ -158,7 +158,7 @@
 
       .holder {
         @apply border-green-500;
-        animation-name: border-color;
+        animation-name: borderColor;
         animation-duration: 5s;
         animation-iteration-count: infinite;
       }

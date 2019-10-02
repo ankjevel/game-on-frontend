@@ -31,7 +31,10 @@
 
 @tailwind utilities;
 
-@keyframes fly-in {
+.a_flyIn {
+  animation-name: flyIn;
+}
+@keyframes flyIn {
   0% {
     transform: rotateY(180deg) rotateX(15deg) translateZ(0) translateX(2rem) translateY(75vh);
   }
@@ -45,7 +48,11 @@
   }
 }
 
-@keyframes border-color {
+.a_borderColor {
+  animation-name: borderColor;
+}
+
+@keyframes borderColor {
   0% {
     @apply border-green-500;
   }

@@ -4,17 +4,18 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": false,
     "jsx": "react",
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
     "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "outDir": "./dist/",
-    "paths": { "*": ["src/types/*"] },
+    "paths": { "*": ["src/types/*"], "@/*": ["src/*"] },
     "sourceMap": true,
     "skipLibCheck": true,
-    "target": "es5"
+    "target": "esnext"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
