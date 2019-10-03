@@ -80,6 +80,10 @@
       height: 87.8251px;
       transform: rotate(-4deg) scale(.4);
 
+      transition: all .4s ease;
+      transform-style: preserve-3d;
+
+
       &:nth-of-type(2n) {
         @apply -ml-12;
         transform: rotate(23deg) scale(.4);
