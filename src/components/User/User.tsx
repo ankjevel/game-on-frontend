@@ -42,7 +42,9 @@ export const User: SFC<{
           <ActionStatus status={row.action.status} winner={winner} />
         </div>
         <div className="info">
-          {round === 4 && <IconThumbUp className="thumbs-up" />}
+          {round === 4 && row.action.status === 'confirm' && (
+            <IconThumbUp className="thumbs-up" />
+          )}
           <h2 className="name">{row.name}</h2>
         </div>
         <div className="cards">
