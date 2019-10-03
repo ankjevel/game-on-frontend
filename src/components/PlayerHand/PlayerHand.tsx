@@ -22,7 +22,7 @@ export const PlayerHand: SFC<{
           </Fragment>
         )}
       </h3>
-      {winner && <h3 className={classNameWinner}>You won this round</h3>}
+      <h3 className={classNameWinner}>{winner && 'You won this round'}</h3>
     </Fragment>
   )
 }

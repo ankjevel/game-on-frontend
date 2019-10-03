@@ -34,6 +34,7 @@
 .a_flyIn {
   animation-name: flyIn;
 }
+
 @keyframes flyIn {
   0% {
     transform: rotateY(180deg) rotateX(15deg) translateZ(0) translateX(2rem) translateY(75vh);
@@ -72,20 +73,18 @@
 
 @keyframes fancyBackground {
   0% {
-    /* background: #ffc931;
-    box-shadow: 0 10px 10px rgba(255, 201, 49, .25); */
     @apply bg-green-500;
-    box-shadow: 0 10px 10px rgba(72, 187, 120, .25);
+    box-shadow: 0 10px 10px rgba(theme('colors.green.500'), .25);
   }
 
   50% {
     @apply bg-yellow-500;
-    box-shadow: 0 10px 10px rgba(236, 201, 75, .25);
+    box-shadow: 0 10px 10px rgba(theme('colors.yellow.500'), .25);
   }
 
   100% {
     @apply bg-green-500;
-    box-shadow: 0 10px 10px rgba(72, 187, 120, .25);
+    box-shadow: 0 10px 10px rgba(theme('colors.green.500'), .25);
   }
 }
 

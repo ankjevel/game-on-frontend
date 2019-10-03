@@ -12,9 +12,13 @@ module.exports = {
   mode: config.mode,
   optimization: {
     usedExports: true,
-    splitChunks: {
-      chunks: 'all',
-    },
+    ...(config.mode === 'production'
+      ? {
+          splitChunks: {
+            chunks: 'all',
+          },
+        }
+      : {}),
   },
   devtool: 'source-map',
   output: {
@@ -26,12 +30,12 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+    }),
     new MiniCssExtractPlugin({
       filename: dev ? '[name].css' : '[name].[hash].css',
       chunkFilename: dev ? '[id].css' : '[id].[hash].css',
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/index.html',
     }),
     new CopyWebpackPlugin([{ from: 'public/', to: outputDir }]),
     configPlugin,
@@ -54,7 +58,6 @@ module.exports = {
           { loader: 'style-loader' },
           {
             loader: MiniCssExtractPlugin.loader,
-            options: { hmr: dev },
           },
           {
             loader: 'css-loader',
@@ -67,6 +70,7 @@ module.exports = {
               plugins: [
                 require('tailwindcss'),
                 require('postcss-nested'),
+                require('postcss-hexrgba'),
                 ...(config.mode === 'production'
                   ? [
                       require('@fullhuman/postcss-purgecss')({

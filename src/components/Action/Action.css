@@ -149,12 +149,14 @@
   }
 
   .bottom {
-    @apply z-30 absolute p-0 w-full text-white left-0 bottom-0 -mb-20;
+    @apply z-30 absolute p-0 w-full text-white left-0;
     box-shadow: 0 0 40px rgba(61, 66, 79, .4);
-    transition: margin-bottom 0.4s ease;
+    /* background: rgba(25, 31, 43, 1); */
+    transition: all 0.4s ease;
+    bottom: -5rem;
 
     &.turn:not(.showdown) {
-      @apply mb-0;
+      bottom: 0;
 
       .holder {
         @apply border-green-500;
@@ -176,6 +178,10 @@
       .player-cards {
         bottom: 10rem;
 
+        &:hover {
+          padding-bottom: 0;
+        }
+
         .card {
           @apply mr-2;
           transform: rotate(0);
@@ -196,7 +202,6 @@
       @apply ml-56;
       bottom: 8rem;
 
-
       .button {
         @apply bg-green-500 text-white text-base leading-none p-2 py-2 px-4 rounded;
 
@@ -206,12 +211,22 @@
       }
     }
 
+    &.turn:not(.showdown) {
+      .player-cards {
+        bottom: 0;
+        &:hover {
+          padding-bottom: 1rem;
+        }
+      }
+    }
+
     .player-cards {
-      bottom: 4rem;
-      transition: bottom 0.4s ease;
+      @apply fixed w-56 inline-block flex flex-row;
+      bottom: -4rem;
+      transition: padding .4s ease, transform .4s ease, bottom .4s ease;
 
       &:hover {
-        bottom: 10rem;
+        padding-bottom: 4.5rem;
 
         .card {
           @apply mr-2;
@@ -259,7 +274,7 @@
         }
 
         &:focus {
-          box-shadow: 0 0 4px rgba(25, 31, 43, .5);
+          box-shadow: 0 0 4px rgba(theme('colors.gray.400'), .5);
         }
       }
 
