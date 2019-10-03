@@ -86,7 +86,7 @@ export const App = () => {
       case '/action':
         return <Redirect to={`/action/${pretty(user.group.action)}`} from="/" />
       case '/wait':
-        return <WaitRedirect to="/" />
+        return <WaitRedirect to="/" waitFor={action.id} toNotBe={null} />
     }
     return <NotFound />
   }
@@ -204,8 +204,8 @@ export const App = () => {
   const WaitRedirect = memo(
     ({
       to,
-      waitFor = '',
-      toBe = '',
+      waitFor,
+      toBe,
       toBeEql,
       toNotBe,
       toNotBeEql,
@@ -259,6 +259,7 @@ export const App = () => {
           userID={user.id}
           group={user.group}
           users={user.users}
+          winners={action.winners}
         />
       )
     }

@@ -29,8 +29,31 @@
     @apply inline-block align-middle text-center w-24 h-24 border-2 border-transparent relative;
   }
 
+  .info {
+    @apply relative;
+
+    .thumbs-up {
+      @apply fill-current text-yellow-200 absolute inset-y-0;
+      left: -1.5rem;
+      top: .2rem;
+    }
+  }
+
   .name {
-    @apply inline-block border-b-4 border-transparent;
+    @apply inline-block border-b-4 border-transparent w-full text-sm truncate py-1 m-auto;
+  }
+
+  &:hover {
+    .cards {
+      .card {
+        transform: rotate(-4deg) scale(1);
+
+        &:nth-of-type(2n) {
+          @apply -ml-10;
+          transform: rotate(23deg) scale(1);
+        }
+      }
+    }
   }
 
   &.is-button .name {
@@ -46,12 +69,13 @@
   }
 
   .cards {
-    @apply absolute h-full w-full;
+    @apply absolute h-full w-full pointer-events-none;
     bottom: 0rem;
     right: -3rem;
 
     .card {
       @apply m-0 p-0 inline-block;
+      box-shadow: none;
       width: 62.8738px;
       height: 87.8251px;
       transform: rotate(-4deg) scale(.4);

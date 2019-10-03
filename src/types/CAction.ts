@@ -8,8 +8,6 @@ export type ActionType =
   | 'raise'
   | 'allIn'
   | 'fold'
-  | 'draw'
-  | 'winner'
   | 'back'
   | 'bank'
   | 'join'
@@ -17,11 +15,46 @@ export type ActionType =
   | 'sittingOut'
   | 'confirm'
 
+export type Card = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
+export type Hand = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+export type Sorted = {
+  spades: number[]
+  hearts: number[]
+  diamonds: number[]
+  clubs: number[]
+}
+
+export type SameObject = {
+  [value in Card]: number
+}
+
+export type HandParsed = {
+  parsed: {
+    cards: Sorted
+    flush: {
+      spades: boolean
+      hearts: boolean
+      diamonds: boolean
+      clubs: boolean
+    }
+    fourOfAKinds: string[]
+    pairs: string[]
+    same: SameObject
+    straightFlushes: string[]
+    straightHigh?: string
+    threeOfAKinds: string[]
+  }
+  highCards: Card[]
+  onHand: Hand[]
+}
+
 export type UserSummary = {
   bet: number
   status: ActionType
   cards?: [string, string]
-  hand?: number
+  hand?: Hand
+  handParsed?: HandParsed
 }
 
 export type NewAction = {
@@ -50,6 +83,7 @@ export interface IAction<T, Y> {
   sittingOut?: User['id'][]
   small: User['id']
   turn: KeyValue<Y>
+  winners?: User['id'][][]
 }
 
 export type Action = IAction<NewAction, UserSummary>
@@ -73,6 +107,7 @@ export type CAction = {
   round?: Action['round']
   turn?: Action['turn']
   sidePot?: Action['sidePot']
+  winners?: Action['winners']
 }
 
 export default CAction

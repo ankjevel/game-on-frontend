@@ -27,6 +27,7 @@ export const Action = memo(
     userID,
     group,
     users,
+    winners,
   }: Params) => {
     const [callPending, setCallPending] = useState(false)
     const placeholders = [...Array(5)].map(_ => null)
@@ -57,12 +58,6 @@ export const Action = memo(
       },
       async allIn() {
         await req({ type: 'allIn' })
-      },
-      async draw() {
-        await req({ type: 'draw' })
-      },
-      async winner(order: string[][]) {
-        await req({ type: 'winner', order })
       },
       async confirm() {
         await req({ type: 'confirm' })
@@ -128,6 +123,7 @@ export const Action = memo(
                 bigID={bigID}
                 round={round}
                 button={button}
+                winner={(winners || [[]])[0].includes(user.id)}
               />
             ))}
           </div>
@@ -140,6 +136,7 @@ export const Action = memo(
                 bigID={bigID}
                 round={round}
                 button={button}
+                winner={(winners || [[]])[0].includes(user.id)}
               />
             ))}
           </div>
@@ -152,6 +149,7 @@ export const Action = memo(
                 bigID={bigID}
                 round={round}
                 button={button}
+                winner={(winners || [[]])[0].includes(user.id)}
               />
             ))}
           </div>
@@ -196,21 +194,13 @@ export const Action = memo(
                 <h3 className="bank key-value">
                   <span>Bank</span> {userGroup.sum}
                 </h3>
-                <PlayerHand className="hand" hand={userTurn.hand} />
+                <PlayerHand
+                  className="hand"
+                  hand={userTurn.hand}
+                  winner={(winners || [[]])[0].includes(userID)}
+                />
               </div>
             </div>
-
-            {round === 4 && userTurn.status !== 'confirm' && !callPending && (
-              <div className="w-full flex flex-row">
-                <button
-                  type="button"
-                  onClick={() => actions.confirm()}
-                  className="bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
-                >
-                  confirm
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -224,6 +214,18 @@ export const Action = memo(
               <Card className="card" key={`player-cards-${card}`} card={card} />
             ))}
           </div>
+          {round === 4 && userTurn.status !== 'confirm' && (
+            <div className="confirm">
+              <button
+                type="button"
+                onClick={() => actions.confirm()}
+                disabled={callPending}
+                className="button"
+              >
+                Start new round
+              </button>
+            </div>
+          )}
           <div className="holder">
             <button
               onClick={() => !callPending && actions.check()}

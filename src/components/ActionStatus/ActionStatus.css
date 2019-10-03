@@ -1,8 +1,8 @@
 .c_action-status {
-  @apply rounded inline-block px-3 py-1 my-2;
+  @apply rounded inline-block px-3 py-1 my-2 w-full h-full;
 
   div {
-    @apply font-bold text-xs uppercase;
+    @apply font-bold text-xs uppercase h-5;
   }
 
   &.none,
@@ -12,8 +12,6 @@
   &.raise,
   &.allIn,
   &.fold,
-  &.draw,
-  &.winner,
   &.back,
   &.bank,
   &.join,
@@ -42,5 +40,13 @@
 
   &.allIn {
     @apply bg-green-700 text-white;
+  }
+
+  &.winner {
+    @apply text-white;
+
+    animation-name: fancyBackground;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
   }
 }

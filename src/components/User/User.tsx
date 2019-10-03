@@ -7,19 +7,21 @@ import './User.css'
 import { Chip } from '../Chip'
 import { Card } from '../Card'
 import { ActionStatus } from '../ActionStatus'
-import { PlayerHand } from '../PlayerHand'
+import { IconThumbUp } from 'react-heroicons-ui'
 
 import getHand from '../../utils/hand'
+import { Action } from 'CAction'
 
 export const User: SFC<{
   row: Row
-  bigID: string
-  round: number
-  button: string
+  bigID: Action['big']
+  round: Action['round']
+  button: Action['button']
   position: 'left' | 'top' | 'right'
-}> = ({ row, bigID, round, button: buttonID, position }) => {
+  winner: boolean
+}> = ({ row, bigID, round, button: buttonID, position, winner }) => {
   const button = buttonID === row.id && round !== 4 ? 'is-button' : ''
-  const big = bigID === row.id ? 'is-big' : ''
+  const big = bigID === row.id && round !== 4 ? 'is-big' : ''
   const className = `c_user-item ${position} ${big} ${button}`.trim()
 
   const cards = row.action.cards || [null, null]
@@ -28,18 +30,19 @@ export const User: SFC<{
   return (
     <div
       className={className}
-      title={`${hand ? `${hand} | ` : ''}Bet: ${row.action.bet} / Bank: ${
-        row.sum
-      }`}
+      title={`${row.name}\n${hand ? `${hand}\n` : ''}Bet: ${
+        row.action.bet
+      } / Bank: ${row.sum}`}
     >
       <div className="player">
         <div className="bet-and-action">
           <div className="bet">
             <Chip /> <strong>{row.action.bet}</strong> / {row.sum}
           </div>
-          <ActionStatus status={row.action.status} />
+          <ActionStatus status={row.action.status} winner={winner} />
         </div>
         <div className="info">
+          {round === 4 && <IconThumbUp className="thumbs-up" />}
           <h2 className="name">{row.name}</h2>
         </div>
         <div className="cards">

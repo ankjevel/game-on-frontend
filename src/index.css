@@ -66,6 +66,29 @@
   }
 }
 
+.a_fancyBackground {
+  animation-name: fancyBackground;
+}
+
+@keyframes fancyBackground {
+  0% {
+    /* background: #ffc931;
+    box-shadow: 0 10px 10px rgba(255, 201, 49, .25); */
+    @apply bg-green-500;
+    box-shadow: 0 10px 10px rgba(72, 187, 120, .25);
+  }
+
+  50% {
+    @apply bg-yellow-500;
+    box-shadow: 0 10px 10px rgba(236, 201, 75, .25);
+  }
+
+  100% {
+    @apply bg-green-500;
+    box-shadow: 0 10px 10px rgba(72, 187, 120, .25);
+  }
+}
+
 html {
   background: #000;
   background: url('/chalkboard.jpg');

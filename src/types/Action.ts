@@ -12,4 +12,5 @@ export type Params = {
   userID: CUser['id']
   group: CUser['group']
   users: CUser['users']
+  winners?: CAction['winners']
 }

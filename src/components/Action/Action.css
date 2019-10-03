@@ -187,11 +187,27 @@
       }
     }
 
+    .confirm,
     .player-cards {
-      @apply absolute p-0 m-0 w-full select-none flex flex-row z-0;
+      @apply absolute p-0 m-auto w-full items-center justify-center flex-wrap select-none flex flex-row z-0 inset-x-0;
+    }
+
+    .confirm {
+      @apply ml-56;
+      bottom: 8rem;
+
+
+      .button {
+        @apply bg-green-500 text-white text-base leading-none p-2 py-2 px-4 rounded;
+
+        &:hover {
+          @apply bg-green-300 text-white;
+        }
+      }
+    }
+
+    .player-cards {
       bottom: 4rem;
-      left: 50%;
-      right: 50%;
       transition: bottom 0.4s ease;
 
       &:hover {
@@ -208,7 +224,11 @@
       }
 
       .card {
-        @apply w-20 h-32 -mr-12 ml-0 p-0;
+        @apply -mr-12 ml-0 p-0;
+        width: 88.0167px;
+        height: 122.95px;
+        width: calc(62.8738px * 1.4);
+        height: calc(87.8251px * 1.4);
         transition: margin-right 0.45s ease-in-out, transform 0.4s ease-in-out;
         transform: rotate(27deg);
         box-shadow: 0 0 10px rgba(61, 66, 79, .4);

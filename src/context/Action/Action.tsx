@@ -20,6 +20,7 @@ const getProp = (action: Action) => {
     round: action.round != null ? action.round : undefined,
     turn: action.turn != null ? action.turn : undefined,
     sidePot: action.sidePot != null ? action.sidePot : undefined,
+    winners: action.winners != null ? action.winners : undefined,
   }
 }
 
@@ -32,6 +33,7 @@ export const reset = () => ({
   round: undefined,
   turn: undefined,
   sidePot: undefined,
+  winners: undefined,
 })
 
 export const ActionProvider = props => {

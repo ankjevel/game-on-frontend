@@ -6,8 +6,10 @@ import './ActionStatus.css'
 export const ActionStatus: SFC<{
   className?: string
   status: UserSummary['status']
-}> = ({ className: cn, status }) => {
-  const className = `c_action-status ${status} ${cn || ''}`
+  winner: boolean
+}> = ({ className: cn, status, winner }) => {
+  const className = `c_action-status ${status} ${winner ? 'winner' : ''} ${cn ||
+    ''}`
   let text: string
 
   switch (status) {
@@ -16,16 +18,20 @@ export const ActionStatus: SFC<{
       break
     }
     case 'sittingOut': {
-      text = 'sitting out'
+      text = 'out'
       break
     }
     case 'none': {
-      text = ''
+      text = ' '
       break
     }
     default: {
       text = status
     }
+  }
+
+  if (winner) {
+    text = 'winner'
   }
 
   return (
