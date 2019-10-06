@@ -10,7 +10,7 @@ jobs:
       script:
         - npm run test
 
-    - stage: deploy
+    - stage: build_and_maybe_deploy
       env:
         - NAMESPACE="game-on-frontend"
         - SERVICE="frontend"
@@ -26,19 +26,18 @@ jobs:
       after_success:
         - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - export REPO="${TRAVIS_REPO_SLUG,,}"
-        - export TAG=$([ -z "$TRAVIS_TAG" ] && echo "latest" || echo "${TRAVIS_TAG/v/}")
-        - docker build -t $REPO:$TAG .
-        - docker push $REPO:$TAG
-        - if [ -z "$TRAVIS_TAG" ]; then
-            docker tag $REPO:$TAG $REPO:latest-tag-release
-            docker push $REPO:latest-tag-release
+        - export TAG=$([ ! -z "$TRAVIS_TAG" ] && echo "${TRAVIS_TAG/v/}" || echo "")
+        - docker build -t $REPO:latest .
+        - docker push $REPO:latest
+        - if [ ! -z "$TAG" ]; then
+            docker tag $REPO:latest $REPO:$TAG
+            docker push $REPO:$TAG
             source <(curl "$RELEASE_SCRIPT" -s 2>&1)
           fi
 
-
 stages:
   - name: test
-  - name: deploy
+  - name: build_and_maybe_deploy
     if: branch = master AND type != pull_request
 
 notifications:
