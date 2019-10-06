@@ -14,7 +14,7 @@ jobs:
       env:
         - NAMESPACE="game-on-frontend"
         - SERVICE="game-on-app"
-        - RELEASE_SCRIPT="https://gist.githubusercontent.com/ankjevel/fc444cdb248287a97242ced271ece388/raw/81b13eeccfe33c959f2101d41521c8a05b32518f/deploy.sh"
+        - RELEASE_SCRIPT="https://gist.githubusercontent.com/ankjevel/fc444cdb248287a97242ced271ece388/raw"
       language: node_js
       node_js: "12.9"
       cache:
