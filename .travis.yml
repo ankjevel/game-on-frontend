@@ -13,7 +13,8 @@ jobs:
     - stage: deploy
       env:
         - NAMESPACE="game-on-frontend"
-        - SERVICE="game-on-app"
+        - SERVICE="frontend"
+        - NAME="game-on-app"
         - RELEASE_SCRIPT="https://gist.githubusercontent.com/ankjevel/fc444cdb248287a97242ced271ece388/raw"
       language: node_js
       node_js: "12.9"
@@ -28,13 +29,12 @@ jobs:
         - export TAG=$([ -z "$TRAVIS_TAG" ] && echo "latest" || echo "${TRAVIS_TAG/v/}")
         - docker build -t $REPO:$TAG .
         - docker push $REPO:$TAG
-        - if [ "$TRAVIS_BRANCH" == "master" ]; then
-            return 0
+        - if [ -z "$TRAVIS_TAG" ]; then
+            docker tag $REPO:$TAG $REPO:latest-tag-release
+            docker push $REPO:latest-tag-release
+            source <(curl "$RELEASE_SCRIPT" -s 2>&1)
           fi
-        - docker tag $REPO:$TAG $REPO:latest-tag-release
-        - docker push $REPO:TAG
-        - docker push $REPO:latest-tag-release
-        - source <(curl "$RELEASE_SCRIPT" -s 2>&1)
+
 
 stages:
   - name: test
