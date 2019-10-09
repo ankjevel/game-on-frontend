@@ -29,7 +29,6 @@ export const SocketProvider = props => {
   })
 
   const resetGroup = async () => {
-    console.log('resetGroup')
     if (socket && socket.emit) {
       await socket.emit('group:leave')
       await socket.off('update:group')
@@ -44,7 +43,6 @@ export const SocketProvider = props => {
   }
 
   useEffect(() => {
-    console.log('main', socket)
     if (socket != null || value.id !== '') return
 
     socket = io(cConfig.api)
@@ -58,11 +56,25 @@ export const SocketProvider = props => {
     })
 
     socket.on('reconnect', async () => {
-      if (value.connected && socket.socket) {
-        socket.socket.connect()
-        return
+      if (socket.disconnected && !socket.connected) {
+        await resetGroup()
+
+        await setValue(state => ({
+          ...state,
+          id: '',
+          room: '',
+          connected: false,
+          userListen: false,
+          actionListen: false,
+          userSet: false,
+        }))
+
+        alert.show('reconnected to server')
       }
-      await resetGroup()
+
+      if (socket.disconnected) {
+        return socket.connect()
+      }
     })
   }, [cConfig.api])
 

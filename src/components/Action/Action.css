@@ -7,6 +7,13 @@
     }
   }
 
+  .main-top,
+  .users,
+  .bottom,
+  .main {
+    max-width: 100vw;
+  }
+
   .main-top {
     @apply absolute top-0 inset-x-0 z-10;
 
@@ -149,7 +156,7 @@
   }
 
   .bottom {
-    @apply z-30 absolute p-0 w-full text-white left-0;
+    @apply z-30 fixed p-0 w-full text-white left-0;
     box-shadow: 0 0 40px rgba(61, 66, 79, .4);
     /* background: rgba(25, 31, 43, 1); */
     transition: all 0.4s ease;
