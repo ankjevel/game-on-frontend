@@ -22,11 +22,11 @@ export type RouteParams = {
 
 export type ERoute =
   | '/'
+  | '/create'
+  | '/game'
+  | '/group'
   | '/sign-in'
   | '/sign-out'
-  | '/create'
-  | '/group'
-  | '/action'
   | '/wait'
 
 export interface IRoute {

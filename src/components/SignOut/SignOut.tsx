@@ -11,7 +11,7 @@ export const SignOut: SFC<{
   const className = `c_sign-out ${cn}`.trim()
 
   return (
-    <Link className={className} to="/sign-out">
+    <Link className={className} to="/sign-out" title="Sign out">
       <IconUpload />
     </Link>
   )

@@ -52,7 +52,7 @@ export const App = () => {
       action.id != null &&
       user.group.action === action.id
     ) {
-      return '/action'
+      return '/game'
     }
 
     if (user.group.users.find(({ id }) => id === user.id) == null) {
@@ -83,8 +83,8 @@ export const App = () => {
         return <Redirect to={`${route}`} from="/" />
       case '/group':
         return <Redirect to={`/group/${pretty(user.group.id)}`} from="/" />
-      case '/action':
-        return <Redirect to={`/action/${pretty(user.group.action)}`} from="/" />
+      case '/game':
+        return <Redirect to={`/game/${pretty(user.group.action)}`} from="/" />
       case '/wait':
         return <WaitRedirect to="/" waitFor={action.id} toNotBe={null} />
     }
@@ -166,19 +166,16 @@ export const App = () => {
 
   const RouteActionWithOutID: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, '/action') || user.group == null ? (
-      <Redirect to="/" from="/action" />
+    return maybeRedirect(params, '/game') || user.group == null ? (
+      <Redirect to="/" from="/game" />
     ) : (
-      <Redirect
-        to={`${'/action'}/${pretty(user.group.action)}`}
-        from="/action"
-      />
+      <Redirect to={`${'/game'}/${pretty(user.group.action)}`} from="/game" />
     )
   }
 
   const Wait: IRoute = () => (
     <WaitRedirect
-      to={`/action/${pretty(user.group.action)}`}
+      to={`/game/${pretty(user.group.action)}`}
       waitFor={action.id}
       toNotBe={null}
     />
@@ -237,14 +234,14 @@ export const App = () => {
         params: { id },
       },
     } = params
-    const redirect = maybeRedirect(params, '/action')
+    const redirect = maybeRedirect(params, '/game')
     if (redirect) {
       return redirect
     }
 
     if (user.group != null) {
       if (pretty(user.group.action) !== pretty(id)) {
-        return <Redirect to={`/action/${pretty(user.group.action)}`} />
+        return <Redirect to={`/game/${pretty(user.group.action)}`} />
       }
 
       return (
@@ -307,15 +304,15 @@ export const App = () => {
       <div className="c_app">
         <Switch>
           <Route path="/" exact component={RouteMain} />
-          <Route path="/sign-in" component={RouteSignIn} />
           <Route path="/create" component={RouteCreate} />
+          <Route path="/game" exact component={RouteActionWithOutID} />
+          <Route path="/game/:id" component={RouteAction} />
           <Route path="/group" exact component={RouteGroupWithOutID} />
-          <Route path="/group/leave" exact component={RouteLeaveGroup} />
           <Route path="/group/:id" component={RouteGroup} />
-          <Route path="/action" exact component={RouteActionWithOutID} />
-          <Route path="/action/:id" component={RouteAction} />
-          <Route path="/wait" component={Wait} />
+          <Route path="/group/leave" exact component={RouteLeaveGroup} />
+          <Route path="/sign-in" component={RouteSignIn} />
           <Route path="/sign-out" component={SignOut} />
+          <Route path="/wait" component={Wait} />
           <Route component={NotFound} />
         </Switch>
       </div>
