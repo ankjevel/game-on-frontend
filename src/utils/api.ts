@@ -4,7 +4,7 @@ import {
   GroupRoutes,
   ListRoutes,
   ActionRoutes,
-} from '../types/Api'
+} from 'Api'
 import { parseJWS, isExpired, validate } from './jwt'
 import req, { Method, setHost, setToken } from './req'
 

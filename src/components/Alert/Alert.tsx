@@ -1,8 +1,9 @@
 import React from 'react'
-import { IconX } from 'react-heroicons-ui'
-import { AlertComponentPropsWithStyle } from 'react-alert'
 
 import './Alert.css'
+
+import { IconX } from 'react-heroicons-ui'
+import { AlertComponentPropsWithStyle } from 'react-alert'
 
 const AlertTemplate = ({
   message,

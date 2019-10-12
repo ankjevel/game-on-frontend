@@ -3,11 +3,12 @@ import React, { useContext, useState, useEffect, Fragment } from 'react'
 import './Group.css'
 
 import { Link } from 'react-router-dom'
-import userContext from '../../context/User'
-import { IconArrowUp, IconArrowDown, IconStar } from 'react-heroicons-ui'
 import update from 'immutability-helper'
-import api from '../../utils/api'
-import SignOut from '../SignOut'
+import { IconArrowUp, IconArrowDown, IconStar } from 'react-heroicons-ui'
+
+import userContext from '@/context/User'
+import api from '@/utils/api'
+import SignOut from '@/components/SignOut'
 
 export const Group = () => {
   const user = useContext(userContext)

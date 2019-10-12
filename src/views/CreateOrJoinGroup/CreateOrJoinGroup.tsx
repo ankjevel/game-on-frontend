@@ -1,13 +1,14 @@
 import { NewGroup } from 'Api'
+
 import React, { Component, ContextType, Fragment } from 'react'
 
 import './CreateOrJoinGroup.css'
 
-import UserContext from '../../context/User'
-import * as api from '../../utils/api'
-import Modal from '../Modal'
-import SignOut from '../SignOut'
-import InputError from '../InputError'
+import UserContext from '@/context/User'
+import * as api from '@/utils/api'
+import Modal from '@/components/Modal'
+import SignOut from '@/components/SignOut'
+import InputError from '@/components/InputError'
 
 type Props = {}
 type State = {

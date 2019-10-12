@@ -1,7 +1,8 @@
 import CContext from 'CConfig'
 
 import React, { useState, useEffect } from 'react'
-import * as api from '../../utils/api'
+
+import * as api from '@/utils/api'
 import Context from './context'
 
 export const ConfigProvider = props => {

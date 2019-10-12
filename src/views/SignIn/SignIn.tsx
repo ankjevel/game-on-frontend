@@ -1,11 +1,12 @@
 import { ISignIn, ICreate, State } from 'SignIn'
+
 import React, { Component, ContextType } from 'react'
 
 import './SignIn.css'
 
-import UserContext from '../../context/User'
-import * as api from '../../utils/api'
-import InputError from '../InputError'
+import UserContext from '@/context/User'
+import * as api from '@/utils/api'
+import InputError from '@/components/InputError'
 
 class SignIn extends Component<{}, State> {
   static contextType = UserContext

@@ -1,9 +1,11 @@
 import CContext, { Action } from 'CAction'
+
 import React, { useEffect, useState, useContext } from 'react'
+
 import { useAlert } from 'react-alert'
-import { list } from '../../utils/api'
+import { list } from '@/utils/api'
 import Context from './context'
-import UserContext, { Context as User } from '../User'
+import UserContext, { Context as User } from '@/context/User'
 
 const getProp = (action: Action) => {
   if (!action) {

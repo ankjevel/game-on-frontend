@@ -1,4 +1,5 @@
 import { UserSummary } from 'CAction'
+
 import React, { SFC } from 'react'
 
 import './ActionStatus.css'

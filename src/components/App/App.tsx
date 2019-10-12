@@ -1,3 +1,5 @@
+import { RouteParams, IMaybeRedirect, ERoute, IRoute } from 'Route'
+
 import React, {
   useContext,
   useState,
@@ -15,14 +17,14 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
-import { RouteParams, IMaybeRedirect, ERoute, IRoute } from '../../types/Route'
-import userContext from '../../context/User'
-import actionContext from '../../context/Action'
-import Action from '../Action'
-import CreateOrJoinGroup from '../CreateOrJoinGroup'
-import Group from '../Group'
-import SignIn from '../SignIn'
-import api from '../../utils/api'
+
+import Action from '@/views/Action'
+import SignIn from '@/views/SignIn'
+import CreateOrJoinGroup from '@/views/CreateOrJoinGroup'
+import Group from '@/components/Group'
+import api from '@/utils/api'
+import actionContext from '@/context/Action'
+import userContext from '@/context/User'
 
 export const App = () => {
   const user = useContext(userContext)
@@ -293,11 +295,7 @@ export const App = () => {
     )
   }
 
-  const NotFound = () => (
-    <div>
-      <h1>Sorry, can’t find that.</h1>
-    </div>
-  )
+  const NotFound = () => <div></div>
 
   return (
     <Router>
@@ -313,7 +311,6 @@ export const App = () => {
           <Route path="/sign-in" component={RouteSignIn} />
           <Route path="/sign-out" component={SignOut} />
           <Route path="/wait" component={Wait} />
-          <Route component={NotFound} />
         </Switch>
       </div>
     </Router>

@@ -8,12 +8,12 @@ import './Action.css'
 
 import Slider from 'rc-slider'
 
-import api from '../../utils/api'
-import Card from '../Card'
-import Chip from '../Chip'
-import User from '../User'
-import PlayerHand from '../PlayerHand'
-import SignOut from '../SignOut'
+import api from '@/utils/api'
+import Card from '@/components/Card'
+import Chip from '@/components/Chip'
+import User from '@/components/User'
+import PlayerHand from '@/components/PlayerHand'
+import SignOut from '@/components/SignOut'
 
 export const Action = memo(
   ({

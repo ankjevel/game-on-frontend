@@ -2,7 +2,7 @@ import React, { SFC, Fragment } from 'react'
 
 import './PlayerHand.css'
 
-import getText, { Hand } from '../../utils/hand'
+import getText, { Hand } from '@/utils/hand'
 
 export const PlayerHand: SFC<{
   className?: string

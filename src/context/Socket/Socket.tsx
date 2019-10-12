@@ -3,13 +3,14 @@ import { Group } from 'Api'
 import CContext from 'CSocket'
 
 import React, { useState, useEffect, useContext } from 'react'
+
 import { useAlert } from 'react-alert'
 import io from 'socket.io-client'
 
 import Context from './context'
-import ActionContext, { Context as CAction } from '../Action'
-import ConfigContext, { Context as CConfig } from '../Config'
-import UserContext, { Context as CUser } from '../User'
+import ActionContext, { Context as CAction } from '@/context/Action'
+import ConfigContext, { Context as CConfig } from '@/context/Config'
+import UserContext, { Context as CUser } from '@/context/User'
 
 let socket
 export const SocketProvider = props => {

@@ -1,16 +1,16 @@
 import { Row } from 'ActionView'
+import { Action } from 'CAction'
 
 import React, { SFC } from 'react'
 
 import './User.css'
 
-import { Chip } from '../Chip'
-import { Card } from '../Card'
-import { ActionStatus } from '../ActionStatus'
 import { IconThumbUp } from 'react-heroicons-ui'
 
-import getHand from '../../utils/hand'
-import { Action } from 'CAction'
+import { Chip } from '@/components/Chip'
+import { Card } from '@/components/Card'
+import { ActionStatus } from '@/components/ActionStatus'
+import getHand from '@/utils/hand'
 
 export const User: SFC<{
   row: Row

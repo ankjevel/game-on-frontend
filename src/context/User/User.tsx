@@ -1,11 +1,12 @@
 import { User } from 'Api'
-import CContext from '../../types/CUser'
+import CContext from 'CUser'
 
 import React, { useState, useEffect } from 'react'
+
 import { useAlert } from 'react-alert'
 
 import Context from './context'
-import * as api from '../../utils/api'
+import * as api from '@/utils/api'
 
 export const reset = () => ({
   id: '',

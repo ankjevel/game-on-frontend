@@ -1,8 +1,8 @@
 import React, { SFC } from 'react'
 
-import { toHex, isRed } from '../../utils/card'
-
 import './Card.css'
+
+import { toHex, isRed } from '@/utils/card'
 
 export const Card: SFC<{
   card: MaybeNull<string>
