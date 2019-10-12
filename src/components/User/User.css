@@ -7,7 +7,7 @@
 
   .bet {
     @apply w-auto inline-block pl-1 pr-2 py-0 rounded-full bg-gray-900;
-    box-shadow: 0 10px 10px rgba(theme('colors.gray.900'), .25);
+    box-shadow: 0 4px 4px rgba(theme('colors.gray.900'), .25);
 
     svg {
       @apply mr-1 ml-0 fill-current text-white text-sm h-3;

@@ -137,21 +137,48 @@
   }
 
   .users {
-    @apply absolute inset-0 font-semibold m-0 p-4 flex flex-row w-full h-full pb-40 select-none z-0;
+    @apply font-semibold select-none m-0 z-0 relative w-full p-4 block mt-10;
 
     .left,
     .right,
     .top {
-      @apply flex w-full items-center justify-center;
+      @apply flex w-full;
+
+      > div {
+        @apply py-2;
+      }
     }
 
-    .top {
-      @apply h-24;
+    @screen md {
+      @apply inline-block;
+      .left,
+      .right,
+      .top {
+        @apply w-0;
+        display: initial;
+        .player {
+          @apply inline-block w-24 m-10;
+        }
+      }
     }
 
-    .left,
-    .right {
-      @apply flex-col w-1/4 pt-24 h-full;
+    @screen lg {
+      @apply absolute inset-0 m-0 p-4 flex flex-row w-full h-full pb-40;
+
+      .left,
+      .right,
+      .top {
+        @apply flex w-full items-center justify-center;
+      }
+
+      .top {
+        @apply h-24;
+      }
+
+      .left,
+      .right {
+        @apply flex-col w-1/4 pt-24 h-full;
+      }
     }
   }
 
@@ -221,6 +248,7 @@
     &.turn:not(.showdown) {
       .player-cards {
         bottom: 0;
+
         &:hover {
           padding-bottom: 1rem;
         }

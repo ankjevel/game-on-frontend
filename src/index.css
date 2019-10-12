@@ -94,9 +94,7 @@ html {
 }
 html, body, #root {
   background: #000;
-}
-body {
-  background: url('/chalkboard.jpg');
+  background-image: url('/chalkboard.jpg');
 }
 #root {
   background: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(61, 66, 79, .8), rgba(44, 49, 59, 0) 70%);
