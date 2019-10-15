@@ -1,12 +1,13 @@
 import { RouteParams, IMaybeRedirect, ERoute, IRoute } from 'Route'
 
 import React, {
-  useContext,
-  useState,
-  lazy,
-  Suspense,
   Fragment,
+  lazy,
   memo,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
 } from 'react'
 
 import './App.css'
@@ -26,15 +27,29 @@ import Group from '@/views/Group'
 import Chat from '@/components/Chat'
 import api from '@/utils/api'
 import actionContext from '@/context/Action'
+import chatContext from '@/context/Chat'
 import userContext from '@/context/User'
 import { onMessage } from '@/context/Socket'
 
 export const App = () => {
   const user = useContext(userContext)
   const action = useContext(actionContext)
+  const chat = useContext(chatContext)
+
+  useEffect(() => {
+    const newState = `state-${
+      user.id !== '' && chat.visible ? 'visible' : 'hidden'
+    }`
+
+    if (newState === chatVisibility) {
+      return
+    }
+
+    updateChatVisibility(newState)
+  }, [user.id, chat.visible])
   const [render, updateRender] = useState(false)
   const [active, updateActive] = useState(false)
-  const [chatVisible, updateChatVisible] = useState(false)
+  const [chatVisibility, updateChatVisibility] = useState('')
 
   const pretty = (key: string) => {
     return key.replace(/^.+?:/, '')
@@ -299,10 +314,6 @@ export const App = () => {
 
   const NotFound = () => <div></div>
 
-  const chatVisibility = `state-${
-    user.id !== '' && chatVisible ? 'visible' : 'hidden'
-  }`
-
   return (
     <Router>
       <div className="c_app">
@@ -322,7 +333,7 @@ export const App = () => {
         <Chat
           className={`chat ${chatVisibility}`}
           onMessage={onMessage}
-          messages={user.messages}
+          messages={chat.messages}
           users={user.users}
           userID={user.id}
         />
@@ -330,7 +341,7 @@ export const App = () => {
         <button
           type="button"
           className={`chat-toggle ${chatVisibility}`}
-          onClick={() => updateChatVisible(!chatVisible)}
+          onClick={() => chat.updateVisibility(!chat.visible)}
         >
           <IconComment />
         </button>

@@ -15,23 +15,12 @@ export const reset = () => ({
   group: undefined,
   ready: false,
   users: {},
-  messages: [],
 })
 
 export const UserProvider = props => {
   const alert = useAlert()
   const [value, setValue] = useState<CContext>({
     ...reset(),
-    newMessage: content => {
-      setValue(state => {
-        const messages = state.messages.slice(state.messages.length - 50)
-        messages.push([content.date, content.userID, content.message])
-        return {
-          ...state,
-          messages,
-        }
-      })
-    },
     setValue: async (key, value) => {
       const changed: any = {}
       switch (key) {

@@ -1,4 +1,5 @@
 import CUser from 'CUser'
+import CChat from 'CChat'
 import { OnMessage } from 'CSocket'
 import React, { useState, useEffect, memo, useRef } from 'react'
 
@@ -13,7 +14,7 @@ export const Chat = memo(
     className: cn,
   }: {
     className: string
-    messages: CUser['messages']
+    messages: CChat['messages']
     onMessage: OnMessage
     users: CUser['users']
     userID: CUser['id']
@@ -22,9 +23,7 @@ export const Chat = memo(
 
     const lastElement = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-      scroll()
-    }, [messages.length])
+    useEffect(() => scroll, [messages.length])
 
     const scroll = () => {
       if (lastElement.current == null) return

@@ -11,9 +11,9 @@ import Context from './context'
 import ActionContext, { Context as CAction } from '@/context/Action'
 import ConfigContext, { Context as CConfig } from '@/context/Config'
 import UserContext, { Context as CUser } from '@/context/User'
+import ChatContext, { Context as CChat } from '@/context/Chat'
 
 let socket
-
 export const onMessage: OnMessage = message => {
   if (socket == null || socket.token == null) return
   socket.emit('message', {
@@ -28,6 +28,7 @@ export const SocketProvider = props => {
   const cConfig = useContext<CConfig>(ConfigContext)
   const cUser = useContext<CUser>(UserContext)
   const cAction = useContext<CAction>(ActionContext)
+  const cChat = useContext<CChat>(ChatContext)
 
   const [value, setValue] = useState<CContext>({
     id: socket != null ? socket.id : '',
@@ -116,7 +117,7 @@ export const SocketProvider = props => {
       alert.show(`user ${message.name} left`)
     })
 
-    socket.on('message', cUser.newMessage)
+    socket.on('message', cChat.newMessage)
 
     setValue(state => ({ ...state, userListen: true }))
   }, [cUser, cUser.id, cAction.id, value.connected, value.userListen])

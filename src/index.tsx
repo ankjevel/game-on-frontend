@@ -12,6 +12,7 @@ import { Provider as Config } from '@/context/Config'
 import { Provider as User } from '@/context/User'
 import { Provider as Socket } from '@/context/Socket'
 import { Provider as Action } from '@/context/Action'
+import { Provider as Chat } from '@/context/Chat'
 
 Modal.setAppElement('#root')
 
@@ -21,16 +22,18 @@ const reactAlertOptions = {
 }
 
 render(
-  <ReactAlert template={Alert} {...reactAlertOptions}>
-    <Config>
-      <User>
-        <Action>
-          <Socket>
-            <App />
-          </Socket>
-        </Action>
-      </User>
-    </Config>
-  </ReactAlert>,
+  <Chat>
+    <ReactAlert template={Alert} {...reactAlertOptions}>
+      <Config>
+        <User>
+          <Action>
+            <Socket>
+              <App />
+            </Socket>
+          </Action>
+        </User>
+      </Config>
+    </ReactAlert>
+  </Chat>,
   document.getElementById('root')
 )
