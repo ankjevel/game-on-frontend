@@ -30,10 +30,10 @@ export const Action = memo(
     winners,
   }: Params) => {
     const [callPending, setCallPending] = useState(false)
-    const placeholders = [...Array(5)].map(_ => null)
     const userTurn = turn[userID]
     const userGroup = group.users.find(user => user.id === userID)
     const big = turn[bigID]
+    const currentButton = button === userID ? 'You' : users[button]
 
     const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
     const [isSmall, setIsSmall] = useState(window.innerWidth < 1024)
@@ -123,6 +123,8 @@ export const Action = memo(
 
     usersCopy = undefined
     userIndex = undefined
+
+    const betMax = userGroup.sum - (big.bet - userTurn.bet)
 
     return (
       <div className="c_action">
@@ -225,9 +227,9 @@ export const Action = memo(
                 <h3 className="bank key-value">
                   <span>Bank</span> {userGroup.sum}
                 </h3>
-                <div>
-                  <h3 className="turn key-value">
-                    <span>Turn</span> {userGroup.sum}
+                <div className="turn">
+                  <h3 className="key-value">
+                    <span>Button</span> {currentButton}
                   </h3>
                 </div>
                 <PlayerHand
@@ -267,7 +269,7 @@ export const Action = memo(
               onClick={() => !callPending && actions.check()}
               disabled={callPending}
               type="button"
-              className="bg-blue-400 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-l"
+              className="button button-bet-call"
             >
               {big.bet === userTurn.bet
                 ? round === 0
@@ -279,7 +281,7 @@ export const Action = memo(
               type="button"
               disabled={callPending}
               onClick={() => !callPending && actions.fold()}
-              className="bg-red-500 hover:bg-red-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4"
+              className="button button-fold"
             >
               fold
             </button>
@@ -300,12 +302,46 @@ export const Action = memo(
 
                 await actions.raise(input.raise)
               }}
-              className={`bg-blue-500 hover:bg-blue-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded-r ${
+              className={`button button-raise ${
                 input.raise === big.bet ? 'disabled' : ''
-              }`}
+              } ${input.raise === betMax ? 'hidden' : ''}`}
             >
               raise
             </button>
+            <button
+              type="button"
+              disabled={callPending || input.raise < betMax}
+              onClick={() => !callPending && actions.allIn()}
+              className={`button button-all-in ${
+                input.raise < betMax ? 'hidden' : ''
+              }`}
+            >
+              all-in
+            </button>
+            <div className="raise">
+              <strong>Raise:</strong>
+              <input
+                value={input.raise}
+                type="number"
+                min={1}
+                max={betMax}
+                onChange={event => {
+                  event.preventDefault()
+                  let {
+                    target: { valueAsNumber: value },
+                  } = event
+
+                  if (isNaN(value)) {
+                    value = 1
+                  }
+
+                  setInput({
+                    ...input,
+                    raise: Math.max(Math.min(value, betMax), 1),
+                  })
+                }}
+              />
+            </div>
             <Slider
               className="slider"
               value={input.raise}
@@ -316,26 +352,8 @@ export const Action = memo(
                 })
               }}
               min={1}
-              max={userGroup.sum - (big.bet - userTurn.bet)}
+              max={betMax}
             />
-            <h3 className="raise select-none">
-              <strong>Raise:</strong> {input.raise}
-            </h3>
-            <button
-              type="button"
-              disabled={
-                callPending ||
-                input.raise < userGroup.sum - (big.bet - userTurn.bet)
-              }
-              onClick={() => !callPending && actions.allIn()}
-              className={`bg-green-500 hover:bg-green-300 text-white hover:text-white text-base leading-none p-2 py-2 px-4 rounded ${
-                input.raise < userGroup.sum - (big.bet - userTurn.bet)
-                  ? 'disabled'
-                  : ''
-              }`}
-            >
-              all-in
-            </button>
           </div>
         </div>
       </div>
