@@ -6,7 +6,7 @@ import { Provider as ReactAlert, positions } from 'react-alert'
 import 'rc-slider/assets/index.css'
 import './index.css'
 
-import App from '@/components/App'
+import App from '@/App'
 import Alert from '@/components/Alert'
 import { Provider as Config } from '@/context/Config'
 import { Provider as User } from '@/context/User'

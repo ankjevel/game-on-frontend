@@ -137,24 +137,27 @@
   }
 
   .users {
-    @apply font-semibold select-none m-0 z-0 relative w-full p-4 block mt-10;
+    @apply font-semibold select-none m-0 z-0 relative w-full p-4 block mt-10 flex flex-row;
 
     .left,
     .right,
     .top {
-      @apply flex w-full;
+      @apply w-full;
+
+      display: inline;
 
       > div {
-        @apply py-2;
+        @apply py-2 w-auto;
       }
     }
 
     @screen md {
-      @apply inline-block;
+      @apply flex flex-row;
+      width: 100vw;
       .left,
       .right,
       .top {
-        @apply w-0;
+        @apply w-full;
         display: initial;
         .player {
           @apply inline-block w-24 m-10;

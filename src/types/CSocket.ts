@@ -7,4 +7,6 @@ export type CSocket = {
   actionListen: boolean
 }
 
+export type OnMessage = (message: string) => void
+
 export default CSocket

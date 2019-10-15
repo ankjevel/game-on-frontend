@@ -1,6 +1,6 @@
 import { Action } from 'CAction'
 import { Group } from 'Api'
-import CContext from 'CSocket'
+import CContext, { OnMessage } from 'CSocket'
 
 import React, { useState, useEffect, useContext } from 'react'
 
@@ -13,6 +13,15 @@ import ConfigContext, { Context as CConfig } from '@/context/Config'
 import UserContext, { Context as CUser } from '@/context/User'
 
 let socket
+
+export const onMessage: OnMessage = message => {
+  if (socket == null || socket.token == null) return
+  socket.emit('message', {
+    message,
+    token: socket.token,
+  })
+}
+
 export const SocketProvider = props => {
   const alert = useAlert()
 
@@ -32,10 +41,14 @@ export const SocketProvider = props => {
   const resetGroup = async () => {
     if (socket && socket.emit) {
       await socket.emit('group:leave')
-      await socket.off('update:group')
-      await socket.off('user:joined')
-      await socket.off('user:left')
-      await socket.off('update:action')
+      for (const key of [
+        'update:group',
+        'user:joined',
+        'user:left',
+        'message',
+      ]) {
+        delete socket._callbacks[`$${key}`]
+      }
       for (const sub of socket.subs) {
         await sub.destroy()
       }
@@ -103,6 +116,8 @@ export const SocketProvider = props => {
       alert.show(`user ${message.name} left`)
     })
 
+    socket.on('message', cUser.newMessage)
+
     setValue(state => ({ ...state, userListen: true }))
   }, [cUser, cUser.id, cAction.id, value.connected, value.userListen])
 
@@ -157,9 +172,11 @@ export const SocketProvider = props => {
       if (token) {
         if (value.userListen && value.userSet) return
         if (value.actionListen) return
+        socket.token = token
 
         await socket.emit('user:join', token)
       } else if (value.userSet) {
+        delete socket.token
         await socket.emit('user:leave')
       }
 

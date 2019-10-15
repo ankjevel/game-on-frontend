@@ -10,6 +10,11 @@ export interface ISetValue {
   setValue(key: 'reset', value: any): Promise<void>
 }
 
+type MessageDate = string
+type MessageFrom = User['id']
+type MessageContent = string
+type Message = [MessageDate, MessageFrom, MessageContent]
+
 export type CUser = {
   id: string
   name: string
@@ -20,6 +25,12 @@ export type CUser = {
     [id: string]: User['name']
   }
   setValue: ISetValue['setValue']
+  newMessage: (message: {
+    message: MessageContent
+    userID: MessageFrom
+    date: MessageDate
+  }) => void
+  messages: Message[]
 }
 
 export default CUser

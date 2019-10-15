@@ -358,7 +358,10 @@ export const Group = () => {
               <button
                 type="button"
                 onClick={startGame}
-                className="inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded"
+                disabled={users.length <= 1}
+                className={`inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded${
+                  users.length <= 1 ? ' disabled cursor-not-allowed' : ''
+                }`}
               >
                 Start game
               </button>

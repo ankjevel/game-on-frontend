@@ -17,20 +17,24 @@ import {
   Route,
   Switch,
 } from 'react-router-dom'
+import { IconComment } from 'react-heroicons-ui'
 
 import Action from '@/views/Action'
 import SignIn from '@/views/SignIn'
 import CreateOrJoinGroup from '@/views/CreateOrJoinGroup'
-import Group from '@/components/Group'
+import Group from '@/views/Group'
+import Chat from '@/components/Chat'
 import api from '@/utils/api'
 import actionContext from '@/context/Action'
 import userContext from '@/context/User'
+import { onMessage } from '@/context/Socket'
 
 export const App = () => {
   const user = useContext(userContext)
   const action = useContext(actionContext)
   const [render, updateRender] = useState(false)
   const [active, updateActive] = useState(false)
+  const [chatVisible, updateChatVisible] = useState(false)
 
   const pretty = (key: string) => {
     return key.replace(/^.+?:/, '')
@@ -105,9 +109,7 @@ export const App = () => {
 
   const RouteLeaveGroup: IRoute = () => {
     if (active) return null
-    if (checkState() !== '/group') {
-      return <Redirect to="/" />
-    }
+    if (checkState() !== '/group') return <Redirect to="/" />
 
     const leave = async () => {
       updateActive(true)
@@ -297,6 +299,10 @@ export const App = () => {
 
   const NotFound = () => <div></div>
 
+  const chatVisibility = `state-${
+    user.id !== '' && chatVisible ? 'visible' : 'hidden'
+  }`
+
   return (
     <Router>
       <div className="c_app">
@@ -306,12 +312,28 @@ export const App = () => {
           <Route path="/game" exact component={RouteActionWithOutID} />
           <Route path="/game/:id" component={RouteAction} />
           <Route path="/group" exact component={RouteGroupWithOutID} />
-          <Route path="/group/:id" component={RouteGroup} />
           <Route path="/group/leave" exact component={RouteLeaveGroup} />
+          <Route path="/group/:id" component={RouteGroup} />
           <Route path="/sign-in" component={RouteSignIn} />
           <Route path="/sign-out" component={SignOut} />
           <Route path="/wait" component={Wait} />
         </Switch>
+
+        <Chat
+          className={`chat ${chatVisibility}`}
+          onMessage={onMessage}
+          messages={user.messages}
+          users={user.users}
+          userID={user.id}
+        />
+
+        <button
+          type="button"
+          className={`chat-toggle ${chatVisibility}`}
+          onClick={() => updateChatVisible(!chatVisible)}
+        >
+          <IconComment />
+        </button>
       </div>
     </Router>
   )

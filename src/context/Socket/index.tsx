@@ -1,5 +1,5 @@
 import Context from 'CSocket'
 import context from './context'
-import Provider from './Socket'
-export { context, Provider, Provider as Socket, Context }
+import Provider, { onMessage } from './Socket'
+export { context, Provider, Provider as Socket, Context, onMessage }
 export default context

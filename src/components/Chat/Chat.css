@@ -1,0 +1,103 @@
+.c_chat {
+  @apply fixed bottom-0 left-0 w-10 w-64 flex flex-col;
+  z-index: -1;
+  height: 100vh;
+  min-height: 100vh;
+
+  .form {
+    @apply flex w-full;
+  }
+
+  .input {
+    @apply font-semibold inline-block w-full bg-gray-800 p-3 outline-none;
+
+    &:active,
+    &:focus {
+      @apply bg-gray-700 shadow-none text-white;
+    }
+  }
+
+  .messages {
+    @apply bg-gray-900 w-full h-full flex flex-col px-4 pb-4 pt-1 overflow-x-auto;
+  }
+
+  .wrap {
+    @apply pb-4;
+  }
+
+  .message {
+    @apply relative bg-blue-400 text-white w-full px-3 z-10 block;
+
+    &:before {
+      @apply absolute h-full inset-0 mx-2 rounded-lg;
+      content: '';
+      z-index: -1;
+    }
+
+    &.you {
+      @apply bg-gray-700;
+
+      &:not(.group) {
+        @apply rounded-t-lg;
+      }
+    }
+
+    &:not(.group) {
+      @apply mt-3 pt-3;
+
+      &:not(.you) {
+        @apply rounded-tr-lg;
+      }
+    }
+
+    &.group {
+      @apply rounded-t-none py-0;
+
+      .info {
+        @apply hidden;
+      }
+    }
+
+    &.last {
+      @apply pb-3;
+
+      &:not(.you) {
+        @apply rounded-b-lg;
+        box-shadow: 0 5px 10px rgba(theme('colors.blue.400'), .4);
+      }
+
+      &.you {
+        @apply rounded-bl-lg;
+        box-shadow: 0 5px 10px rgba(theme('colors.gray.700'), .4);
+      }
+    }
+
+    .info {
+      @apply flex flex-row items-stretch;
+
+      div {
+        @apply self-center;
+      }
+    }
+
+    .from {
+      @apply flex-grow font-bold;
+    }
+
+    .date {
+      @apply flex-grow-0;
+    }
+
+    .content {
+      @apply flex flex-wrap relative whitespace-normal;
+      p {
+        @apply block w-auto;
+      }
+    }
+
+    .date,
+    .content {
+      @apply text-xs;
+    }
+  }
+}
