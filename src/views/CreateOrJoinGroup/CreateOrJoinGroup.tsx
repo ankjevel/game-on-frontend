@@ -1,8 +1,10 @@
-import { NewGroup } from 'Api'
+import { NewGroup, PublicGroup } from 'Api'
 
 import React, { Component, ContextType, Fragment } from 'react'
 
 import './CreateOrJoinGroup.css'
+
+import { Link, Prompt } from 'react-router-dom'
 
 import UserContext from '@/context/User'
 import * as api from '@/utils/api'
@@ -16,6 +18,7 @@ type State = {
   joinError: string
   input: NewGroup & { join: string }
   isOpen: boolean
+  publicGroups: PublicGroup[]
 }
 
 class CreateOrJoinGroup extends Component<Props, State> {
@@ -36,11 +39,11 @@ class CreateOrJoinGroup extends Component<Props, State> {
         join: '',
       },
       isOpen: false,
+      publicGroups: [],
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.createGroup = this.createGroup.bind(this)
-    this.joinGroup = this.joinGroup.bind(this)
     this.toggleModalVisible = this.toggleModalVisible.bind(this)
   }
 
@@ -151,15 +154,29 @@ class CreateOrJoinGroup extends Component<Props, State> {
       <Fragment>
         <Modal onClose={this.toggleModalVisible} isOpen={this.state.isOpen}>
           <div className="c_create-or-join-group-modal">
-            <h1>Input group id</h1>
-            <form onSubmit={this.joinGroup}>
-              <input
-                className="join"
-                name="join"
-                onChange={this.handleChange}
-              />
-              <InputError message={this.state.joinError} />
-            </form>
+            <div className="hero">
+              <h1>Join a open group</h1>
+            </div>
+            <div className="table">
+              <div className="header table-row">
+                <div className="table-cell">name</div>
+                <div className="table-cell">startSum / big / small</div>
+                <div className="table-cell">users</div>
+              </div>
+              {this.state.publicGroups.map(x => (
+                <Link
+                  key={x.id}
+                  className="table-row"
+                  to={`/group/${x.id.replace(/.+?:/i, '')}`}
+                >
+                  <div className="table-cell">{x.name}</div>
+                  <div className="table-cell">
+                    {x.startSum} / {x.blind.big} / {x.blind.small}
+                  </div>
+                  <div className="table-cell">{x.users}</div>
+                </Link>
+              ))}
+            </div>
           </div>
         </Modal>
 
@@ -229,9 +246,20 @@ class CreateOrJoinGroup extends Component<Props, State> {
                 <button
                   className="input-button"
                   type="button"
-                  onClick={this.toggleModalVisible}
+                  onClick={async event => {
+                    event.preventDefault()
+
+                    const res = await api.list.publicGroups()
+
+                    this.setState({
+                      ...this.state,
+                      publicGroups: res || [],
+                    })
+
+                    this.toggleModalVisible()
+                  }}
                 >
-                  Join existing group
+                  Join open group
                 </button>
               </div>
             </form>

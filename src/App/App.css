@@ -6,16 +6,16 @@
   min-width: 100vw;
 
   .chat {
-    @apply z-50;
+    @apply z-50 -ml-64;
     transition: all 0.4s ease;
+    box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .0);
 
     &.state-visible {
       box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .4);
+      @apply ml-0;
     }
 
     &.state-hidden {
-      @apply -ml-64;
-      box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .0);
     }
   }
 

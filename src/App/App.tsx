@@ -17,6 +17,7 @@ import {
   Redirect,
   Route,
   Switch,
+  Prompt,
 } from 'react-router-dom'
 import { IconComment } from 'react-heroicons-ui'
 
@@ -317,6 +318,13 @@ export const App = () => {
   return (
     <Router>
       <div className="c_app">
+        <Prompt
+          message={location =>
+            location.pathname.includes('sign-out')
+              ? `Are you sure you want to sign out?`
+              : true
+          }
+        />
         <Switch>
           <Route path="/" exact component={RouteMain} />
           <Route path="/create" component={RouteCreate} />

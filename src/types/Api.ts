@@ -1,6 +1,11 @@
 import { CConfig } from 'CConfig'
 import { NewAction, Action } from 'CAction'
 
+export type PublicGroup = Group & {
+  users: number
+  owner: undefined
+}
+
 export interface User {
   id: string
   name: string
@@ -79,6 +84,8 @@ export interface ListRoutes {
   get(id: string, type: 'user'): Response<User>
   get(id: string, type: 'group'): Response<Group>
   get(id: string, type: 'action'): Response<Action>
+
+  publicGroups(take?: number): Response<MaybeNull<PublicGroup[]>>
 }
 
 export interface ActionRoutes {

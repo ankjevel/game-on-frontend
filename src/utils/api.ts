@@ -101,6 +101,12 @@ export const list: ListRoutes = {
       method: 'GET',
     })
   },
+  publicGroups(take = 10) {
+    return req({
+      url: `/get/public-groups?take=${take}`,
+      method: 'GET',
+    })
+  },
 }
 
 export const action: ActionRoutes = {
