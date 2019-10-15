@@ -1,5 +1,5 @@
 .c_app {
-  @apply flex items-center justify-center relative z-10;
+  @apply flex items-center justify-center relative z-10 inset-0 flex-wrap;
   min-height: 100%;
   min-width: 100%;
   min-height: 100vh;

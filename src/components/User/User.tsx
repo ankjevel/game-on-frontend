@@ -17,13 +17,16 @@ export const User: SFC<{
   bigID: Action['big']
   round: Action['round']
   button: Action['button']
-  position: 'left' | 'top' | 'right'
+  position?: 'left' | 'top' | 'right'
   winner: boolean
-}> = ({ row, bigID, round, button: buttonID, position, winner }) => {
+}> = ({ row, bigID, round, button: buttonID, position = '', winner }) => {
   const button = buttonID === row.id && round !== 4 ? 'is-button' : ''
   const big = bigID === row.id && round !== 4 ? 'is-big' : ''
-  const className = `c_user-item ${position} ${big} ${button}`.trim()
 
+  const hideCards =
+    round === 0 || row.action.status === 'fold' ? 'hide-cards' : ''
+
+  const className = `c_user-item ${position} ${big} ${button} ${hideCards}`.trim()
   const cards = row.action.cards || [null, null]
   const hand = getHand(row.action.hand)
 

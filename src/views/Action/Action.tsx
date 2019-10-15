@@ -2,7 +2,7 @@ import { NewAction } from 'CAction'
 import { Row } from 'ActionView'
 import { Params } from 'Action'
 
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useEffect } from 'react'
 
 import './Action.css'
 
@@ -36,6 +36,24 @@ export const Action = memo(
     const big = turn[bigID]
 
     const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
+    const [isSmall, setIsSmall] = useState(window.innerWidth < 1024)
+
+    useEffect(() => {
+      let handler: any
+
+      const resize = () => {
+        clearTimeout(handler)
+        handler = setTimeout(() => {
+          setIsSmall(window.innerWidth < 1024)
+        }, 25)
+      }
+
+      window.addEventListener('resize', resize)
+      return () => {
+        clearTimeout(handler)
+        window.removeEventListener('resize', resize)
+      }
+    }, [])
 
     const req = async (body: NewAction) => {
       setCallPending(true)
@@ -113,12 +131,15 @@ export const Action = memo(
           <SignOut className="sign-out" />
         </div>
 
-        <div className="users">
-          <span className="left">
-            {usersRows.left.reverse().map((user, i) => (
+        {isSmall ? (
+          <div className="users-sm">
+            {[
+              ...usersRows.left.reverse(),
+              ...usersRows.top,
+              ...usersRows.right,
+            ].map((user, i) => (
               <User
-                key={`left-${i}`}
-                position="left"
+                key={`users-sm-${i}`}
                 row={user}
                 bigID={bigID}
                 round={round}
@@ -126,34 +147,50 @@ export const Action = memo(
                 winner={(winners || [[]])[0].includes(user.id)}
               />
             ))}
-          </span>
-          <span className="top">
-            {usersRows.top.map((user, i) => (
-              <User
-                key={`top-${i}`}
-                position="top"
-                row={user}
-                bigID={bigID}
-                round={round}
-                button={button}
-                winner={(winners || [[]])[0].includes(user.id)}
-              />
-            ))}
-          </span>
-          <span className="right">
-            {usersRows.right.map((user, i) => (
-              <User
-                key={`right-${i}`}
-                position="right"
-                row={user}
-                bigID={bigID}
-                round={round}
-                button={button}
-                winner={(winners || [[]])[0].includes(user.id)}
-              />
-            ))}
-          </span>
-        </div>
+          </div>
+        ) : (
+          <div className="users-lg">
+            <span className="left">
+              {usersRows.left.reverse().map((user, i) => (
+                <User
+                  key={`left-${i}`}
+                  position="left"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                  winner={(winners || [[]])[0].includes(user.id)}
+                />
+              ))}
+            </span>
+            <span className="top">
+              {usersRows.top.map((user, i) => (
+                <User
+                  key={`top-${i}`}
+                  position="top"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                  winner={(winners || [[]])[0].includes(user.id)}
+                />
+              ))}
+            </span>
+            <span className="right">
+              {usersRows.right.map((user, i) => (
+                <User
+                  key={`right-${i}`}
+                  position="right"
+                  row={user}
+                  bigID={bigID}
+                  round={round}
+                  button={button}
+                  winner={(winners || [[]])[0].includes(user.id)}
+                />
+              ))}
+            </span>
+          </div>
+        )}
 
         <div className="main">
           <div>
@@ -178,12 +215,6 @@ export const Action = memo(
                   ))}
                   {[...Array(5 - communityCards.length)].map((_, i) => (
                     <div className="card none" key={`blank_card_${i}`} />
-                  ))}
-                </div>
-
-                <div className="placeholders">
-                  {placeholders.map((_, i) => (
-                    <div className="card" key={`placeholder_${i}`} />
                   ))}
                 </div>
               </div>
