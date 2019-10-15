@@ -150,7 +150,7 @@ export const Action = memo(
           </div>
         ) : (
           <div className="users-lg">
-            <span className="left">
+            <div className="left">
               {usersRows.left.reverse().map((user, i) => (
                 <User
                   key={`left-${i}`}
@@ -162,8 +162,8 @@ export const Action = memo(
                   winner={(winners || [[]])[0].includes(user.id)}
                 />
               ))}
-            </span>
-            <span className="top">
+            </div>
+            <div className="top">
               {usersRows.top.map((user, i) => (
                 <User
                   key={`top-${i}`}
@@ -175,8 +175,8 @@ export const Action = memo(
                   winner={(winners || [[]])[0].includes(user.id)}
                 />
               ))}
-            </span>
-            <span className="right">
+            </div>
+            <div className="right">
               {usersRows.right.map((user, i) => (
                 <User
                   key={`right-${i}`}
@@ -188,7 +188,7 @@ export const Action = memo(
                   winner={(winners || [[]])[0].includes(user.id)}
                 />
               ))}
-            </span>
+            </div>
           </div>
         )}
 
@@ -225,6 +225,11 @@ export const Action = memo(
                 <h3 className="bank key-value">
                   <span>Bank</span> {userGroup.sum}
                 </h3>
+                <div>
+                  <h3 className="turn key-value">
+                    <span>Turn</span> {userGroup.sum}
+                  </h3>
+                </div>
                 <PlayerHand
                   className="hand"
                   hand={userTurn.hand}

@@ -20,15 +20,13 @@
   }
 
   .chat-toggle {
-    @apply fixed bottom-0 left-0 text-white z-50 outline-none fill-current ml-2 p-4;
+    @apply fixed left-0 text-white z-50 outline-none fill-current ml-2 p-2;
     transition: all 0.4s ease;
-    top: 50%;
-    bottom: 50%;
+
+    top: 2em;
 
     &.state-visible {
-      @apply ml-64 text-gray-700;
-      top: 0;
-      bottom: 100%;
+      @apply ml-64 text-gray-700 top-0 p-4;
     }
   }
 }
