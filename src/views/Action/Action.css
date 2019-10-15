@@ -228,10 +228,10 @@
 
   .bottom {
     @apply z-30 fixed p-0 w-full text-white left-0;
-    bottom: 0;
+    bottom: -5rem;
 
     &.turn:not(.showdown) {
-      /* bottom: 0; */
+      bottom: 0;
 
       .holder {
         @apply border-green-500;
@@ -323,11 +323,16 @@
         @apply -mr-12 ml-0 p-0;
         width: 88.0167px;
         height: 122.95px;
-        width: calc(62.8738px * 1.4);
-        height: calc(87.8251px * 1.4);
+        width: calc(62.8738px * .9);
+        height: calc(87.8251px * .9);
         transition: margin-right 0.45s ease-in-out, transform 0.4s ease-in-out;
         transform: rotate(27deg);
         box-shadow: 0 0 10px rgba(61, 66, 79, .4);
+
+        @screen md {
+          width: calc(62.8738px * 1.4);
+          height: calc(87.8251px * 1.4);
+        }
 
         &:nth-child(2n) {
           transform: rotate(45deg);
@@ -404,7 +409,7 @@
       }
 
       input {
-        @apply inline-block px-2 w-auto bg-transparent appearance-none border-none outline-none;
+        @apply inline-block px-2 w-10 bg-transparent appearance-none border-none outline-none text-sm;
         appearance: textfield;
 
         @screen lg {
