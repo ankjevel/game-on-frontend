@@ -43,6 +43,7 @@ export const SocketProvider = props => {
     if (socket && socket.emit) {
       await socket.emit('group:leave')
       for (const key of [
+        'update:action',
         'update:group',
         'user:joined',
         'user:left',
@@ -50,10 +51,13 @@ export const SocketProvider = props => {
       ]) {
         delete socket._callbacks[`$${key}`]
       }
-      for (const sub of socket.subs) {
-        await sub.destroy()
-      }
-      await socket.close()
+
+      await setValue(val => ({
+        ...val,
+        room: '',
+        userListen: false,
+        actionListen: false,
+      }))
     }
   }
 
@@ -110,10 +114,16 @@ export const SocketProvider = props => {
     })
 
     socket.on('user:joined', message => {
+      if (message.name === cUser.name) {
+        return
+      }
       alert.show(`user ${message.name} joined`)
     })
 
     socket.on('user:left', message => {
+      if (message.name === cUser.name) {
+        return
+      }
       alert.show(`user ${message.name} left`)
     })
 
@@ -170,9 +180,11 @@ export const SocketProvider = props => {
       }
 
       const { token } = cUser
+
       if (token) {
         if (value.userListen && value.userSet) return
         if (value.actionListen) return
+        if (token === socket.token) return
         socket.token = token
 
         await socket.emit('user:join', token)
