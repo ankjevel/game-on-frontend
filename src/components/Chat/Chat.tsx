@@ -20,14 +20,21 @@ export const Chat = memo(
     userID: CUser['id']
   }) => {
     const [message, setMessage] = useState('')
-
     const lastElement = useRef<HTMLDivElement>(null)
 
     useEffect(() => scroll, [messages.length])
 
+    let scrollEvent: any = null
+
     const scroll = () => {
       if (lastElement.current == null) return
-      lastElement.current.scrollIntoView({ behavior: 'smooth' })
+      clearTimeout(scrollEvent)
+      scrollEvent = setTimeout(() => {
+        if (lastElement.current == null) {
+          return scroll()
+        }
+        lastElement.current.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
     }
 
     const updateMessage = event => {

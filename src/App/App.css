@@ -12,10 +12,27 @@
 
     &.state-visible {
       box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .4);
+
       @apply ml-0;
     }
 
     &.state-hidden {
+    }
+
+    &:after {
+      @apply block absolute inset-0 h-full w-full;
+      content: '';
+      box-shadow: 0 0 10px rgba(theme('colors.green.500'), .0);
+      background: none !important;
+      transition: all 0.4s ease;
+    }
+
+    &.new-message {
+      &:after {
+        animation-name: fancyBackground;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+      }
     }
   }
 
@@ -30,6 +47,13 @@
 
     &.state-visible {
       @apply ml-64 text-gray-700 top-0 p-4;
+    }
+
+    &.new-message {
+      transition: all 0.4s ease;
+      animation-name: seeMee;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
     }
   }
 }

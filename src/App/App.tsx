@@ -26,7 +26,7 @@ import SignIn from '@/views/SignIn'
 import CreateOrJoinGroup from '@/views/CreateOrJoinGroup'
 import Group from '@/views/Group'
 import Chat from '@/components/Chat'
-import api from '@/utils/api'
+import api, { group } from '@/utils/api'
 import actionContext from '@/context/Action'
 import chatContext from '@/context/Chat'
 import userContext from '@/context/User'
@@ -39,7 +39,9 @@ export const App = () => {
 
   useEffect(() => {
     const newState = `state-${
-      user.id !== '' && chat.visible ? 'visible' : 'hidden'
+      user.id !== '' && user.group != null && chat.visible
+        ? 'visible'
+        : 'hidden'
     }`
 
     if (newState === chatVisibility) {
@@ -48,9 +50,35 @@ export const App = () => {
 
     updateChatVisibility(newState)
   }, [user.id, chat.visible])
+
+  useEffect(() => {
+    if (chat.messages.length === 0) {
+      return
+    }
+
+    const newState = chat.visible ? '' : 'new-message'
+    const last = chat.messages[chat.messages.length - 1][0]
+
+    if (newState === messageState) {
+      if (last !== lastMessage) {
+        updateLastMessage(last)
+      }
+      return
+    }
+
+    if (newState !== '' && last === lastMessage) {
+      return
+    }
+
+    updateLastMessage(last)
+    updateMessageState(newState)
+  }, [[chat.visible, chat.messages.length]])
+
   const [render, updateRender] = useState(false)
   const [active, updateActive] = useState(false)
   const [chatVisibility, updateChatVisibility] = useState('')
+  const [messageState, updateMessageState] = useState('')
+  const [lastMessage, updateLastMessage] = useState('')
 
   const pretty = (key: string) => {
     return key.replace(/^.+?:/, '')
@@ -339,7 +367,7 @@ export const App = () => {
         </Switch>
 
         <Chat
-          className={`chat ${chatVisibility}`}
+          className={`chat ${chatVisibility} ${messageState}`.trim()}
           onMessage={onMessage}
           messages={chat.messages}
           users={user.users}
@@ -348,7 +376,7 @@ export const App = () => {
 
         <button
           type="button"
-          className={`chat-toggle ${chatVisibility}`}
+          className={`chat-toggle ${chatVisibility} ${messageState}`.trim()}
           onClick={() => chat.updateVisibility(!chat.visible)}
         >
           <IconComment />
