@@ -33,7 +33,7 @@
       left: 2em;
 
       @screen lg {
-        @apply left-0 text-base;
+        @apply text-base;
       }
     }
 
@@ -60,7 +60,7 @@
     }
 
     @screen lg {
-      @apply absolute m-auto w-full;
+      @apply absolute m-auto w-full inset-0;
     }
   }
 
