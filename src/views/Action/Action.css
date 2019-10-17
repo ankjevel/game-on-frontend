@@ -183,12 +183,64 @@
 
     .chip {
       @apply absolute inset-x-0 top-0;
+
       &:nth-of-type(2) {
         top: -0.15em;
       }
 
       &:nth-of-type(3) {
         top: -0.3em;
+      }
+
+      &:nth-of-type(4) {
+        top: -0.45em;
+      }
+
+      &:nth-of-type(5) {
+        top: -0.6em;
+      }
+
+      &:nth-of-type(6) {
+        top: -0.75em;
+      }
+
+      &:nth-of-type(7) {
+        top: 0;
+        left: -1em;
+      }
+
+      &:nth-of-type(8) {
+        top: -0.15em;
+        left: -1em;
+      }
+
+      &:nth-of-type(9) {
+        top: -0.3em;
+        left: -1em;
+      }
+
+      &:nth-of-type(10) {
+        top: -0.45em;
+        left: -1em;
+      }
+
+      &:nth-of-type(11) {
+        top: -0.6em;
+        left: -1em;
+      }
+
+      &:nth-of-type(12) {
+        top: -0.75em;
+        left: -1em;
+      }
+
+      &:nth-of-type(13) {
+        top: -0.9em;
+      }
+
+      &:nth-of-type(14) {
+        top: -0.9em;
+        left: -1em;
       }
 
       #stroke {
@@ -388,6 +440,7 @@
         .button-bet-call {
           display: none;
         }
+
         .button-fold {
           @apply rounded-l;
         }

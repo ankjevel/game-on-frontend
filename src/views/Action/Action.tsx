@@ -8,7 +8,7 @@ import './Action.css'
 
 import Slider from 'rc-slider'
 
-import api from '@/utils/api'
+import api, { user } from '@/utils/api'
 import Card from '@/components/Card'
 import Chip from '@/components/Chip'
 import User from '@/components/User'
@@ -132,6 +132,7 @@ export const Action = memo(
     userIndex = undefined
 
     const betMax = userGroup.sum - (big.bet - userTurn.bet)
+    const chips = big.bet === group.blind.big ? 2 : 3 + sidePot.length
 
     return (
       <div className={`c_action round-${round}`}>
@@ -211,9 +212,9 @@ export const Action = memo(
               <div className="bets">
                 <h1 className="bet">
                   <span className="chips">
-                    <Chip className="chip" type="thin" />
-                    <Chip className="chip" type="thin" />
-                    <Chip className="chip" type="thin" />
+                    {[...Array(chips)].map((_, i) => (
+                      <Chip key={`chip-${i}`} className="chip" type="thin" />
+                    ))}
                   </span>
                   {big.bet}
                 </h1>
@@ -279,7 +280,8 @@ export const Action = memo(
               </button>
             </div>
           )}
-          <div className={`holder${betMax === 0 ? ' only-all-in' : ''}`}>
+
+          <div className={`holder${betMax <= 0 ? ' only-all-in' : ''}`}>
             <button
               onClick={() => !callPending && actions.check()}
               disabled={callPending}
@@ -319,7 +321,7 @@ export const Action = memo(
               }}
               className={`button button-raise ${
                 input.raise === big.bet ? 'disabled' : ''
-              } ${!betMax || input.raise === betMax ? 'hidden' : ''}`}
+              } ${betMax <= 0 || input.raise === betMax ? 'hidden' : ''}`}
             >
               raise
             </button>
