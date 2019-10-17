@@ -47,12 +47,12 @@
     max-width: 640px;
     min-height: 25vh;
     max-height: 40vh;
-    bottom: 4em;
-    transform: scale(.7);
+    min-width: 100%;
+    bottom: 5em;
 
     @screen md {
       @apply px-4 py-6 relative;
-      transform: none;
+      bottom: 4em;
     }
 
     > div {
@@ -74,6 +74,16 @@
         @apply relative;
       }
     }
+
+    .bets .bet,
+    .bets .pot,
+    .key-value,
+    .you {
+      @apply text-xs;
+      @screen md {
+        @apply text-base;
+      }
+    }
   }
 
   .card {
@@ -91,6 +101,8 @@
     svg {
       @apply h-32 w-24;
       height: 8.4rem;
+      max-height: 100%;
+      max-width: 100%;
     }
 
     &.none {
@@ -101,12 +113,29 @@
 
   .bets {
     .pot {
-      @apply text-lg pt-2;
+      @apply text-xs p-0;
+
+      @screen md {
+        @apply text-lg pt-2;
+      }
     }
+
+    .bet,
+    .pot {
+      @apply inline-block px-2;
+      @screen md {
+        @apply block px-0;
+      }
+    }
+
   }
 
   .key-value {
-    @apply font-bold;
+    @apply text-xs font-bold;
+
+    @screen md {
+      @apply text-lg;
+    }
 
     span {
       @apply uppercase font-normal;
@@ -116,7 +145,11 @@
 
   .cards,
   .placeholders {
-    @apply flex flex-row p-4 justify-center z-10;
+    @apply flex flex-row py-2 justify-center z-10;
+
+    @screen md {
+      @apply p-4;
+    }
 
     .card {
       &:nth-of-type(4) {
@@ -134,19 +167,29 @@
     }
 
     h3 {
-      @apply flex-1 p-2 text-center w-auto block;
+      @apply flex-1 py-0 px-2 text-center w-auto block;
 
-      &:nth-of-type(1) {
-        @apply text-right;
-      }
+      @screen md {
+        @apply p-2;
 
-      &:nth-of-type(2) {
-        @apply text-left;
+        &:nth-of-type(1) {
+          @apply text-right;
+        }
+
+        &:nth-of-type(2) {
+          @apply text-left;
+        }
       }
     }
 
     .button,
     .hand {
+      @screen md {
+        flex-basis: 100%;
+      }
+    }
+
+    .winner {
       flex-basis: 100%;
     }
 
@@ -324,21 +367,32 @@
       }
 
       .player-cards {
+        @apply pt-2;
         bottom: -1rem;
 
         &:hover {
-          bottom: 5rem;
+          bottom: 2.8rem;
+
+          @screen md {
+            bottom: 5rem;
+          }
         }
       }
     }
 
     &.showdown {
       .player-cards {
-        bottom: 0;
-        margin: auto;
+        @apply m-0;
+        bottom: 1rem;
+        transform: scale(.8);
+
+        @screen md {
+          @apply m-auto;
+        }
 
         @screen lg {
-          bottom: 10rem;
+          bottom: 1rem;
+          transform: none;
         }
 
         &:hover {
@@ -362,11 +416,19 @@
     }
 
     .confirm {
-      @apply ml-56;
       bottom: 8rem;
 
+      @screen md {
+        @apply ml-56;
+      }
+
       .button {
-        @apply bg-green-500 text-white text-base leading-none p-2 py-2 px-4 rounded;
+        @apply bg-green-500 text-white leading-none p-2 py-2 px-4 rounded text-xs absolute;
+        right: 2rem;
+
+        @screen md {
+          @apply text-base relative;
+        }
 
         &:hover {
           @apply bg-green-300 text-white;
@@ -385,9 +447,13 @@
     }
 
     .player-cards {
-      @apply fixed w-56 inline-block flex flex-row;
+      @apply fixed w-40 inline-block flex flex-row;
       bottom: -4rem;
       transition: padding .4s ease, transform .4s ease, bottom .4s ease;
+
+      @screen md {
+        @apply w-56;
+      }
 
       &:hover {
         padding-bottom: 4.5rem;

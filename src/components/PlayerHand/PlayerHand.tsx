@@ -11,14 +11,14 @@ export const PlayerHand: SFC<{
 }> = ({ className: cn, hand, winner }) => {
   const text = getText(hand) || ''
   const className = `c_player-hand ${cn}`.trim()
-  const classNameWinner = `c_player-hand-winner ${cn}`.trim()
+  const classNameWinner = `c_player-hand-winner winner ${cn}`.trim()
 
   return (
     <Fragment>
       <h3 className={className}>
         {text && (
           <Fragment>
-            <span>On hand:</span> {text}
+            <span>On hand</span> {text}
           </Fragment>
         )}
       </h3>

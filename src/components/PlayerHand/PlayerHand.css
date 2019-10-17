@@ -1,5 +1,9 @@
 .c_player-hand {
-  @apply block w-full h-full h-4 font-bold mb-6;
+  @apply block w-full h-full h-4 font-bold;
+
+  @screen md {
+    @apply mb-6;
+  }
 
   span {
     @apply uppercase font-normal;

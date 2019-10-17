@@ -11,7 +11,7 @@
   }
 
   svg {
-    @apply z-10;
+    @apply z-10 fill-current;
     transform: rotateY(0);
   }
 
@@ -28,8 +28,10 @@
 
   .face {
     @apply text-gray-800;
+    fill: theme('colors.gray.800');
     &.is-red {
       @apply text-red-600;
+      fill: theme('colors.red.600');
     }
   }
 }
