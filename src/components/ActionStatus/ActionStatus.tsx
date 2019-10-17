@@ -28,6 +28,10 @@ export const ActionStatus: SFC<{
       text = ' '
       break
     }
+    case 'confirm': {
+      text = 'ready'
+      break
+    }
     default: {
       text = status
     }

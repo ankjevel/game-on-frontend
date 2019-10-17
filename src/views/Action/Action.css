@@ -56,7 +56,8 @@
 
     @screen lg {
       @apply m-auto w-full inset-0 px-4 py-6;
-      bottom: 4em;
+      top: 6em;
+      bottom: 0;
     }
 
     > div {
@@ -80,6 +81,7 @@
     .key-value,
     .you {
       @apply text-xs;
+
       @screen md {
         @apply text-base;
       }
@@ -123,11 +125,11 @@
     .bet,
     .pot {
       @apply inline-block px-2;
+
       @screen md {
         @apply block px-0;
       }
     }
-
   }
 
   .key-value {
@@ -159,11 +161,15 @@
   }
 
   .you {
-    @apply flex flex-row w-auto m-auto text-gray-700 flex-wrap;
+    @apply flex flex-row w-auto m-auto flex-wrap;
     transition: color .5s ease;
 
-    &:hover {
-      @apply text-white;
+    @screen lg {
+      @apply text-gray-500;
+
+      &:hover {
+        @apply text-white;
+      }
     }
 
     h3 {
@@ -191,15 +197,19 @@
 
     .winner {
       @apply pt-6;
+      flex-basis: 100%;
+
       @screen md {
         padding: inherit;
       }
-      flex-basis: 100%;
-
     }
 
     .button {
-      @apply w-full block;
+      @apply w-auto inline-block;
+
+      @screen md {
+        @apply w-full block;
+      }
 
       h3 {
         @apply text-center;
