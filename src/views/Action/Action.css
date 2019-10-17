@@ -48,19 +48,19 @@
     min-height: 25vh;
     max-height: 40vh;
     min-width: 100%;
-    bottom: 5em;
+    bottom: 2em;
+
+    @screen md {
+      bottom: 8em;
+    }
 
     @screen lg {
-      @apply px-4 py-6 relative;
+      @apply m-auto w-full inset-0 px-4 py-6;
       bottom: 4em;
     }
 
     > div {
       @appl w-full text-left p-2 text-gray-700 flex flex-col;
-    }
-
-    @screen lg {
-      @apply absolute m-auto w-full inset-0;
     }
   }
 
@@ -190,7 +190,12 @@
     }
 
     .winner {
+      @apply pt-6;
+      @screen md {
+        padding: inherit;
+      }
       flex-basis: 100%;
+
     }
 
     .button {
