@@ -50,7 +50,7 @@
     min-width: 100%;
     bottom: 5em;
 
-    @screen md {
+    @screen lg {
       @apply px-4 py-6 relative;
       bottom: 4em;
     }
