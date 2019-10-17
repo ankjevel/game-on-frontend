@@ -84,7 +84,7 @@ module.exports = {
                         ],
                         css: ['./src/**/*.css', './src/index.css'],
                         keyframes: true,
-                        whitelistPatterns: [/[ac]_[a-z0-9-_:/]+/gi],
+                        whitelistPatterns: [/rc-|[ac]_[a-z0-9-_:/]+/gi],
                       }),
                       require('cssnano'),
                     ]
