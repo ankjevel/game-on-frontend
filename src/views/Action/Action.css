@@ -233,6 +233,15 @@
     .bet {
       @apply w-auto inline-block pl-2 pr-2 py-0 rounded-full;
       background: rgba(25, 31, 43, .25);
+
+      &.side-pot {
+        transform: scale(.9);
+        .chip {
+          #background {
+            fill: theme('colors.green.500');
+          }
+        }
+      }
     }
 
     .chips {

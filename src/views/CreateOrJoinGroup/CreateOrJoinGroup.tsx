@@ -4,7 +4,7 @@ import React, { Component, ContextType, Fragment } from 'react'
 
 import './CreateOrJoinGroup.css'
 
-import { Link, Prompt } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import UserContext from '@/context/User'
 import * as api from '@/utils/api'

@@ -2,13 +2,13 @@ import { NewAction } from 'CAction'
 import { Row } from 'ActionView'
 import { Params } from 'Action'
 
-import React, { useState, memo, useEffect, Fragment } from 'react'
+import React, { useState, memo, useEffect } from 'react'
 
 import './Action.css'
 
 import Slider from 'rc-slider'
 
-import api, { user } from '@/utils/api'
+import api from '@/utils/api'
 import Card from '@/components/Card'
 import Chip from '@/components/Chip'
 import User from '@/components/User'
@@ -133,6 +133,9 @@ export const Action = memo(
 
     const betMax = userGroup.sum - (big.bet - userTurn.bet)
     const chips = big.bet === group.blind.big ? 2 : 3 + sidePot.length
+    const sidePots = sidePot
+      .filter(({ id }) => id !== bigID)
+      .map(({ sum }) => sum)
 
     return (
       <div className={`c_action round-${round}`}>
@@ -207,9 +210,19 @@ export const Action = memo(
         )}
 
         <div className="main">
-          <div>
+          <div className={`${sidePots.length ? 'has-side-pots' : ''}`}>
             <div className="table">
               <div className="bets">
+                {sidePots.map((sum, i) => (
+                  <h1 className="bet side-pot" key={`sidepot-${i}`}>
+                    <span className="chips">
+                      <Chip className="chip" type="thin" />
+                      <Chip className="chip" type="thin" />
+                      <Chip className="chip" type="thin" />
+                    </span>
+                    {sum}
+                  </h1>
+                ))}
                 <h1 className="bet">
                   <span className="chips">
                     {[...Array(chips)].map((_, i) => (
