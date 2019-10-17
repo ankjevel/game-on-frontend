@@ -117,14 +117,14 @@ export const SocketProvider = props => {
       if (message.name === cUser.name) {
         return
       }
-      alert.show(`user ${message.name} joined`)
+      alert.show(`${message.name} joined`)
     })
 
     socket.on('user:left', message => {
       if (message.name === cUser.name) {
         return
       }
-      alert.show(`user ${message.name} left`)
+      alert.show(`${message.name} left`)
     })
 
     socket.on('message', cChat.newMessage)
