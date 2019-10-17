@@ -57,6 +57,12 @@
         box-shadow: 0 4px 4px rgba(theme('colors.green.900'), .25);
       }
     }
+
+    .chip {
+      #background {
+        fill: theme('colors.yellow.500');
+      }
+    }
   }
 
   &.left,

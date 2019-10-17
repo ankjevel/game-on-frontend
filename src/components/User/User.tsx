@@ -31,9 +31,6 @@ export const User: SFC<{
 }) => {
   const button = buttonID === row.id && round !== 4 ? 'is-button' : ''
   const big = bigID === row.id && round !== 4 ? 'is-big' : ''
-
-  const sidepotSum = sidePot && sidePot.sum
-
   const hideCards =
     round === 0 || row.action.status === 'fold' ? 'hide-cards' : ''
 
