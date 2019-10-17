@@ -58,6 +58,7 @@
       }
     }
 
+    .single-chip,
     .chip {
       #background {
         fill: theme('colors.yellow.500');
