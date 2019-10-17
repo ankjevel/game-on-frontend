@@ -13,15 +13,26 @@ import { ActionStatus } from '@/components/ActionStatus'
 import getHand from '@/utils/hand'
 
 export const User: SFC<{
-  row: Row
   bigID: Action['big']
-  round: Action['round']
   button: Action['button']
   position?: 'left' | 'top' | 'right'
+  round: Action['round']
+  row: Row
+  sidePot?: Action['sidePot'][0]
   winner: boolean
-}> = ({ row, bigID, round, button: buttonID, position = '', winner }) => {
+}> = ({
+  bigID,
+  button: buttonID,
+  position = '',
+  round,
+  row,
+  sidePot,
+  winner,
+}) => {
   const button = buttonID === row.id && round !== 4 ? 'is-button' : ''
   const big = bigID === row.id && round !== 4 ? 'is-big' : ''
+
+  const sidepotSum = sidePot && sidePot.sum
 
   const hideCards =
     round === 0 || row.action.status === 'fold' ? 'hide-cards' : ''
@@ -40,7 +51,17 @@ export const User: SFC<{
       <div className="player">
         <div className="bet-and-action">
           <div className="bet">
-            <Chip /> <strong>{row.action.bet}</strong> / {row.sum}
+            {(sidePot && (
+              <span className="chips">
+                <Chip className="chip" type="thin" />
+                <Chip className="chip" type="thin" />
+                <Chip className="chip" type="thin" />
+              </span>
+            )) ||
+              (row.action.bet > 0 && (
+                <Chip className="single-chip" type="thin" />
+              ))}
+            <strong>{row.action.bet}</strong> / {row.sum}
           </div>
           <ActionStatus status={row.action.status} winner={winner} />
         </div>
@@ -50,6 +71,7 @@ export const User: SFC<{
           )}
           <h2 className="name">{row.name}</h2>
         </div>
+
         <div className="cards">
           {cards.map((card, i) => (
             <Card

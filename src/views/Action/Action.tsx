@@ -2,7 +2,7 @@ import { NewAction } from 'CAction'
 import { Row } from 'ActionView'
 import { Params } from 'Action'
 
-import React, { useState, memo, useEffect } from 'react'
+import React, { useState, memo, useEffect, Fragment } from 'react'
 
 import './Action.css'
 
@@ -17,17 +17,18 @@ import SignOut from '@/components/SignOut'
 
 export const Action = memo(
   ({
-    turn,
-    communityCards,
-    round,
-    pot,
-    button,
     actionID,
     bigID,
-    userID,
+    button,
+    communityCards,
     group,
+    pot,
+    round,
+    sidePot = [],
+    turn,
+    userID,
     users,
-    winners,
+    winners = [[]],
   }: Params) => {
     const [callPending, setCallPending] = useState(false)
     const userTurn = turn[userID]
@@ -35,7 +36,9 @@ export const Action = memo(
     const big = turn[bigID]
     const currentButton = button === userID ? 'You' : users[button]
 
-    const [input, setInput] = useState({ raise: Math.min(2, userTurn.bet) })
+    const [input, setInput] = useState({
+      raise: Math.min(2, Math.max(userTurn.bet, 1)),
+    })
     const [isSmall, setIsSmall] = useState(window.innerWidth < 1024)
 
     useEffect(() => {
@@ -65,7 +68,11 @@ export const Action = memo(
       async check() {
         await req({
           type:
-            big.bet === userTurn.bet ? (round === 0 ? 'bet' : 'check') : 'call',
+            round === 0 && big.bet === group.blind.big
+              ? 'bet'
+              : big.bet === userTurn.bet
+              ? 'check'
+              : 'call',
         })
       },
       async raise(value: number) {
@@ -127,7 +134,7 @@ export const Action = memo(
     const betMax = userGroup.sum - (big.bet - userTurn.bet)
 
     return (
-      <div className="c_action">
+      <div className={`c_action round-${round}`}>
         <div className="main-top">
           <h1 className="title">{group.name}</h1>
           <SignOut className="sign-out" />
@@ -146,7 +153,8 @@ export const Action = memo(
                 bigID={bigID}
                 round={round}
                 button={button}
-                winner={(winners || [[]])[0].includes(user.id)}
+                winner={winners[0].includes(user.id)}
+                sidePot={sidePot.find(({ id }) => id === user.id)}
               />
             ))}
           </div>
@@ -161,7 +169,8 @@ export const Action = memo(
                   bigID={bigID}
                   round={round}
                   button={button}
-                  winner={(winners || [[]])[0].includes(user.id)}
+                  winner={winners[0].includes(user.id)}
+                  sidePot={sidePot.find(({ id }) => id === user.id)}
                 />
               ))}
             </div>
@@ -174,7 +183,8 @@ export const Action = memo(
                   bigID={bigID}
                   round={round}
                   button={button}
-                  winner={(winners || [[]])[0].includes(user.id)}
+                  winner={winners[0].includes(user.id)}
+                  sidePot={sidePot.find(({ id }) => id === user.id)}
                 />
               ))}
             </div>
@@ -187,7 +197,8 @@ export const Action = memo(
                   bigID={bigID}
                   round={round}
                   button={button}
-                  winner={(winners || [[]])[0].includes(user.id)}
+                  winner={winners[0].includes(user.id)}
+                  sidePot={sidePot.find(({ id }) => id === user.id)}
                 />
               ))}
             </div>
@@ -199,7 +210,11 @@ export const Action = memo(
             <div className="table">
               <div className="bets">
                 <h1 className="bet">
-                  <Chip className="chip" />
+                  <span className="chips">
+                    <Chip className="chip" type="thin" />
+                    <Chip className="chip" type="thin" />
+                    <Chip className="chip" type="thin" />
+                  </span>
                   {big.bet}
                 </h1>
                 <h3 className="pot key-value">
@@ -227,7 +242,7 @@ export const Action = memo(
                 <h3 className="bank key-value">
                   <span>Bank</span> {userGroup.sum}
                 </h3>
-                <div className="turn">
+                <div className="button">
                   <h3 className="key-value">
                     <span>Button</span> {currentButton}
                   </h3>
@@ -235,7 +250,7 @@ export const Action = memo(
                 <PlayerHand
                   className="hand"
                   hand={userTurn.hand}
-                  winner={(winners || [[]])[0].includes(userID)}
+                  winner={winners[0].includes(userID)}
                 />
               </div>
             </div>
@@ -264,17 +279,17 @@ export const Action = memo(
               </button>
             </div>
           )}
-          <div className="holder">
+          <div className={`holder${betMax === 0 ? ' only-all-in' : ''}`}>
             <button
               onClick={() => !callPending && actions.check()}
               disabled={callPending}
               type="button"
               className="button button-bet-call"
             >
-              {big.bet === userTurn.bet
-                ? round === 0
-                  ? 'bet'
-                  : 'check'
+              {round === 0 && big.bet === group.blind.big
+                ? 'bet'
+                : big.bet === userTurn.bet
+                ? 'check'
                 : 'call'}
             </button>
             <button
@@ -304,7 +319,7 @@ export const Action = memo(
               }}
               className={`button button-raise ${
                 input.raise === big.bet ? 'disabled' : ''
-              } ${input.raise === betMax ? 'hidden' : ''}`}
+              } ${!betMax || input.raise === betMax ? 'hidden' : ''}`}
             >
               raise
             </button>

@@ -2,15 +2,16 @@ import { CUser } from 'CUser'
 import { CAction } from 'CAction'
 
 export type Params = {
-  turn: CAction['turn']
-  communityCards: CAction['communityCards']
-  round: CAction['round']
-  pot: CAction['pot']
-  button: CAction['button']
   actionID: CAction['id']
   bigID: CAction['big']
-  userID: CUser['id']
+  button: CAction['button']
+  communityCards: CAction['communityCards']
   group: CUser['group']
+  pot: CAction['pot']
+  round: CAction['round']
+  sidePot?: CAction['sidePot']
+  turn: CAction['turn']
+  userID: CUser['id']
   users: CUser['users']
   winners?: CAction['winners']
 }

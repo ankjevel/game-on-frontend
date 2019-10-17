@@ -145,12 +145,12 @@
       }
     }
 
-    .turn,
+    .button,
     .hand {
       flex-basis: 100%;
     }
 
-    .turn {
+    .button {
       @apply w-full block;
 
       h3 {
@@ -163,14 +163,45 @@
     }
   }
 
+  &.round-4 {
+    .you {
+      .button {
+        display: none;
+      }
+    }
+  }
+
   .bets {
     .bet {
       @apply w-auto inline-block pl-2 pr-2 py-0 rounded-full;
       background: rgba(25, 31, 43, .25);
     }
 
+    .chips {
+      @apply relative inline-block mr-2 w-4 h-4;
+    }
+
     .chip {
-      @apply fill-current text-yellow-500 mr-2;
+      @apply absolute inset-x-0 top-0;
+      &:nth-of-type(2) {
+        top: -0.15em;
+      }
+
+      &:nth-of-type(3) {
+        top: -0.3em;
+      }
+
+      #stroke {
+        fill: theme('colors.gray.900');
+      }
+
+      #secondary {
+        fill: theme('colors.gray.900');
+      }
+
+      #background {
+        fill: theme('colors.yellow.500');
+      }
     }
   }
 
@@ -349,6 +380,17 @@
 
       @screen lg {
         @apply p-4;
+      }
+
+      &.only-all-in {
+        .raise,
+        .slider,
+        .button-bet-call {
+          display: none;
+        }
+        .button-fold {
+          @apply rounded-l;
+        }
       }
     }
 

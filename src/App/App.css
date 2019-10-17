@@ -21,6 +21,7 @@
 
     &:after {
       @apply block absolute inset-0 h-full w-full;
+      z-index: -1;
       content: '';
       box-shadow: 0 0 10px rgba(theme('colors.green.500'), .0);
       background: none !important;

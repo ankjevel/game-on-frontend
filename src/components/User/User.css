@@ -8,9 +8,45 @@
   .bet {
     @apply w-auto inline-block pl-1 pr-2 py-0 rounded-full bg-gray-900;
     box-shadow: 0 4px 4px rgba(theme('colors.gray.900'), .25);
+  }
 
-    svg {
-      @apply mr-1 ml-0 fill-current text-white text-sm h-3;
+  .single-chip,
+  .chip {
+    #stroke {
+      fill: theme('colors.gray.900');
+    }
+
+    #secondary {
+      fill: theme('colors.gray.900');
+    }
+  }
+
+  .single-chip {
+    @apply mr-1 ml-0 h-4;
+    margin-bottom: 2px;
+
+    #background {
+      fill: white;
+    }
+  }
+
+  .chips {
+    @apply relative inline-block mr-1 ml-0 w-4 h-4;
+  }
+
+  .chip {
+    @apply absolute inset-x-0 top-0;
+
+    &:nth-of-type(2) {
+      top: -0.15em;
+    }
+
+    &:nth-of-type(3) {
+      top: -0.3em;
+    }
+
+    #background {
+      fill: theme('colors.green.500');
     }
   }
 

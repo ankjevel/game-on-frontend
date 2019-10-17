@@ -305,6 +305,7 @@ export const App = () => {
           group={user.group}
           users={user.users}
           winners={action.winners}
+          sidePot={action.sidePot}
         />
       )
     }
