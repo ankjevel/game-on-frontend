@@ -257,7 +257,6 @@ export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
   return (
     <div className="c_group-view" onClick={onClick}>
       <SignOut className="sign-out" />
-
       <div className="main-container">
         <div className="px-4 py-6">
           <div>
@@ -368,6 +367,7 @@ export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
           </div>
         </div>
       </div>
+      <div className="_fill" />
     </div>
   )
 }

@@ -389,9 +389,13 @@
         bottom: 2.8rem;
 
         @screen md {
-          bottom: 5rem;
+          bottom: 4rem;
         }
       }
+    }
+
+    .current-button {
+      @apply py-2;
     }
 
     &:not(.turn) {
@@ -477,19 +481,8 @@
       }
     }
 
-    &.turn:not(.showdown) {
-      .player-cards {
-        bottom: 0;
-
-        &:hover {
-          padding-bottom: 1rem;
-        }
-      }
-    }
-
     .player-cards {
-      @apply fixed w-40 inline-block flex flex-row;
-      bottom: -4rem;
+      @apply fixed w-40 inline-block flex flex-row bottom-0;
       transition: padding .4s ease, transform .4s ease, bottom .4s ease;
 
       @screen md {
@@ -497,7 +490,7 @@
       }
 
       &:hover {
-        padding-bottom: 4.5rem;
+        padding-bottom: .7rem;
 
         .card {
           @apply mr-2;
@@ -531,7 +524,7 @@
     }
 
     .holder {
-      @apply flex items-center justify-center flex-wrap w-full relative z-10 p-1 pb-2 border-t-4 border-transparent bg-black;
+      @apply flex items-center justify-center flex-wrap w-full relative z-10 p-1 pb-2 border-t-4 border-black bg-black;
 
       @screen md {
         @apply p-2;

@@ -80,12 +80,9 @@ export const SocketProvider = props => {
 
         await setValue(state => ({
           ...state,
-          id: '',
           room: '',
-          connected: false,
           userListen: false,
           actionListen: false,
-          userSet: false,
         }))
 
         alert.show('reconnected to server')
@@ -113,19 +110,25 @@ export const SocketProvider = props => {
       }
     })
 
-    socket.on('user:joined', message => {
-      if (message.name === cUser.name) {
+    const printMessage: (
+      message: MaybeNull<{ name: string }>,
+      type: 'joined' | 'left'
+    ) => void = (message, type) => {
+      if (
+        !cUser ||
+        !cUser.name ||
+        !message ||
+        !message.name ||
+        message.name === cUser.name
+      ) {
         return
       }
-      alert.show(`${message.name} joined`)
-    })
+      alert.show(`${message.name} ${type}`)
+    }
 
-    socket.on('user:left', message => {
-      if (message.name === cUser.name) {
-        return
-      }
-      alert.show(`${message.name} left`)
-    })
+    socket.on('user:joined', message => printMessage(message, 'joined'))
+
+    socket.on('user:left', message => printMessage(message, 'left'))
 
     socket.on('message', cChat.newMessage)
 

@@ -1,5 +1,5 @@
 .c_group-view {
-  @apply w-0 flex flex-col;
+  @apply w-0 flex flex-col z-0;
   flex-basis: 100%;
 
   .sign-out {
@@ -28,4 +28,8 @@
 }
 
 
+._fill {
+  @apply fixed inset-0 w-full h-full;
+  z-index: -1;
+}
 

@@ -26,7 +26,7 @@ import SignIn from '@/views/SignIn'
 import CreateOrJoinGroup from '@/views/CreateOrJoinGroup'
 import Group from '@/views/Group'
 import Chat from '@/components/Chat'
-import api, { group } from '@/utils/api'
+import api from '@/utils/api'
 import actionContext from '@/context/Action'
 import chatContext from '@/context/Chat'
 import userContext from '@/context/User'
@@ -38,11 +38,7 @@ export const App = () => {
   const chat = useContext(chatContext)
 
   useEffect(() => {
-    const newState = `state-${
-      user.id !== '' && user.group != null && chat.visible
-        ? 'visible'
-        : 'hidden'
-    }`
+    const newState = `state-${chat.visible ? 'visible' : 'hidden'}`
 
     if (newState === chatVisibility) {
       return
@@ -371,21 +367,25 @@ export const App = () => {
           <Route path="/wait" component={Wait} />
         </Switch>
 
-        <Chat
-          className={`chat ${chatVisibility} ${messageState}`.trim()}
-          onMessage={onMessage}
-          messages={chat.messages}
-          users={user.users}
-          userID={user.id}
-        />
+        {user.id !== '' && user.group != null && (
+          <Fragment>
+            <Chat
+              className={`chat ${chatVisibility} ${messageState}`.trim()}
+              onMessage={onMessage}
+              messages={chat.messages}
+              users={user.users}
+              userID={user.id}
+            />
 
-        <button
-          type="button"
-          className={`chat-toggle ${chatVisibility} ${messageState}`.trim()}
-          onClick={() => chat.updateVisibility(!chat.visible)}
-        >
-          <IconComment />
-        </button>
+            <button
+              type="button"
+              className={`chat-toggle ${chatVisibility} ${messageState}`.trim()}
+              onClick={() => chat.updateVisibility(!chat.visible)}
+            >
+              <IconComment />
+            </button>
+          </Fragment>
+        )}
       </div>
     </Router>
   )
