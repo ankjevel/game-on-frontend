@@ -328,7 +328,7 @@ export const Action = memo(
               onClick={async event => {
                 event.preventDefault()
 
-                if (callPending || input.raiseDirty || input.raise >= 0) {
+                if (callPending || input.raiseDirty || input.raise <= 0) {
                   return
                 }
 
