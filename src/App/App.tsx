@@ -354,18 +354,23 @@ export const App = () => {
               : true
           }
         />
-        <Switch>
-          <Route path="/" exact component={RouteMain} />
-          <Route path="/create" component={RouteCreate} />
-          <Route path="/game" exact component={RouteActionWithOutID} />
-          <Route path="/game/:id" component={RouteAction} />
-          <Route path="/group" exact component={RouteGroupWithOutID} />
-          <Route path="/group/leave" exact component={RouteLeaveGroup} />
-          <Route path="/group/:id" component={RouteGroup} />
-          <Route path="/sign-in" component={RouteSignIn} />
-          <Route path="/sign-out" component={SignOut} />
-          <Route path="/wait" component={Wait} />
-        </Switch>
+        <div
+          className="_view"
+          onClick={() => chat.visible && chat.updateVisibility(false)}
+        >
+          <Switch>
+            <Route path="/" exact component={RouteMain} />
+            <Route path="/create" component={RouteCreate} />
+            <Route path="/game" exact component={RouteActionWithOutID} />
+            <Route path="/game/:id" component={RouteAction} />
+            <Route path="/group" exact component={RouteGroupWithOutID} />
+            <Route path="/group/leave" exact component={RouteLeaveGroup} />
+            <Route path="/group/:id" component={RouteGroup} />
+            <Route path="/sign-in" component={RouteSignIn} />
+            <Route path="/sign-out" component={SignOut} />
+            <Route path="/wait" component={Wait} />
+          </Switch>
+        </div>
 
         <Chat
           className={`chat ${chatVisibility} ${messageState}`.trim()}
