@@ -38,6 +38,7 @@ export const Action = memo(
 
     const [input, setInput] = useState({
       raise: Math.min(2, Math.max(userTurn.bet, 1)),
+      raiseDirty: false,
     })
     const [isSmall, setIsSmall] = useState(window.innerWidth < 1024)
 
@@ -256,11 +257,6 @@ export const Action = memo(
                 <h3 className="bank key-value">
                   <span>Bank</span> {userGroup.sum}
                 </h3>
-                <div className="button">
-                  <h3 className="key-value">
-                    <span>Button</span> {currentButton}
-                  </h3>
-                </div>
                 <PlayerHand
                   className="hand"
                   hand={userTurn.hand}
@@ -295,11 +291,18 @@ export const Action = memo(
           )}
 
           <div className={`holder${betMax <= 0 ? ' only-all-in' : ''}`}>
+            <div className="current-button">
+              <h3 className="key-value">
+                <span>Current Button</span> {currentButton}
+              </h3>
+            </div>
             <button
               onClick={() => !callPending && actions.check()}
               disabled={callPending}
               type="button"
-              className="button button-bet-call"
+              className={`button button-bet-call${
+                callPending ? ' disabled' : ''
+              }`.trim()}
             >
               {round === 0 && big.bet === group.blind.big
                 ? 'bet'
@@ -311,17 +314,21 @@ export const Action = memo(
               type="button"
               disabled={callPending}
               onClick={() => !callPending && actions.fold()}
-              className="button button-fold"
+              className={`button button-fold${
+                callPending ? ' disabled' : ''
+              }`.trim()}
             >
               fold
             </button>
             <button
               type="button"
-              disabled={callPending || input.raise === userTurn.bet}
+              disabled={
+                callPending || input.raiseDirty || input.raise === userTurn.bet
+              }
               onClick={async event => {
                 event.preventDefault()
 
-                if (callPending) {
+                if (callPending || input.raiseDirty || input.raise >= 0) {
                   return
                 }
 
@@ -332,19 +339,25 @@ export const Action = memo(
 
                 await actions.raise(input.raise)
               }}
-              className={`button button-raise ${
-                input.raise === big.bet ? 'disabled' : ''
-              } ${betMax <= 0 || input.raise === betMax ? 'hidden' : ''}`}
+              className={`button button-raise${
+                callPending || input.raiseDirty || input.raise === big.bet
+                  ? ' disabled'
+                  : ''
+              }${betMax <= 0 || input.raise >= betMax ? ' hidden' : ''}`.trim()}
             >
               raise
             </button>
             <button
               type="button"
-              disabled={callPending || input.raise < betMax}
+              disabled={callPending || input.raiseDirty || input.raise < betMax}
               onClick={() => !callPending && actions.allIn()}
               className={`button button-all-in ${
                 input.raise < betMax ? 'hidden' : ''
-              }`}
+              }${
+                callPending || input.raiseDirty || input.raise < betMax
+                  ? ' disabled'
+                  : ''
+              }`.trim()}
             >
               all-in
             </button>
@@ -353,21 +366,25 @@ export const Action = memo(
               <input
                 value={input.raise}
                 type="number"
-                min={1}
                 max={betMax}
                 onChange={event => {
                   event.preventDefault()
-                  let {
-                    target: { valueAsNumber: value },
+                  const {
+                    target: { valueAsNumber: raise },
                   } = event
 
-                  if (isNaN(value)) {
-                    value = 1
+                  if (isNaN(raise)) {
+                    return setInput({
+                      ...input,
+                      raiseDirty: true,
+                      raise: '' as any,
+                    })
                   }
 
                   setInput({
                     ...input,
-                    raise: Math.max(Math.min(value, betMax), 1),
+                    raiseDirty: raise > betMax || raise <= 0,
+                    raise,
                   })
                 }}
               />
@@ -375,13 +392,13 @@ export const Action = memo(
             <Slider
               className="slider"
               value={input.raise}
-              onChange={value => {
+              onChange={raise => {
                 setInput({
                   ...input,
-                  raise: value,
+                  raiseDirty: raise > betMax || raise <= 0,
+                  raise,
                 })
               }}
-              min={1}
               max={betMax}
             />
           </div>

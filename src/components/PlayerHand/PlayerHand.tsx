@@ -18,7 +18,7 @@ export const PlayerHand: SFC<{
       <h3 className={className}>
         {text && (
           <Fragment>
-            <span>On hand</span> {text}
+            <span>Your hand</span> {text}
           </Fragment>
         )}
       </h3>

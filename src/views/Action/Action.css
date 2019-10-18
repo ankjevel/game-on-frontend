@@ -43,12 +43,13 @@
   }
 
   .main {
-    @apply p-0 z-20 absolute inset-x-0 block m-auto;
+    @apply p-0 absolute inset-x-0 block m-auto;
     max-width: 640px;
     min-height: 25vh;
     max-height: 40vh;
     min-width: 100%;
     bottom: 2em;
+    z-index: -1;
 
     @screen md {
       bottom: 8em;
@@ -236,6 +237,7 @@
 
       &.side-pot {
         transform: scale(.9);
+
         .chip {
           #background {
             fill: theme('colors.green.500');
@@ -377,12 +379,32 @@
   }
 
   .bottom {
-    @apply z-30 fixed p-0 w-full text-white left-0;
-    bottom: -5rem;
+    @apply z-30 fixed p-0 w-full text-white left-0 bottom-0;
+
+    .player-cards {
+      @apply pt-2;
+      bottom: -1rem;
+
+      &:hover {
+        bottom: 2.8rem;
+
+        @screen md {
+          bottom: 5rem;
+        }
+      }
+    }
+
+    &:not(.turn) {
+      .holder {
+        .button,
+        .raise,
+        .slider {
+          @apply hidden;
+        }
+      }
+    }
 
     &.turn:not(.showdown) {
-      bottom: 0;
-
       .holder {
         @apply border-green-500;
         animation-name: borderColor;
@@ -390,21 +412,16 @@
         animation-iteration-count: infinite;
       }
 
-      .player-cards {
-        @apply pt-2;
-        bottom: -1rem;
-
-        &:hover {
-          bottom: 2.8rem;
-
-          @screen md {
-            bottom: 5rem;
-          }
-        }
+      .current-button {
+        @apply hidden;
       }
     }
 
     &.showdown {
+      .holder {
+        @apply hidden;
+      }
+
       .player-cards {
         @apply m-0;
         bottom: 1rem;
