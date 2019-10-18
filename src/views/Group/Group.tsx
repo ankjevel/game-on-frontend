@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react'
+import React, { useContext, useState, useEffect, Fragment, SFC } from 'react'
 
 import './Group.css'
 
@@ -10,9 +10,8 @@ import userContext from '@/context/User'
 import api from '@/utils/api'
 import SignOut from '@/components/SignOut'
 
-export const Group = () => {
+export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
   const user = useContext(userContext)
-
   const [owner, setOwner] = useState(user.group.owner)
   const [users, setOrder] = useState(user.group.users)
   const [name, changeName] = useState(user.group.name)
@@ -256,7 +255,7 @@ export const Group = () => {
   }
 
   return (
-    <div className="c_group-view">
+    <div className="c_group-view" onClick={onClick}>
       <SignOut className="sign-out" />
 
       <div className="main-container">

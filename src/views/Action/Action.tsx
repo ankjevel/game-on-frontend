@@ -22,6 +22,7 @@ export const Action = memo(
     button,
     communityCards,
     group,
+    onClick,
     pot,
     round,
     sidePot = [],
@@ -139,7 +140,7 @@ export const Action = memo(
       .map(({ sum }) => sum)
 
     return (
-      <div className={`c_action round-${round}`}>
+      <div className={`c_action round-${round}`} onClick={onClick}>
         <div className="main-top">
           <h1 className="title">{group.name}</h1>
           <SignOut className="sign-out" />

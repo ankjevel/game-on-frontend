@@ -2,6 +2,7 @@ import { CUser } from 'CUser'
 import { CAction } from 'CAction'
 
 export type Params = {
+  onClick?: () => void
   actionID: CAction['id']
   bigID: CAction['big']
   button: CAction['button']

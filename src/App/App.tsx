@@ -188,7 +188,9 @@ export const App = () => {
         return <Redirect to={`/group/${pretty(user.group.id)}`} />
       }
 
-      return <Group />
+      return (
+        <Group onClick={() => chat.visible && chat.updateVisibility(false)} />
+      )
     }
 
     const join = async () => {
@@ -294,6 +296,7 @@ export const App = () => {
 
       return (
         <Action
+          onClick={() => chat.visible && chat.updateVisibility(false)}
           turn={action.turn}
           communityCards={action.communityCards}
           round={action.round}
@@ -342,7 +345,7 @@ export const App = () => {
     )
   }
 
-  const NotFound = () => <div></div>
+  const NotFound = () => <div>NONE NON NOEN</div>
 
   return (
     <Router>
@@ -354,23 +357,19 @@ export const App = () => {
               : true
           }
         />
-        <div
-          className="_view"
-          onClick={() => chat.visible && chat.updateVisibility(false)}
-        >
-          <Switch>
-            <Route path="/" exact component={RouteMain} />
-            <Route path="/create" component={RouteCreate} />
-            <Route path="/game" exact component={RouteActionWithOutID} />
-            <Route path="/game/:id" component={RouteAction} />
-            <Route path="/group" exact component={RouteGroupWithOutID} />
-            <Route path="/group/leave" exact component={RouteLeaveGroup} />
-            <Route path="/group/:id" component={RouteGroup} />
-            <Route path="/sign-in" component={RouteSignIn} />
-            <Route path="/sign-out" component={SignOut} />
-            <Route path="/wait" component={Wait} />
-          </Switch>
-        </div>
+
+        <Switch>
+          <Route path="/" exact component={RouteMain} />
+          <Route path="/create" component={RouteCreate} />
+          <Route path="/game" exact component={RouteActionWithOutID} />
+          <Route path="/game/:id" component={RouteAction} />
+          <Route path="/group" exact component={RouteGroupWithOutID} />
+          <Route path="/group/leave" exact component={RouteLeaveGroup} />
+          <Route path="/group/:id" component={RouteGroup} />
+          <Route path="/sign-in" component={RouteSignIn} />
+          <Route path="/sign-out" component={SignOut} />
+          <Route path="/wait" component={Wait} />
+        </Switch>
 
         <Chat
           className={`chat ${chatVisibility} ${messageState}`.trim()}
