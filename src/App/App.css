@@ -38,7 +38,7 @@
   }
 
   .chat-toggle {
-    @apply fixed left-0 top-0 text-white z-50 outline-none fill-current ml-2 py-4 px-2;
+    @apply absolute left-0 top-0 text-white z-50 outline-none fill-current ml-2 py-4 px-2;
     transition: all 0.4s ease;
     transform: scale(.7);
 
