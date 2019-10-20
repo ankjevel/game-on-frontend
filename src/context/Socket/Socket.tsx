@@ -39,9 +39,10 @@ export const SocketProvider = props => {
     actionListen: false,
   })
 
-  const resetGroup = async () => {
-    if (socket && socket.emit) {
-      await socket.emit('group:leave')
+  const reset = async (destroy = false) => {
+    await socket.emit('group:leave')
+
+    if (!destroy) {
       for (const key of [
         'update:action',
         'update:group',
@@ -51,15 +52,25 @@ export const SocketProvider = props => {
       ]) {
         delete socket._callbacks[`$${key}`]
       }
-
-      await setValue(val => ({
+      return await setValue(val => ({
         ...val,
         room: '',
         userListen: false,
         actionListen: false,
       }))
     }
+
+    socket.destroy()
+    socket = null
   }
+
+  useEffect(() => {
+    return () => {
+      if (socket == null) return
+      socket.emit('user:leave')
+      reset(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (socket != null || value.id !== '') return
@@ -76,7 +87,7 @@ export const SocketProvider = props => {
 
     socket.on('reconnect', async () => {
       if (socket.disconnected && !socket.connected) {
-        await resetGroup()
+        await reset()
 
         await setValue(state => ({
           ...state,
@@ -92,6 +103,8 @@ export const SocketProvider = props => {
         return socket.connect()
       }
     })
+
+    socket.reset = reset
   }, [cConfig.api])
 
   useEffect(() => {
@@ -155,7 +168,7 @@ export const SocketProvider = props => {
 
       if (cUser.group == null) {
         if (value.room !== '') {
-          await resetGroup()
+          await reset()
         }
 
         return
@@ -189,7 +202,6 @@ export const SocketProvider = props => {
         if (value.actionListen) return
         if (token === socket.token) return
         socket.token = token
-
         await socket.emit('user:join', token)
       } else if (value.userSet) {
         delete socket.token

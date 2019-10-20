@@ -328,9 +328,10 @@ export const App = () => {
 
     const WhenDone = lazy(async () => {
       await user.setValue('reset', '')
+      await chat.reset()
 
       return {
-        default: () => <h1>Hello</h1>,
+        default: () => null,
       }
     })
 

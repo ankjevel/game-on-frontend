@@ -14,6 +14,7 @@ export type CChat = {
   }) => void
   visible: boolean
   updateVisibility: (visible: boolean) => void
+  reset: () => void
 }
 
 export default CChat

@@ -9,6 +9,7 @@ export const ChatProvider = props => {
     messages: [],
     visible: false,
     updateVisibility: visible => setValue(state => ({ ...state, visible })),
+    reset: () => setValue(state => ({ ...state, messages: [] })),
     newMessage: content =>
       setValue(state => {
         const messages = state.messages.slice(state.messages.length - 50)
