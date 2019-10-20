@@ -1,4 +1,4 @@
-import { Action } from 'CAction'
+import { Action, KeyValue } from 'CAction'
 import { Group } from 'Api'
 import CContext, { OnMessage } from 'CSocket'
 
@@ -39,10 +39,21 @@ export const SocketProvider = props => {
     actionListen: false,
   })
 
-  const reset = async (destroy = false) => {
-    await socket.emit('group:leave')
+  const reset: (options?: {
+    destroy?: boolean
+    emit?: string
+    emitData?: string
+    state?: { [key: string]: string | boolean }
+  }) => void = async (
+    options = {
+      emit: 'group:leave',
+    }
+  ) => {
+    if (options.emit) {
+      await socket.emit(options.emit, options.emitData)
+    }
 
-    if (!destroy) {
+    if (!options.destroy) {
       for (const key of [
         'update:action',
         'update:group',
@@ -57,6 +68,7 @@ export const SocketProvider = props => {
         room: '',
         userListen: false,
         actionListen: false,
+        ...options.state,
       }))
     }
 
@@ -68,7 +80,10 @@ export const SocketProvider = props => {
     return () => {
       if (socket == null) return
       socket.emit('user:leave')
-      reset(true)
+      reset({
+        destroy: true,
+        emit: '',
+      })
     }
   }, [])
 
@@ -85,18 +100,14 @@ export const SocketProvider = props => {
       }))
     })
 
+    socket.on('disconnect', () => {
+      alert.error('lost connection to server')
+    })
+
     socket.on('reconnect', async () => {
       if (socket.disconnected && !socket.connected) {
-        await reset()
-
-        await setValue(state => ({
-          ...state,
-          room: '',
-          userListen: false,
-          actionListen: false,
-        }))
-
-        alert.show('reconnected to server')
+        socket.emit('restore', socket.token)
+        alert.success('reconnected to server')
       }
 
       if (socket.disconnected) {
