@@ -270,7 +270,7 @@ export const Action = memo(
 
         <div
           className={`bottom ${button === userID ? 'turn' : ''} ${
-            round === 4 ? 'showdown' : ''
+            round === 5 ? 'showdown' : ''
           }`}
         >
           <div className="player-cards">
@@ -278,7 +278,7 @@ export const Action = memo(
               <Card className="card" key={`player-cards-${card}`} card={card} />
             ))}
           </div>
-          {round === 4 && userTurn.status !== 'confirm' && (
+          {round === 5 && userTurn.status !== 'confirm' && (
             <div className="confirm">
               <button
                 type="button"
