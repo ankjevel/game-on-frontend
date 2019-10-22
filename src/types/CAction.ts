@@ -78,7 +78,7 @@ export interface IAction<T, Y> {
   id: string
   pot: number
   queued: KeyValue<T>
-  round: 0 | 1 | 2 | 3 | 4 | 5
+  round: 0 | 1 | 2 | 3 | 4
   sidePot?: { id: User['id']; sum: number }[]
   sittingOut?: User['id'][]
   small: User['id']

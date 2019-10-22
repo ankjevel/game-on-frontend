@@ -45,22 +45,23 @@
   .main {
     @apply relative block m-auto;
     max-width: 640px;
-    min-height: none;
     max-height: none;
+    min-height: none;
     min-width: 100%;
     z-index: -1;
-    padding: 100px 0;
+    padding: 0 0 100px;
 
     @screen md {
-      @apply absolute p-0;
-      min-height: 25vh;
-      max-height: 40vh;
-      bottom: 8em;
+      @apply relative p-0;
+      height: 500px;
+      min-height: 500px;
     }
 
     @screen lg {
-      @apply m-auto w-full inset-x-0 px-4 py-6;
-      top: 6em;
+      @apply absolute m-auto w-full inset-x-0 px-4 pt-40 pb-48;
+      min-height: 700px;
+      height: 700px;
+      top: 8em;
       bottom: 0;
     }
 
@@ -398,7 +399,30 @@
     }
 
     .current-button {
-      @apply py-2;
+      &,
+      .name {
+        @apply text-xs;
+
+        @screen md {
+          @apply text-lg;
+        }
+      }
+
+      span {
+        @apply uppercase font-normal;
+        font-size: smaller;
+      }
+
+      .name {
+        @apply font-bold mx-1 border-b-2 border-green-500;
+        animation-name: borderColor;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+
+        @screen md {
+          @apply mx-2;
+        }
+      }
     }
 
     &:not(.turn) {
@@ -430,7 +454,7 @@
       }
 
       .player-cards {
-        @apply m-0 ;
+        @apply m-0;
         bottom: 1rem;
         transform: scale(.8);
 
@@ -468,7 +492,7 @@
 
       @screen md {
         @apply ml-56;
-        bottom: 8rem;
+        bottom: 4rem;
       }
 
       .button {

@@ -159,7 +159,7 @@ body,
   overflow-x: hidden;
 
   @screen lg {
-    overflow: hidden;
+    /* overflow: hidden; */
     white-space: nowrap;
   }
 }

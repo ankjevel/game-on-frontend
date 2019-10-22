@@ -14,6 +14,7 @@ import Chip from '@/components/Chip'
 import User from '@/components/User'
 import PlayerHand from '@/components/PlayerHand'
 import SignOut from '@/components/SignOut'
+import Help from '@/components/Help'
 
 export const Action = memo(
   ({
@@ -268,9 +269,20 @@ export const Action = memo(
           </div>
         </div>
 
+        {/* <Help
+          userID={userID}
+          bigID={bigID}
+          round={round}
+          button={button}
+          winners={winners}
+          users={users}
+          currentBig={big.bet}
+          currentBet={userTurn.bet}
+        /> */}
+
         <div
           className={`bottom ${button === userID ? 'turn' : ''} ${
-            round === 5 ? 'showdown' : ''
+            round === 4 ? 'showdown' : ''
           }`}
         >
           <div className="player-cards">
@@ -278,7 +290,7 @@ export const Action = memo(
               <Card className="card" key={`player-cards-${card}`} card={card} />
             ))}
           </div>
-          {round === 5 && userTurn.status !== 'confirm' && (
+          {round === 4 && userTurn.status !== 'confirm' && (
             <div className="confirm">
               <button
                 type="button"
@@ -293,8 +305,10 @@ export const Action = memo(
 
           <div className={`holder${betMax <= 0 ? ' only-all-in' : ''}`}>
             <div className="current-button">
-              <h3 className="key-value">
-                <span>Current Button</span> {currentButton}
+              <h3>
+                <span>Waiting for</span>
+                <span className="name">{currentButton}</span>
+                <span>To make a move</span>
               </h3>
             </div>
             <button
