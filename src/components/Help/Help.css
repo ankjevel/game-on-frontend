@@ -25,4 +25,8 @@
       bottom: 6rem;
     }
   }
+
+  &-hidden {
+    @apply hidden;
+  }
 }

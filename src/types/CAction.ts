@@ -84,6 +84,7 @@ export interface IAction<T, Y> {
   small: User['id']
   turn: KeyValue<Y>
   winners?: User['id'][][]
+  lastMove?: NewAction & { userID: User['id'] }
 }
 
 export type Action = IAction<NewAction, UserSummary>
@@ -108,6 +109,7 @@ export type CAction = {
   turn?: Action['turn']
   sidePot?: Action['sidePot']
   winners?: Action['winners']
+  lastMove?: Action['lastMove']
 }
 
 export default CAction

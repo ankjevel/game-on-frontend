@@ -305,6 +305,7 @@ export const App = () => {
           users={user.users}
           winners={action.winners}
           sidePot={action.sidePot}
+          lastMove={action.lastMove}
         />
       )
     }

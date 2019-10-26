@@ -24,6 +24,7 @@ const getProp = (action: Action) => {
     turn: action.turn != null ? action.turn : undefined,
     sidePot: action.sidePot != null ? action.sidePot : undefined,
     winners: action.winners != null ? action.winners : undefined,
+    lastMove: action.lastMove != null ? action.lastMove : undefined,
   }
 }
 
@@ -37,6 +38,7 @@ export const reset = () => ({
   turn: undefined,
   sidePot: undefined,
   winners: undefined,
+  lastMove: undefined,
 })
 
 export const ActionProvider = props => {

@@ -8,7 +8,7 @@ export const PlayerHand: SFC<{
   className?: string
   hand: Hand
   winner?: boolean
-}> = ({ className: cn, hand, winner }) => {
+}> = ({ className: cn = '', hand, winner }) => {
   const text = getText(hand) || ''
   const className = `c_player-hand ${cn}`.trim()
   const classNameWinner = `c_player-hand-winner winner ${cn}`.trim()

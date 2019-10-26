@@ -9,12 +9,14 @@ import './Action.css'
 import Slider from 'rc-slider'
 
 import api from '@/utils/api'
-import Card from '@/components/Card'
 import Chip from '@/components/Chip'
-import User from '@/components/User'
+import CommunityCards from '@/components/CommunityCards'
+// import Help from '@/components/Help'
+import LastMove from '@/components/LastMove'
+import PlayerCards from '@/components/PlayerCards'
 import PlayerHand from '@/components/PlayerHand'
 import SignOut from '@/components/SignOut'
-import Help from '@/components/Help'
+import User from '@/components/User'
 
 export const Action = memo(
   ({
@@ -23,6 +25,7 @@ export const Action = memo(
     button,
     communityCards,
     group,
+    lastMove,
     onClick,
     pot,
     round,
@@ -42,6 +45,7 @@ export const Action = memo(
       raise: Math.min(2, Math.max(userTurn.bet, 1)),
       raiseDirty: false,
     })
+
     const [isSmall, setIsSmall] = useState(window.innerWidth < 1024)
 
     useEffect(() => {
@@ -235,22 +239,22 @@ export const Action = memo(
                   {big.bet}
                 </h1>
                 <h3 className="pot key-value">
-                  <span>Pot</span> {pot}
+                  <span>Pot total</span> {pot}
                 </h3>
+                {round !== 4 && (
+                  <LastMove
+                    className="last-move key-value"
+                    lastMove={lastMove}
+                    users={users}
+                    you={userID}
+                  />
+                )}
               </div>
               <div className="holder">
-                <div className="cards">
-                  {communityCards.map(card => (
-                    <Card
-                      card={card}
-                      className="card"
-                      key={`community-card-${card}`}
-                    />
-                  ))}
-                  {[...Array(5 - communityCards.length)].map((_, i) => (
-                    <div className="card none" key={`blank_card_${i}`} />
-                  ))}
-                </div>
+                <CommunityCards
+                  className="cards"
+                  communityCards={communityCards}
+                />
               </div>
               <div className="you">
                 <h3 className="bet key-value">
@@ -285,11 +289,7 @@ export const Action = memo(
             round === 4 ? 'showdown' : ''
           }`}
         >
-          <div className="player-cards">
-            {(userTurn.cards || ([] as string[])).map(card => (
-              <Card className="card" key={`player-cards-${card}`} card={card} />
-            ))}
-          </div>
+          <PlayerCards className="player-cards" cards={userTurn.cards} />
           {round === 4 && userTurn.status !== 'confirm' && (
             <div className="confirm">
               <button

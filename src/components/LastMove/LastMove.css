@@ -1,0 +1,29 @@
+.c_last-move {
+  span {
+    @apply mr-1;
+  }
+
+  small {
+    @apply font-normal;
+  }
+
+  &-chip {
+    @apply mr-1;
+
+    #stroke {
+      fill: theme('colors.gray.900');
+    }
+
+    #secondary {
+      fill: theme('colors.gray.900');
+    }
+
+    #background {
+      fill: theme('colors.yellow.500');
+    }
+  }
+
+  @screen md {
+    @apply mr-2;
+  }
+}

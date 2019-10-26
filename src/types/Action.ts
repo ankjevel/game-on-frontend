@@ -15,4 +15,5 @@ export type Params = {
   userID: CUser['id']
   users: CUser['users']
   winners?: CAction['winners']
+  lastMove?: CAction['lastMove']
 }

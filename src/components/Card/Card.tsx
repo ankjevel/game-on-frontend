@@ -7,8 +7,8 @@ import { toHex, isRed } from '@/utils/card'
 export const Card: SFC<{
   card: MaybeNull<string>
   className?: string
-}> = ({ card, className: cn }) => {
-  const className = `c_card ${card == null ? 'none' : ''} ${cn || ''}`.trim()
+}> = ({ card, className: cn = '' }) => {
+  const className = `c_card ${card == null ? 'none' : ''} ${cn}`.trim()
   const backClassName = `back ${card == null ? 'rotate' : ''}`.trim()
   return (
     <div className={className}>

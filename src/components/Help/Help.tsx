@@ -46,8 +46,6 @@ export const Help: SFC<{
     .filter(c => c)
     .map(c => `${PREFIX}-${c}`)
 
-  const className = `${PREFIX} ${classes.join(' ')} ${cn}`.trim()
-
   let message = ''
   if (inBettingRound) {
     if (isButton) {
@@ -72,6 +70,12 @@ export const Help: SFC<{
       message = `Waiting for ${users[button]} to make their move`
     }
   }
+
+  if (message === '') {
+    classes.push(`${PREFIX}-hidden`)
+  }
+
+  const className = `${PREFIX} ${classes.join(' ')} ${cn}`.trim()
 
   return <div className={className}>{message}</div>
 }

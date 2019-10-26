@@ -8,7 +8,7 @@ export const ActionStatus: SFC<{
   className?: string
   status: UserSummary['status']
   winner: boolean
-}> = ({ className: cn, status, winner }) => {
+}> = ({ className: cn = '', status, winner }) => {
   const base = 'c_action-status'
   const className = `${base} ${base}_${status} ${
     winner ? `${base}_winner` : ''

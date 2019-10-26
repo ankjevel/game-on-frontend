@@ -1,0 +1,13 @@
+.c_community_cards {
+  @apply flex flex-row py-2 justify-center z-10;
+
+  @screen md {
+    @apply p-4;
+  }
+
+  .card {
+    &:nth-of-type(4) {
+      @apply mx-4;
+    }
+  }
+}
