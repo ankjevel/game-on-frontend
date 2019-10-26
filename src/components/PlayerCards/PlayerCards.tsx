@@ -11,13 +11,19 @@ import './PlayerCards.css'
 import { Card } from '@/components/Card'
 
 export const PlayerCards = memo(
-  ({ className: cn = '', cards }: Params) => (
-    <div className={`c_player-cards ${cn}`.trim()}>
-      {cards.map(card => (
-        <Card className="card" key={`player-cards-${card}`} card={card} />
-      ))}
-    </div>
-  ),
+  ({ className: cn = '', cards }: Params) => {
+    if (cards == null || Array.isArray(cards) === false) {
+      return null
+    }
+
+    return (
+      <div className={`c_player-cards ${cn}`.trim()}>
+        {cards.map(card => (
+          <Card className="card" key={`player-cards-${card}`} card={card} />
+        ))}
+      </div>
+    )
+  },
   (prevProps, nextProps) => {
     if (!nextProps) return false
     if (!prevProps || prevProps.cards == null) return true
