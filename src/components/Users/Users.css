@@ -1,0 +1,62 @@
+.c_users {
+  max-width: 100vw;
+
+  &-sm {
+    min-height: calc(100vh - 330px);
+    max-height: 60vh;
+
+    @screen md {
+      min-height: calc(100vh - 550px);
+    }
+  }
+
+  &-lg,
+  &-sm {
+    @apply font-semibold select-none m-0 z-0 p-4 mt-10 w-full;
+    width: 100vw;
+  }
+
+  &-sm {
+    @apply relative block flex flex-row flex-wrap justify-between content-center p-0;
+
+    @screen md {
+      @apply p-4;
+    }
+
+    > div {
+      transform: scale(.7);
+
+      @apply p-0 m-0;
+
+      @screen md {
+        @apply px-4 py-2 m-0;
+        transform: scale(.8);
+      }
+    }
+  }
+
+  &-lg {
+    @apply absolute m-0 p-4 flex flex-row h-full;
+    max-height: calc(100vh - 8em);
+    height: 100vh;
+
+    .left,
+    .right,
+    .top {
+      @apply flex w-full items-center justify-center;
+    }
+
+    .top {
+      @apply h-24;
+
+      .top {
+        @apply inline inline-flex m-auto w-auto;
+      }
+    }
+
+    .left,
+    .right {
+      @apply flex-col w-1/4 pt-24 h-full;
+    }
+  }
+}

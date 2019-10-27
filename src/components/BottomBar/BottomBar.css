@@ -1,0 +1,292 @@
+.c_bottom-bar {
+  @apply z-30 fixed p-0 w-full text-white left-0 bottom-0;
+
+  .player-cards {
+    @apply pt-2;
+    bottom: -1rem;
+
+    &:hover {
+      bottom: 2.8rem;
+
+      @screen md {
+        bottom: 4rem;
+      }
+    }
+  }
+
+  .current-button {
+    &,
+    .name {
+      @apply text-xs;
+
+      @screen md {
+        @apply text-lg;
+      }
+    }
+
+    span {
+      @apply uppercase font-normal;
+      font-size: smaller;
+    }
+
+    .name {
+      @apply font-bold mx-1 border-b-2 border-green-500;
+      animation-name: borderColor;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+
+      @screen md {
+        @apply mx-2;
+      }
+    }
+  }
+
+  &:not(.turn) {
+    .holder {
+      .button,
+      .raise,
+      .slider {
+        @apply hidden;
+      }
+    }
+  }
+
+  &.turn:not(.showdown) {
+    .holder {
+      @apply border-green-500;
+      animation-name: borderColor;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+    }
+
+    .current-button {
+      @apply hidden;
+    }
+  }
+
+  &.showdown {
+    .holder {
+      @apply hidden;
+    }
+
+    .player-cards {
+      @apply m-0;
+      bottom: 1rem;
+      transform: scale(.8);
+
+      @screen md {
+        @apply m-auto;
+      }
+
+      @screen lg {
+        bottom: 1rem;
+        transform: none;
+      }
+
+      &:hover {
+        padding-bottom: 0;
+      }
+
+      .card {
+        @apply mr-2;
+        transform: rotate(0);
+
+        &:nth-child(2n) {
+          transform: rotate(0);
+        }
+      }
+    }
+  }
+
+  .confirm,
+  .player-cards {
+    @apply absolute p-0 m-auto w-full items-center justify-center flex-wrap select-none flex flex-row z-0 inset-x-0;
+  }
+
+  .confirm {
+    bottom: 2rem;
+
+    @screen md {
+      @apply ml-56;
+      bottom: 4rem;
+    }
+
+    .button {
+      @apply bg-green-500 text-white leading-none p-2 py-2 px-4 rounded text-xs absolute;
+      right: 2rem;
+
+      @screen md {
+        @apply text-base relative;
+      }
+
+      &:hover {
+        @apply bg-green-300 text-white;
+      }
+    }
+  }
+
+  .player-cards {
+    @apply fixed w-40 inline-block flex flex-row bottom-0;
+    transition: padding .4s ease, transform .4s ease, bottom .4s ease;
+
+    @screen md {
+      @apply w-56;
+    }
+
+    &:hover {
+      padding-bottom: .7rem;
+
+      .card {
+        @apply mr-2;
+        transform: rotate(0);
+
+        &:nth-child(2n) {
+          transform: rotate(0);
+        }
+      }
+    }
+
+    .card {
+      @apply -mr-12 ml-0 p-0;
+      width: 88.0167px;
+      height: 122.95px;
+      width: calc(62.8738px * .9);
+      height: calc(87.8251px * .9);
+      transition: margin-right 0.45s ease-in-out, transform 0.4s ease-in-out;
+      transform: rotate(27deg);
+      box-shadow: 0 0 10px rgba(61, 66, 79, .4);
+
+      @screen md {
+        width: calc(62.8738px * 1.4);
+        height: calc(87.8251px * 1.4);
+      }
+
+      &:nth-child(2n) {
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  .holder {
+    @apply flex items-center justify-center flex-wrap w-full relative z-10 p-1 pb-4 border-t-4 border-black bg-black;
+
+    @screen md {
+      @apply p-2;
+    }
+
+    @screen lg {
+      @apply p-4;
+    }
+
+    &.only-all-in {
+      .raise,
+      .slider,
+      .button-bet-call {
+        display: none;
+      }
+
+      .button-fold {
+        @apply rounded-l;
+      }
+    }
+  }
+
+  .button {
+    @apply text-white text-sm leading-none p-2;
+
+    @screen md {
+      @apply text-base py-2 px-4;
+    }
+
+    &:hover,
+    &:active {
+      @apply text-white;
+    }
+
+    &-bet-call {
+      @apply bg-blue-400 rounded-l;
+
+      &:hover,
+      &:active {
+        @apply bg-blue-300;
+      }
+    }
+
+    &-fold {
+      @apply bg-red-500;
+
+      &:hover,
+      &:active {
+        @apply bg-red-300 text-white;
+      }
+    }
+
+    &-raise {
+      @apply bg-blue-500 rounded-r;
+
+      &:hover,
+      &:active {
+        @apply bg-blue-300;
+      }
+    }
+
+    &-all-in {
+      @apply bg-green-500 rounded-r;
+
+      &:hover,
+      &:active {
+        @apply bg-green-300;
+      }
+    }
+  }
+
+  .raise {
+    @apply inline-block bg-transparent p-1 w-24 text-left mx-2 text-xs;
+
+    @screen md {
+      @apply py-2 px-2 text-base w-32;
+    }
+
+    input {
+      @apply inline-block px-2 w-10 bg-transparent appearance-none border-none outline-none text-sm;
+      appearance: textfield;
+
+      @screen md {
+        @apply w-12;
+      }
+
+      &:active,
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .slider {
+    @apply w-32 h-2 m-4 hidden;
+
+    @screen lg {
+      @apply block;
+    }
+
+    .rc-slider-handle {
+      @apply border-r-2 border-gray-400;
+
+      &:active {
+        @apply shadow-none;
+      }
+
+      &:focus {
+        box-shadow: 0 0 4px rgba(theme('colors.gray.400'), .5);
+      }
+    }
+
+    .rc-slider-step {
+      @apply border-gray-600;
+    }
+
+    .rc-slider-track {
+      @apply bg-green-200;
+    }
+  }
+}
