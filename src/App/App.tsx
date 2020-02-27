@@ -25,14 +25,17 @@ import Action from '@/views/Action'
 import SignIn from '@/views/SignIn'
 import CreateOrJoinGroup from '@/views/CreateOrJoinGroup'
 import Group from '@/views/Group'
+import Introduction from '@/views/Introduction'
 import Chat from '@/components/Chat'
 import api from '@/utils/api'
 import actionContext from '@/context/Action'
 import chatContext from '@/context/Chat'
 import userContext from '@/context/User'
 import { onMessage } from '@/context/Socket'
+import configContext from '@/context/Config'
 
 export const App = () => {
+  const config = useContext(configContext)
   const user = useContext(userContext)
   const action = useContext(actionContext)
   const chat = useContext(chatContext)
@@ -80,8 +83,11 @@ export const App = () => {
     return key.replace(/^.+?:/, '')
   }
 
-  const checkState = (): ERoute => {
+  const checkState = (params): ERoute => {
     if (user.id === '') {
+      if (params.match.path === '/') {
+        return '/'
+      }
       return '/sign-in'
     }
 
@@ -108,11 +114,11 @@ export const App = () => {
     return '/group'
   }
 
-  const maybeRedirect: IMaybeRedirect = (
-    { location: { pathname } },
-    validRoute
-  ) => {
-    const route = checkState()
+  const maybeRedirect: IMaybeRedirect = (params, validRoute) => {
+    const {
+      location: { pathname },
+    } = params
+    const route = checkState(params)
     const redirect = Array.isArray(validRoute)
       ? validRoute.includes(route) === false
       : validRoute !== route
@@ -120,10 +126,12 @@ export const App = () => {
     return redirect ? <Redirect to={`${route}`} from={pathname} /> : false
   }
 
-  const RouteMain: IRoute = () => {
+  const RouteMain: IRoute = params => {
     if (active) return null
-    const route = checkState()
+    const route = checkState(params)
     switch (route) {
+      case '/':
+        return <Introduction title={config.title} />
       case '/sign-in':
       case '/create':
         return <Redirect to={`${route}`} from="/" />
@@ -139,7 +147,11 @@ export const App = () => {
 
   const RouteSignIn: IRoute = params => {
     if (active) return null
-    return maybeRedirect(params, '/sign-in') || <SignIn />
+    return (
+      maybeRedirect(params, '/sign-in') || (
+        <SignIn createNew={params.location.hash.toLowerCase() === '#new'} />
+      )
+    )
   }
 
   const RouteCreate: IRoute = params => {
@@ -147,9 +159,9 @@ export const App = () => {
     return maybeRedirect(params, '/create') || <CreateOrJoinGroup />
   }
 
-  const RouteLeaveGroup: IRoute = () => {
+  const RouteLeaveGroup: IRoute = params => {
     if (active) return null
-    if (checkState() !== '/group') return <Redirect to="/" />
+    if (checkState(params) !== '/group') return <Redirect to="/" />
 
     const leave = async () => {
       updateActive(true)

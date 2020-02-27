@@ -295,7 +295,7 @@ export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
                   <button
                     type="button"
                     onClick={updateGroup}
-                    className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2 rounded"
+                    className="absolute inline top-0 right-0 mt-2 mr-2 bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-xs leading-none py-1 px-2"
                   >
                     update
                   </button>
@@ -347,7 +347,7 @@ export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
 
           <div className="pt-4 mt-4">
             <Link
-              className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              className="inline-block leave-button bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white text-base leading-none py-2 px-4 border border-blue-500 hover:border-transparent"
               to="/group/leave"
             >
               Leave group
@@ -357,7 +357,7 @@ export const Group: SFC<{ onClick?: () => void }> = ({ onClick }) => {
                 type="button"
                 onClick={startGame}
                 disabled={users.length <= 1}
-                className={`inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4 rounded${
+                className={`inline-block float-right bg-green-500 hover:bg-green-300 text-white font-semibold hover:text-white text-base leading-none p-2 py-2 px-4${
                   users.length <= 1 ? ' disabled cursor-not-allowed' : ''
                 }`}
               >

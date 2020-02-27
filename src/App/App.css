@@ -8,10 +8,11 @@
   .chat {
     @apply z-50 -ml-64;
     transition: all 0.4s ease;
-    box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .0);
+    box-shadow: 5px 0 10px rgba(theme('colors.gray.900'), .0);
+    transform-style: preserve-3d;
 
     &.state-visible {
-      box-shadow: 0 0 10px rgba(theme('colors.gray.700'), .4);
+      box-shadow: 5px 0 10px rgba(theme('colors.gray.900'), .7);
 
       @apply ml-0;
     }
@@ -20,17 +21,21 @@
     }
 
     &:after {
-      @apply block absolute inset-0 h-full w-full;
+      @apply block absolute inset-x-0 w-full;
+      top: 2.5%;
+      bottom: 2.5%;
+      height: 95%;
       z-index: -1;
       content: '';
-      box-shadow: 0 0 10px rgba(theme('colors.green.500'), .0);
+      box-shadow: 5px 0 10px rgba(theme('colors.green.500'), .0);
       background: none !important;
       transition: all 0.4s ease;
+      transform: translateZ(-1px);
     }
 
     &.new-message {
       &:after {
-        animation-name: fancyBackground;
+        animation-name: animateBoxShadow;
         animation-duration: 5s;
         animation-iteration-count: infinite;
       }

@@ -37,7 +37,7 @@
   }
 
   .sign-in {
-    @apply bg-white w-full self-center rounded overflow-hidden shadow-lg bg-white m-auto;
+    @apply bg-white w-full self-center overflow-hidden shadow-lg bg-white m-auto;
 
     @screen sm {
       @apply w-full;

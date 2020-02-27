@@ -8,7 +8,7 @@ import UserContext from '@/context/User'
 import * as api from '@/utils/api'
 import InputError from '@/components/InputError'
 
-class SignIn extends Component<{}, State> {
+class SignIn extends Component<{ createNew: any }, State> {
   static contextType = UserContext
   context!: ContextType<typeof UserContext>
 
@@ -16,7 +16,7 @@ class SignIn extends Component<{}, State> {
     super(props)
 
     this.state = {
-      create: false,
+      create: props.createNew,
       input: {
         password: '',
         passwordRepeat: '',

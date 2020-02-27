@@ -35,6 +35,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html',
+      title: config.title,
+      meta: {
+        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+        'theme-color': '#000000',
+        'apple-mobile-web-app-capable': 'yes',
+        'mobile-web-app-capable': 'yes',
+      },
+      favicon: path.join(__dirname, 'public/favicon.ico'),
     }),
     new MiniCssExtractPlugin({
       filename: dev ? '[name].css' : '[name].[hash].css',
